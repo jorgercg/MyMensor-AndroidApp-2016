@@ -36,11 +36,55 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable/default_video_poster.png"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/simple_button_background_selector.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/simple_button_background_selector.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/default_video_poster.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/default_video_poster.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/toastbackground.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/toastbackground.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/divider.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/divider.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/selector_web_back.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/selector_web_back.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/button_detail_green.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/button_detail_green.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable/toastbackground.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable/toastbackground.xml"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/button_detail_blue.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/button_detail_blue.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/progress_bar.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/progress_bar.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable/selector_web_back.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable/selector_web_back.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/selector_web_forward.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/selector_web_forward.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/selector_darker.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/selector_darker.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable/rating_drawable.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable/rating_drawable.xml"
     }
 ]

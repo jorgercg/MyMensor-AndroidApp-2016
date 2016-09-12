@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <bool name="isTablet">false</bool>
+    <color name="button_pressed_background">#33000000</color>
+    <color name="common_action_bar_splitter">#d2d2d2</color>
+    <color name="common_signin_btn_dark_text_default">@android:color/white</color>
+    <color name="common_signin_btn_dark_text_disabled">#FFAAAAAA</color>
+    <color name="common_signin_btn_dark_text_focused">@android:color/white</color>
+    <color name="common_signin_btn_dark_text_pressed">@android:color/white</color>
+    <color name="common_signin_btn_default_background">#FFDD4B39</color>
+    <color name="common_signin_btn_light_text_default">#FF737373</color>
+    <color name="common_signin_btn_light_text_disabled">#FFAAAAAA</color>
+    <color name="common_signin_btn_light_text_focused">#FF737373</color>
+    <color name="common_signin_btn_light_text_pressed">@android:color/white</color>
+    <color name="gray">#CCC</color>
+    <color name="light_gray">#E5E5E5</color>
+    <color name="listViewBackground">#FFECECEC</color>
+    <color name="listViewText">#FF282828</color>
+    <color name="list_row_selected">#afefff</color>
+    <color name="metaiocolor">#FF0654A5</color>
+    <color name="poiDetailBackground">#CC000000</color>
+    <color name="screenTitle">#FFFFFFFF</color>
+    <color name="sponsoredBackground">#E6FFFF99</color>
+    <color name="tableViewBackground">#FFC2C2C2</color>
+    <color name="toastBackground">#EE444444</color>
+    <color name="toastBorder">#EE777777</color>
+    <color name="toastText">#FFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="wallet_bright_foreground_disabled_holo_light">#ffb2b2b2</color>
+    <color name="wallet_bright_foreground_holo_dark">#fff3f3f3</color>
+    <color name="wallet_bright_foreground_holo_light">#ff000000</color>
+    <color name="wallet_dim_foreground_disabled_holo_dark">#80bebebe</color>
+    <color name="wallet_dim_foreground_holo_dark">#bebebe</color>
+    <color name="wallet_dim_foreground_inverse_disabled_holo_dark">#80323232</color>
+    <color name="wallet_dim_foreground_inverse_holo_dark">#323232</color>
+    <color name="wallet_highlighted_text_holo_dark">#6633b5e5</color>
+    <color name="wallet_highlighted_text_holo_light">#6633b5e5</color>
+    <color name="wallet_hint_foreground_holo_dark">#808080</color>
+    <color name="wallet_hint_foreground_holo_light">#808080</color>
+    <color name="wallet_holo_blue_light">#ff33b5e5</color>
+    <color name="wallet_link_text_light">#0000ee</color>
+    <declare-styleable name="AdsAttrs"><attr format="string" name="adSize"/><attr format="string" name="adSizes"/><attr format="string" name="adUnitId"/></declare-styleable>
+    <declare-styleable name="CustomWalletTheme"><attr format="enum" name="windowTransitionStyle"><enum name="slide" value="1"/><enum name="none" value="2"/></attr></declare-styleable>
+    <declare-styleable name="LoadingImageView"><attr format="enum" name="imageAspectRatioAdjust"><enum name="none" value="0"/><enum name="adjust_width" value="1"/><enum name="adjust_height" value="2"/></attr><attr format="float" name="imageAspectRatio"/><attr format="boolean" name="circleCrop"/></declare-styleable>
+    <declare-styleable name="MapAttrs"><attr format="enum" name="mapType"><enum name="none" value="0"/><enum name="normal" value="1"/><enum name="satellite" value="2"/><enum name="terrain" value="3"/><enum name="hybrid" value="4"/></attr><attr format="float" name="cameraBearing"/><attr format="float" name="cameraTargetLat"/><attr format="float" name="cameraTargetLng"/><attr format="float" name="cameraTilt"/><attr format="float" name="cameraZoom"/><attr format="boolean" name="liteMode"/><attr format="boolean" name="uiCompass"/><attr format="boolean" name="uiRotateGestures"/><attr format="boolean" name="uiScrollGestures"/><attr format="boolean" name="uiTiltGestures"/><attr format="boolean" name="uiZoomControls"/><attr format="boolean" name="uiZoomGestures"/><attr format="boolean" name="useViewLifecycle"/><attr format="boolean" name="zOrderOnTop"/><attr format="boolean" name="uiMapToolbar"/></declare-styleable>
+    <declare-styleable name="WalletFragmentOptions"><attr format="enum" name="appTheme"><enum name="holo_dark" value="0"/><enum name="holo_light" value="1"/></attr><attr format="enum" name="environment"><enum name="production" value="1"/><enum name="sandbox" value="0"/><enum name="strict_sandbox" value="2"/></attr><attr format="reference" name="fragmentStyle"/><attr format="enum" name="fragmentMode"><enum name="buyButton" value="1"/><enum name="selectionDetails" value="2"/></attr></declare-styleable>
+    <declare-styleable name="WalletFragmentStyle"><attr format="dimension" name="buyButtonHeight"><enum name="match_parent" value="-1"/><enum name="wrap_content" value="-2"/></attr><attr format="dimension" name="buyButtonWidth"><enum name="match_parent" value="-1"/><enum name="wrap_content" value="-2"/></attr><attr format="enum" name="buyButtonText"><enum name="buy_with_google" value="1"/><enum name="buy_now" value="2"/><enum name="book_now" value="3"/><enum name="donate_with_google" value="4"/></attr><attr format="enum" name="buyButtonAppearance"><enum name="classic" value="1"/><enum name="grayscale" value="2"/><enum name="monochrome" value="3"/></attr><attr format="reference" name="maskedWalletDetailsTextAppearance"/><attr format="reference" name="maskedWalletDetailsHeaderTextAppearance"/><attr format="reference|color" name="maskedWalletDetailsBackground"/><attr format="reference" name="maskedWalletDetailsButtonTextAppearance"/><attr format="reference|color" name="maskedWalletDetailsButtonBackground"/><attr format="color" name="maskedWalletDetailsLogoTextColor"/><attr format="enum" name="maskedWalletDetailsLogoImageType"><enum name="classic" value="1"/><enum name="monochrome" value="2"/></attr></declare-styleable>
+    <item name="audioButton" type="id"/>
+    <item name="callButton" type="id"/>
+    <item name="emailButton" type="id"/>
+    <item name="homePageButton" type="id"/>
+    <item name="imageButton" type="id"/>
+    <item name="routeButton" type="id"/>
+    <item name="videoButton" type="id"/>
+    <integer name="google_play_services_version">7095000</integer>
+    <string name="BTN_ACCEPT">Accept</string>
+    <string name="BTN_ADD">Add</string>
+    <string name="BTN_ADD_FAVORITE">Add to Favorites</string>
+    <string name="BTN_AGREE_TERMS">I agree to the Terms of Service and Privacy Policy</string>
+    <string name="BTN_ALL">All</string>
+    <string name="BTN_APPLY">Apply</string>
+    <string name="BTN_BACK">Back</string>
+    <string name="BTN_BUY">Buy</string>
+    <string name="BTN_CALL">Call</string>
+    <string name="BTN_CANCEL">Cancel</string>
+    <string name="BTN_CLOSE">Close</string>
+    <string name="BTN_CLOSE_HELPTXT">Close</string>
+    <string name="BTN_DELETE">Delete</string>
+    <string name="BTN_EMAIL">Email</string>
+    <string name="BTN_EXIT">Exit</string>
+    <string name="BTN_FEEDBACK">Feedback</string>
+    <string name="BTN_FILTER">Filter</string>
+    <string name="BTN_GETTING_STARTED">Getting started</string>
+    <string name="BTN_GET_INFORMATION">Get information</string>
+    <string name="BTN_GO">Go</string>
+    <string name="BTN_HIDE">Hide</string>
+    <string name="BTN_HOME">Home</string>
+    <string name="BTN_INFO">Info</string>
+    <string name="BTN_LATEST">Latest</string>
+    <string name="BTN_LICENSE">License</string>
+    <string name="BTN_LIST">List</string>
+    <string name="BTN_LIVE">Live</string>
+    <string name="BTN_LLAMARKER">Detect</string>
+    <string name="BTN_LOAD_3D">Load 3D</string>
+    <string name="BTN_LOGIN">Login</string>
+    <string name="BTN_LOGOUT">Logout</string>
+    <string name="BTN_MANAGE_CHANNEL">Manage this channel</string>
+    <string name="BTN_MAP">Map</string>
+    <string name="BTN_MOST_RELEVANT">Most Relevant</string>
+    <string name="BTN_MY_JUNAIO">My junaio</string>
+    <string name="BTN_NAVIGATE">Navigation</string>
+    <string name="BTN_NEW">New</string>
+    <string name="BTN_NO">No</string>
+    <string name="BTN_NO_THANKS">No Thanks</string>
+    <string name="BTN_OK">OK</string>
+    <string name="BTN_OPEN">Open</string>
+    <string name="BTN_OPEN_CHANNEL">Open the Channel</string>
+    <string name="BTN_OPEN_WEB">Open Web</string>
+    <string name="BTN_PLAY_AUDIO">Play Audio</string>
+    <string name="BTN_PLAY_MEDIA">Play</string>
+    <string name="BTN_PLAY_VIDEO">Play Video</string>
+    <string name="BTN_POPULAR">Popular</string>
+    <string name="BTN_POST">Post</string>
+    <string name="BTN_RATE_IT">Rate it!</string>
+    <string name="BTN_REFUSE">Refuse</string>
+    <string name="BTN_REMEBMER_LOGIN">Keep me logged in</string>
+    <string name="BTN_REMOVE_FAVORITE">Remove from Favorites</string>
+    <string name="BTN_REMOVE_FRIEND">Remove from Friends</string>
+    <string name="BTN_RETRY">Retry</string>
+    <string name="BTN_ROUTE">Route</string>
+    <string name="BTN_SAVE">Save</string>
+    <string name="BTN_SAVE_SCREENSHOT">Save screenshot</string>
+    <string name="BTN_SCAN">Scan</string>
+    <string name="BTN_SEARCH_JUNAIO">Search for channels</string>
+    <string name="BTN_SETTINGS">Settings</string>
+    <string name="BTN_SHARE_FACEBOOK">Share on Facebook</string>
+    <string name="BTN_SHARING">Sharing</string>
+    <string name="BTN_SHOW_PASSWORD">Show Password</string>
+    <string name="BTN_SIGNUP_LOGIN">Sign up/Login</string>
+    <string name="BTN_SIGNUP_NEWSLETTER">Signup to junaio newsletter</string>
+    <string name="BTN_SIGN_UP">Sign Up</string>
+    <string name="BTN_SOCIAL">My Junaio</string>
+    <string name="BTN_SUPPORT">Support</string>
+    <string name="BTN_TAG_THE_WORLD">Tag the World</string>
+    <string name="BTN_TAG_VISIBILITY">Tag Visibility</string>
+    <string name="BTN_VIEW">View</string>
+    <string name="BTN_VIEW_IMAGE">View Image</string>
+    <string name="BTN_YES">Yes</string>
+    <string name="CATEGORY_BANKING">Banking</string>
+    <string name="CATEGORY_CULTURE">Culture</string>
+    <string name="CATEGORY_FAVORITES">Favorites</string>
+    <string name="CATEGORY_FEATURED">Featured</string>
+    <string name="CATEGORY_FOOD">Food</string>
+    <string name="CATEGORY_FRIENDS_CHANNEL">My friends\' channels</string>
+    <string name="CATEGORY_GAMES">Games</string>
+    <string name="CATEGORY_HISTORY">History</string>
+    <string name="CATEGORY_MY_CHANNELS">My Channels</string>
+    <string name="CATEGORY_NEARBY">Nearby</string>
+    <string name="CATEGORY_NEWS">News</string>
+    <string name="CATEGORY_NIGHTLIFE">Nightlife</string>
+    <string name="CATEGORY_SEARCH">Search channels</string>
+    <string name="CATEGORY_SHOPPING">Shopping</string>
+    <string name="CATEGORY_TRAVEL">Travel</string>
+    <string name="HNT_CHANNELS_SEARCH">Type in search terms</string>
+    <string name="HNT_EMAIL_ADDRESS">Email Address</string>
+    <string name="HNT_PASSWORD">Password</string>
+    <string name="HNT_SEARCH_JUNAIO">Search junaio</string>
+    <string name="HNT_SEARCH_USERS">Search by username or email address</string>
+    <string name="HNT_TWITTER_PASSWORD">Twitter password</string>
+    <string name="HNT_TWITTER_USERNAME">Twitter username</string>
+    <string name="HNT_USERNAME">Username</string>
+    <string name="LBL_ABOUT_JUNAIO">About junaio</string>
+    <string name="LBL_ADD_COMMENT">Add a comment</string>
+    <string name="LBL_ADD_FRIENDS">Add friends</string>
+    <string name="LBL_ADD_MODEL">Add model</string>
+    <string name="LBL_APPLICATION_NAME">junaio</string>
+    <string name="LBL_AUTOMATICALLY_SHARE_EVENTS">Automatically share events!</string>
+    <string name="LBL_BY">by %s</string>
+    <string name="LBL_CHANNELS">Channels</string>
+    <string name="LBL_CHANNEL_STATE_ACTIVE">Active</string>
+    <string name="LBL_CHANNEL_STATE_INACTIVE">Channel created, waiting for approval!</string>
+    <string name="LBL_CHARACTERS_LEFT_FOR_INPUT">%d characters left.</string>
+    <string name="LBL_CHECK_EXT_STORAGE">Checking external storage…</string>
+    <string name="LBL_CHECK_INTERNET">Checking internet connection…</string>
+    <string name="LBL_CHECK_INT_STORAGE">Checking internal storage…</string>
+    <string name="LBL_COMMENTS">Comments</string>
+    <string name="LBL_CURRENTLY_SCANNING_FOR">Currently scanning for:</string>
+    <string name="LBL_DAYS_AGO">%d days ago</string>
+    <string name="LBL_DAY_AGO">%d day ago</string>
+    <string name="LBL_DESCRIPTION">Description</string>
+    <string name="LBL_DONE">Done</string>
+    <string name="LBL_EDIT_MODEL">Edit model</string>
+    <string name="LBL_ERROR">Error</string>
+    <string name="LBL_FEATURED_PICKS">Featured Picks</string>
+    <string name="LBL_FRIENDS">Friends</string>
+    <string name="LBL_FRIENDSHIP_REQUESTS">Friendship requests</string>
+    <string name="LBL_HELPTEXT_BTN_GO_SCANVIEW">Use the GO Tab to navigate in junaio</string>
+    <string name="LBL_HELPTEXT_BTN_SEARCHJUNAIO_SCANVIEW">Take a picture and browse for related Augmented Reality content in junaio</string>
+    <string name="LBL_HELPTEXT_SCANWINDOW_SCANVIEW">Position barcodes and QR codes for automatic detection and tab link for more info</string>
+    <string name="LBL_HELPTXT_FEATUREDPICKS_HOMESCREEN">Recommended channels in your region</string>
+    <string name="LBL_HELPTXT_NEARME_HOMESCREEN">Explore location based channels around you</string>
+    <string name="LBL_HELPTXT_SCAN_HOMESCREEN">Search junaio by scanning barcodes, QR codes and images</string>
+    <string name="LBL_HELPTXT_SEARCHBAR_HOMESCREEN">Search for channels by name or keywords</string>
+    <string name="LBL_HOURS_AGO">%d hours ago</string>
+    <string name="LBL_HOUR_AGO">%d hour ago</string>
+    <string name="LBL_IMAGE">Image</string>
+    <string name="LBL_KM_AWAY">%i km away</string>
+    <string name="LBL_LOADING">Loading…</string>
+    <string name="LBL_LOAD_MORE">Load more…</string>
+    <string name="LBL_LOGIN_JUNAIO">Login to junaio</string>
+    <string name="LBL_MINUTES_AGO">%d minutes ago</string>
+    <string name="LBL_MINUTE_AGO">%d minute ago</string>
+    <string name="LBL_MODEL">Model</string>
+    <string name="LBL_MY_COMMENT">My comment</string>
+    <string name="LBL_M_AWAY">%i m away</string>
+    <string name="LBL_NAME">Name</string>
+    <string name="LBL_NEARBY">Nearby</string>
+    <string name="LBL_NOTE">Note</string>
+    <string name="LBL_NOW_VIEWING">Now viewing…</string>
+    <string name="LBL_NO_COMMENTS">No comments</string>
+    <string name="LBL_POSTING">Posting…</string>
+    <string name="LBL_POST_IMAGE">Post image</string>
+    <string name="LBL_POST_MESSAGE">Post message</string>
+    <string name="LBL_PRIVATE">Private</string>
+    <string name="LBL_PROFILE">Profile</string>
+    <string name="LBL_PUBLIC">Public</string>
+    <string name="LBL_QRCODES_AND_BARCODES">Barcodes and QRCodes </string>
+    <string name="LBL_RATE">Rate</string>
+    <string name="LBL_RIGHT_NOW">right now</string>
+    <string name="LBL_SEARCHING_CHANNELS">Searching for channels</string>
+    <string name="LBL_SEARCHING_PRODUCTS">Searching for products</string>
+    <string name="LBL_SECONDS_AGO">some seconds ago</string>
+    <string name="LBL_SHARE_SCREENSHOT">Share Screenshot</string>
+    <string name="LBL_TAG_IT">Tag it</string>
+    <string name="LBL_TWITTER">Twitter</string>
+    <string name="LBL_UNTITLED">Untitled</string>
+    <string name="LBL_X_AWAY">%1$i%2$@ away</string>
+    <string name="MENU_OPEN_IMG_EXTERNAL">Open image in a browser</string>
+    <string name="MENU_OPEN_LINK_EXTERNAL">Open link in a browser</string>
+    <string name="MNU_CLEAR_CACHE">Clear Cache</string>
+    <string name="MNU_CLEAR_HISTORY">Clear History</string>
+    <string name="MNU_ZOOM_ALL">All</string>
+    <string name="MNU_ZOOM_HERE">Here</string>
+    <string name="MSGE_ACCEPT_TERMS">You have to accept the terms and conditions in order to sign up.</string>
+    <string name="MSGE_ADDING_PLACEDMODEL">Content addition failed. Please verify the URL.</string>
+    <string name="MSGE_DELETE_POI">Deleting point of interest failed.</string>
+    <string name="MSGE_ENTER_ATLEAST_CHARS">Please enter at least %i characters</string>
+    <string name="MSGE_FRIENDSHIP">Friendship approval failed.</string>
+    <string name="MSGE_FRIENDSHIP_REQUEST">Friendship request failed. This can happen if you already requested this friendship.</string>
+    <string name="MSGE_FRIEND_REMOVED">Removing friend failed.</string>
+    <string name="MSGE_HISTORY_NOT_CLEARED">Error clearing channels\' history</string>
+    <string name="MSGE_IMAGE_SAVE_FAILED">Unable to save the image</string>
+    <string name="MSGE_INTERNAL_SERVER">Internal Server Error</string>
+    <string name="MSGE_INVALID_EMAIL_ENTERED">Please enter a valid email address.</string>
+    <string name="MSGE_INVALID_EMAIL_OPENED">Invalid email address</string>
+    <string name="MSGE_INVALID_PASSWORD">Please type in a valid password.</string>
+    <string name="MSGE_INVALID_PHONE_NUMBER">Invalid phone number</string>
+    <string name="MSGE_INVALID_URL">Invalid URL</string>
+    <string name="MSGE_INVALID_USERNAME">Please type in a valid username.</string>
+    <string name="MSGE_LLA_MARKER_DETECTED">Detection of LLA marker failed. Please try again.</string>
+    <string name="MSGE_LOAD_TWITTER">Loading Twitter feed failed.</string>
+    <string name="MSGE_LOGIN">Login failed. Please verify your username and password.</string>
+    <string name="MSGE_NETWORK">Network error</string>
+    <string name="MSGE_NOT_AVAILABLE">not available</string>
+    <string name="MSGE_NO_EMAIL">Sorry, but you forgot the email address.</string>
+    <string name="MSGE_NO_EXTERNAL_MEMORY">Please make sure that SD card is available on the phone and the phone is not connected to the USB cable.</string>
+    <string name="MSGE_NO_GOOGLE_MAPS_NAV">Please install Google Maps Navigation to use this feature</string>
+    <string name="MSGE_NO_INTERNAL_MEMORY">Not enough internal phone memory available. Please free the memory by uninstalling the applications or clearing the application caches</string>
+    <string name="MSGE_NO_INTERNET">No Internet Connection</string>
+    <string name="MSGE_NO_OPTICAL_TRACKING">This device does not support optical tracking</string>
+    <string name="MSGE_PLAYING_AUDIO">Error playing audio stream</string>
+    <string name="MSGE_POST_IMAGE">Posting of image failed.</string>
+    <string name="MSGE_POST_MESSAGE">Posting of message failed.</string>
+    <string name="MSGE_PUBLISH_COMMENT">Publishing of comment failed.</string>
+    <string name="MSGE_SERVER">Server Error</string>
+    <string name="MSGE_SIGNUP">Sign up failed. Username or email address already exists.</string>
+    <string name="MSGE_SUBSCRIBE_CHANNEL">Channel subscription failed.</string>
+    <string name="MSGE_TIMEOUT">Request Timeout</string>
+    <string name="MSGE_TRY_AGAIN">There has been a server error. Please try again later.</string>
+    <string name="MSGE_TWITTER_LOGIN">Login to Twitter failed. Please verify your login data.</string>
+    <string name="MSGE_UNAUTHORIZED_ACCESS">Unauthorized Access</string>
+    <string name="MSGE_UNKNOWN_NETWORK">Unknown network error</string>
+    <string name="MSGE_UPDATE_CHANNEL">Channel update failed.</string>
+    <string name="MSGE_VERIFY_PASSWORD">Please verify that your password is at least 5 characters long.</string>
+    <string name="MSGE_VERIFY_USERNAME">Please verify that your username is between 3 and 32 characters.</string>
+    <string name="MSGI_AVAILABLE">available</string>
+    <string name="MSGI_CACHE_CLEARED">Cache cleared</string>
+    <string name="MSGI_CHANNELS_NOT_FOUND">No channels found!</string>
+    <string name="MSGI_DOWNLOADING">Downloading %s …</string>
+    <string name="MSGI_DOWNLOADING_EXTERNAL_MODEL">Downloading external model</string>
+    <string name="MSGI_FRIEND_REQUEST_SENT">Friendship request has been sent.</string>
+    <string name="MSGI_GPS_WAITING">Waiting for GPS</string>
+    <string name="MSGI_HISTORY_CLEARED">Channels\' history cleared</string>
+    <string name="MSGI_HISTORY_EMPTY">History is empty!</string>
+    <string name="MSGI_HW_NOT_SUPPORTED">Unfortunately this device does not have the necessary hardware to run junaio.</string>
+    <string name="MSGI_IMAGE_SAVED">Image saved at %s</string>
+    <string name="MSGI_LIKEAPP_MSG">Please rate it in the App Store</string>
+    <string name="MSGI_LLA_MARKER_DETECTED">GPS can be inaccurate, especially inside buildings. junaio will use the precise position determined by this LLA marker for 1 minute. Then it will switch back to GPS.</string>
+    <string name="MSGI_LOADING_POIS">Loading points of interest…</string>
+    <string name="MSGI_LOADING_TWITTER_FEED_FOR">Loading twitter feed for %s …</string>
+    <string name="MSGI_NOT_LOGGED_IN">You are not logged in. To access all the features, please sign up to junaio.</string>
+    <string name="MSGI_NO_CURRENT_TWEETS">No current tweets</string>
+    <string name="MSGI_NO_MATCHES">No Matches</string>
+    <string name="MSGI_NO_RESULTS">Search failed. Please try again.</string>
+    <string name="MSGI_POIS_NOT_FOUND">No nearby points of interest found!</string>
+    <string name="MSGI_SEND_FRIENDREQUEST_TO">Send friendship request to %s</string>
+    <string name="MSGI_STARTING_JUNAIO">Starting junaio…</string>
+    <string name="MSGI_SYNCING_MODELS">Syncing models</string>
+    <string name="MSGI_THANK_YOU">Thank you</string>
+    <string name="MSGI_USERS_NOT_FOUND">No users found, please adjust keywords and try again!</string>
+    <string name="MSGQ_FILL_IN">Please fill in \n %s.</string>
+    <string name="MSGQ_LOGOUT">Do you want to logout?</string>
+    <string name="MSGQ_REMOVE_FRIEND">Do you want to remove \'%s\' from Friends?</string>
+    <string name="MSGQ_WANT_TO_CONTINUE">Are you sure you want to continue?</string>
+    <string name="MSGW_ACCELEROMETER_UNAVAILABLE">Accelerometer sensor is not available</string>
+    <string name="MSGW_BARCODE_UNSUPPORTED">Your device does not support barcode scanning, please upgrade to Android 2.2 or above! For any questions, please contact us directly.</string>
+    <string name="MSGW_BLACK_LIST">Unfortunately junaio is not compatible with your phone. For any questions or feedback, please contact us directly.</string>
+    <string name="MSGW_CAMERA_UNAVAILABLE">Camera not available</string>
+    <string name="MSGW_GPS_UNAVAILABLE">GPS is not available</string>
+    <string name="MSGW_IOS4_REQUIRED">iOS4 is required for optical tracking</string>
+    <string name="MSGW_IPHONE_3GS_REQUIRED">Compass required</string>
+    <string name="MSGW_LIVEVIEW_ONLY_3GS">The live-view functionality needs a device with compass.</string>
+    <string name="MSGW_LOCATIONSERVICE_NEEDED">Location services needed</string>
+    <string name="MSGW_LOCATION_UNAVAILABLE">Current location is not available, please enable GPS in the settings</string>
+    <string name="MSGW_NOT_WHITE_LIST">You are running junaio on an untested device. For any questions or technical problems, please contact us directly.</string>
+    <string name="MSGW_OPEN_EXTERNAL_APP">This will close junaio and open an external application.</string>
+    <string name="MSGW_ORIENTATION_UNAVAILABLE">Orientation sensor is not available</string>
+    <string name="MSGW_SERVER_UNREACHABLE">Unfortunately we could not connect to the junaio server. Please try again later.</string>
+    <string name="MSG_TITLE_BARCODE_UNSUPPORTED">Barcode scanning not supported</string>
+    <string name="MSG_TITLE_DIRECTIONS">Directions</string>
+    <string name="MSG_TITLE_LIKE_APP">Like this App?</string>
+    <string name="MSG_TITLE_LLA_MARKER_DETECTED">LLA marker detected</string>
+    <string name="MSG_TITLE_LOGIN_FAILED">Login failed</string>
+    <string name="MSG_TITLE_NO_LLA_MARKERS_DETECTED">No LLA marker detected</string>
+    <string name="MSG_TITLE_NO_MEMORY">No memory access</string>
+    <string name="MSG_TITLE_PLACING_MODEL_FAILED">Placing model failed.</string>
+    <string name="MSG_TITLE_SEARCHING_CHANNELS">Channels</string>
+    <string name="MSG_TITLE_SERVER_UNREACHABLE">junaio server unavailable</string>
+    <string name="MSG_TITLE_SIGNUP_ERROR">Sign up error</string>
+    <string name="MSG_TITLE_SIGNUP_FAILED">Signup failed</string>
+    <string name="MSG_TITLE_TERMS_CONDITIONS">Terms and conditions</string>
+    <string name="MSG_TITLE_TERMS_SERVICE">Terms of Service</string>
+    <string name="MSG_TITLE_USERS_NOT_FOUND">No users found</string>
+    <string name="MSG_TITLE_VALIDATION_ERROR">Validation error</string>
+    <string name="MSG_TITLE_WARNING">Warning</string>
+    <string name="accept">Accept</string>
+    <string name="admin_present_waiving_gps_time">Admin present... waiving the wait for GPS signal...</string>
+    <string name="almost_finished_loading_assets">Almost there.....</string>
+    <string name="app_name">SeaMensor</string>
+    <string name="app_version_seamensor">SeaMensor 1.0.0.4</string>
+    <string name="app_version_smc">SMC 1.0.0.4</string>
+    <string name="button_accept_vp_photo">OK</string>
+    <string name="button_alpha_toggle">Transparent</string>
+    <string name="button_ambiguous_vp_toggle">Amb VP</string>
+    <string name="button_exit">Press Button twice quickly to exit!</string>
+    <string name="button_flash_toggle">TORCH ON</string>
+    <string name="button_flash_torch_vp_toggle">FLASH</string>
+    <string name="button_id_100mm_vp_toggle">ID 100mm</string>
+    <string name="button_id_20mm_vp_toggle">ID 20mm</string>
+    <string name="button_ok">OK</string>
+    <string name="button_reject_vp_photo">Repeat</string>
+    <string name="button_sav_desc_vp_text">DscVpTxt</string>
+    <string name="button_show_next_vp_capture">\u003e</string>
+    <string name="button_show_previous_vp_capture">\u003c</string>
+    <string name="button_show_vp_captures">See Captures</string>
+    <string name="button_super_single_vp_toggle">Sup VP</string>
+    <string name="button_text">Close VP Photo</string>
+    <string name="button_text_decrease_qtyvps">QtyVp--</string>
+    <string name="button_text_increase_qtyvps">QtyVp++</string>
+    <string name="button_text_request_photo">Capture VP</string>
+    <string name="button_text_save_tracking_vps_data">Save VPs</string>
+    <string name="camera_focusing">Wait!!! Camera Focusing!!!</string>
+    <string name="camera_image_captured">image captured</string>
+    <string name="common_android_wear_notification_needs_update_text">An application requires an update to the Android Wear app.</string>
+    <string name="common_android_wear_update_text">This app won\'t run unless you update the Android Wear app.</string>
+    <string msgid="6006316683626838685" name="common_android_wear_update_title">Update Android Wear</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">Enable Google Play services</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">This app won\'t work unless you enable Google Play services.</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">Enable Google Play services</string>
+    <string name="common_google_play_services_error_notification_requested_by_msg">Requested by <ns1:g id="app_name">%1$s</ns1:g></string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">Get Google Play services</string>
+    <string msgid="2122112764540849864" name="common_google_play_services_install_text_phone">This app won\'t run without Google Play services, which are missing from your phone.</string>
+    <string msgid="7351599665250191022" name="common_google_play_services_install_text_tablet">This app won\'t run without Google Play services, which are missing from your tablet.</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">Get Google Play services</string>
+    <string name="common_google_play_services_invalid_account_text">The specified account does not exist on this device. Please choose a different account.</string>
+    <string name="common_google_play_services_invalid_account_title">Invalid Account</string>
+    <string name="common_google_play_services_needs_enabling_title">An application requires Google Play services to be enabled.</string>
+    <string name="common_google_play_services_network_error_text">A data connection is required to connect to Google Play services.</string>
+    <string name="common_google_play_services_network_error_title">Network Error</string>
+    <string name="common_google_play_services_notification_needs_installation_title">An application requires installation of Google Play services.</string>
+    <string name="common_google_play_services_notification_needs_update_title">An application requires an update for Google Play services.</string>
+    <string name="common_google_play_services_notification_ticker">Google Play services error</string>
+    <string name="common_google_play_services_sign_in_failed_text">Error signing in the specified account. Please choose a different account.</string>
+    <string name="common_google_play_services_sign_in_failed_title">Sign in failed</string>
+    <string name="common_google_play_services_unknown_issue">Unknown issue with Google Play services.</string>
+    <string name="common_google_play_services_unsupported_text">Google Play services, which some of your applications rely on, is not supported by your device. Please contact the manufacturer for assistance.</string>
+    <string name="common_google_play_services_unsupported_title">Google Play services</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">Update</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">This app won\'t run unless you update Google Play services.</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">Update Google Play services</string>
+    <string name="common_open_on_phone">Open on phone</string>
+    <string name="common_signin_button_text">Sign in</string>
+    <string name="common_signin_button_text_long">Sign in with Google</string>
+    <string name="commono_google_play_services_api_unavailable_text">This app requires one or more Google Play services that are not currently
+available. Please contact the developer for assistance.</string>
+    <string name="create_calendar_message">Allow Ad to create a calendar event?</string>
+    <string name="create_calendar_title">Create calendar event</string>
+    <string name="date_vp_capture_shown">Photo taken on</string>
+    <string name="date_vp_touched_first_acquisition">now</string>
+    <string name="date_vp_touched_free_to_be_acquired">Available from</string>
+    <string name="date_vp_touched_last_acquired">Last acquired</string>
+    <string name="date_vp_touched_not_acquired">never</string>
+    <string name="decline">Decline</string>
+    <string name="desc_vp_empty">Empty</string>
+    <string name="device_clock_problem">Please set correctly the Device Clock</string>
+    <string name="double_bck_exit">Press Back twice quickly to exit!</string>
+    <string name="dropboxlinkerror">Not linked to Dropbox - exiting app</string>
+    <string name="gps_time_acquired">GPS signal acquired... GPS UTC date and time acquired</string>
+    <string name="is_photo_ok">Is Photo captured ok? (You can zoom in!!!)</string>
+    <string name="load_assets_finished">The wait is over!!!</string>
+    <string name="metaioSDKSignature">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
+    <string name="no_inttime">Cannot retrieve certified time</string>
+    <string name="no_photo_captured_in_this_vp">No photo captured in this vp!!!</string>
+    <string name="no_seamensor_account">No SeaMensor Account in this Device</string>
+    <string name="no_wifi">WiFi malfunction</string>
+    <string name="not_all_vps_acquired">Error: not all vps acquired</string>
+    <string name="passcode_enter_passcode">Enter your user number</string>
+    <string name="passcode_wrong_passcode">User number not registered, please try again.</string>
+    <string name="starting_to_load_assets">Starting.....</string>
+    <string name="still_loading_assets">Still loading.....</string>
+    <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
+    <string name="store_picture_title">Save image</string>
+    <string name="user_name">User name:"</string>
+    <string name="user_number">User number:</string>
+    <string name="vpAcquiredStatus">Y</string>
+    <string name="vpNotAcquiredStatus">N</string>
+    <string name="vp_00">VP#00</string>
+    <string name="vp_location_des_text_missing">Error: vp location text missing</string>
+    <string name="vp_name">VP#</string>
+    <string name="vp_out_of_bounds">VP out of Bounds!!!!</string>
+    <string name="vp_touched">VP#</string>
+    <string name="vp_touched_info">Info about this VP</string>
+    <string name="waiting_for_gps_time">Go outside... waiting for GPS signal...</string>
+    <string name="waiting_for_internet_time">Querying for internet certified Time...</string>
+    <string name="waiting_to_load_assets">Loading.....</string>
+    <string name="wallet_buy_button_place_holder" translation_description="Text on a button that allows a user to make a payment with Google Wallet [CHAR LIMIT=30]">Buy with Google</string>
+    <style name="AppTheme" parent="android:Theme.Light"/>
+    <style name="POIButton" parent="android:style/Widget.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:drawablePadding">4dp</item>
+    </style>
+    <style name="POIButton.POIActionButton">
+        <item name="android:background">@color/transparent</item>
+    </style>
+    <style name="PasscodeInputItemStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="PasscodeKeyboardButtonStyle" parent="@android:style/Widget.Button">
+       <item name="android:textSize">22sp</item>
+  	   <item name="android:textColor">#FF464646</item>
+       <item name="android:gravity">center</item>
+       <item name="android:background">@drawable/passcode_keyboard_button</item>
+       <item name="android:layout_margin">3dp</item>
+	   <item name="android:padding">5dp</item>
+	   <item name="android:layout_width">wrap_content</item>
+       <item name="android:layout_height">wrap_content</item>
+   </style>
+    <style name="Theme.FullScreen" parent="android:Theme">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="Theme.Fullscreen" parent="android:Theme">
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+    <style name="Theme.IAPTheme" parent="android:Theme">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:backgroundDimEnabled">false</item>
+  </style>
+    <style name="Theme.POIDialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+    <style name="Theme.Translucent" parent="android:style/Theme.Translucent">  
+    	<item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="WalletFragmentDefaultButtonTextAppearance">
+        <item name="android:textColor">@color/wallet_primary_text_holo_light</item>
+        <item name="android:textColorHighlight">@color/wallet_highlighted_text_holo_light</item>
+        <item name="android:textColorHint">@color/wallet_hint_foreground_holo_light</item>
+        <item name="android:textColorLink">@color/wallet_link_text_light</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="WalletFragmentDefaultDetailsHeaderTextAppearance" parent="WalletFragmentDefaultDetailsTextAppearance">
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="WalletFragmentDefaultDetailsTextAppearance">
+        <item name="android:textColor">@color/wallet_secondary_text_holo_dark</item>
+        <item name="android:textColorHighlight">@color/wallet_highlighted_text_holo_dark</item>
+        <item name="android:textColorHint">@color/wallet_hint_foreground_holo_dark</item>
+        <item name="android:textColorLink">@color/wallet_holo_blue_light</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="WalletFragmentDefaultStyle">
+        <item name="buyButtonHeight">48dp</item>
+        <item name="buyButtonWidth">match_parent</item>
+        <item name="buyButtonText">buy_with_google</item>
+        <item name="buyButtonAppearance">classic</item>
+        <item name="maskedWalletDetailsTextAppearance">@style/WalletFragmentDefaultDetailsTextAppearance</item>
+        <item name="maskedWalletDetailsHeaderTextAppearance">@style/WalletFragmentDefaultDetailsHeaderTextAppearance</item>
+        <item name="maskedWalletDetailsBackground">@color/wallet_bright_foreground_holo_light</item>
+        <item name="maskedWalletDetailsButtonBackground">@android:drawable/btn_default</item>
+        <item name="maskedWalletDetailsButtonTextAppearance">@style/WalletFragmentDefaultButtonTextAppearance</item>
+        <item name="maskedWalletDetailsLogoTextColor">@color/wallet_bright_foreground_holo_dark</item>
+        <item name="maskedWalletDetailsLogoImageType">classic</item>
+    </style>
+</resources>

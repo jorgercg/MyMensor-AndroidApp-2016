@@ -2,5 +2,9 @@
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/release/layout-land/poidetaildialog.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/layout-land/poidetaildialog.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/layout-land/poidetaildialog.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/layout-land/poidetaildialog.xml"
     }
 ]

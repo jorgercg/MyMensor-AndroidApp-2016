@@ -1,7 +1,15 @@
 [
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/layout/html5container.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/layout/html5container.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/release/layout/webview.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/layout/webview.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/layout/webviewnav.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/layout/webviewnav.xml"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/release/layout/button_action_detail.xml",
@@ -12,6 +20,10 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/layout/poidetaildialog.xml"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/layout/webview.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/layout/webview.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/release/layout/webviewnav.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/layout/webviewnav.xml"
     },
@@ -20,7 +32,19 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/layout/poiactivity.xml"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/layout/poiactivity.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/layout/poiactivity.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/release/layout/html5container.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/layout/html5container.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/layout/button_action_detail.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/layout/button_action_detail.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/layout/poidetaildialog.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/layout/poidetaildialog.xml"
     }
 ]

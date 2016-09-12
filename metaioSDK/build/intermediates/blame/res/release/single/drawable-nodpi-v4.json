@@ -2,5 +2,9 @@
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/release/drawable-nodpi-v4/poi_background.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-nodpi/poi_background.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/release/drawable-nodpi-v4/poi_background.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-nodpi/poi_background.png"
     }
 ]

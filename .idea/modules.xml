@@ -3,10 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/metaioSDK/metaioSDK.iml" filepath="$PROJECT_DIR$/metaioSDK/metaioSDK.iml" />
-      <module fileurl="file://$PROJECT_DIR$/seamensor.iml" filepath="$PROJECT_DIR$/seamensor.iml" />
-      <module fileurl="file://$PROJECT_DIR$/seamensor_sdk_6.iml" filepath="$PROJECT_DIR$/seamensor_sdk_6.iml" />
+      <module fileurl="file://$PROJECT_DIR$/seamensor/seamensor.iml" filepath="$PROJECT_DIR$/seamensor/seamensor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/seamensor_sdk_6_dj.iml" filepath="$PROJECT_DIR$/seamensor_sdk_6_dj.iml" />
       <module fileurl="file://$PROJECT_DIR$/smm/smm.iml" filepath="$PROJECT_DIR$/smm/smm.iml" />
     </modules>
   </component>
 </project>
-

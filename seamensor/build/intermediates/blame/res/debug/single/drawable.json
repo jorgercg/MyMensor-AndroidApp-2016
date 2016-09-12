@@ -4,20 +4,24 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/selector_web_back.xml"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/selector_web_forward.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/selector_web_forward.xml"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/rating_drawable.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/rating_drawable.xml"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/button_detail_green.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/button_detail_green.xml"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/button_detail_blue.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/button_detail_blue.xml"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_icon_light.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_icon_light.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/simple_button_background_selector.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/simple_button_background_selector.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_text_dark.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_text_dark.xml"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/rating_drawable.xml",
@@ -28,8 +32,12 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/default_video_poster.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_text_light.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_text_light.xml"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/selector_web_back.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/selector_web_back.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/divider.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/divider.xml"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/divider.xml",
@@ -44,6 +52,18 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/selector_darker.xml"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/toastbackground.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/toastbackground.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/button_detail_blue.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/button_detail_blue.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/selector_darker.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/selector_darker.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_icon_dark.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_icon_dark.xml"
     },
@@ -56,7 +76,47 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/simple_button_background_selector.xml"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/selector_web_forward.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/selector_web_forward.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/button_detail_blue.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable/button_detail_blue.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/progress_bar.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/progress_bar.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_text_light.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_icon_light.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_icon_light.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/default_video_poster.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/default_video_poster.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_text_light.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_text_light.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_icon_dark.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_icon_dark.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/button_detail_green.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/button_detail_green.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable/common_signin_btn_text_dark.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable/common_signin_btn_text_dark.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable/selector_web_forward.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable/selector_web_forward.xml"
     }
 ]

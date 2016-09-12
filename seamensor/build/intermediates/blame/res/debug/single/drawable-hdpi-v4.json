@@ -1,11 +1,223 @@
 [
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_back_dis.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_back_dis.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_focus_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_light.9.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_focus_dark.9.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_focus_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_normal_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_normal_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_reload.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_reload.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_stop.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_stop.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_focus_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_focus_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_gray_pressed.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_gray_pressed.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_reload.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_reload.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_pressed.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_pressed.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_pressed_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_pressed_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_pressed.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_pressed.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_focus_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_focus_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_pressed_new.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_pressed_new.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_normal_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_normal_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_default.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_default.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_act.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/star_act.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_pressed_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_pressed_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_focus_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_focus_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_tall_off_client.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_tall_off_client.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_focus_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_focus_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_pressed.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_pressed.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_pressed_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_pressed_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/radar_inner.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/radar_inner.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_focus_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_focus_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_normal_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_normal_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_standard_off_client.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_standard_off_client.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/icon_placeholder.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/icon_placeholder.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_back.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_back.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_focus_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_focus_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_gray_default.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_gray_default.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_dis.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/star_dis.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_focus_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_focus_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/powered_by_google_light.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.0.0/res/drawable-hdpi/powered_by_google_light.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/icon_placeholder.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/icon_placeholder.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_default.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_default.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_gray_pressed.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_gray_pressed.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_focus_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_focus_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_focus_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_pressed.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_pressed.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_back_dis.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_back_dis.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_pressed_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_pressed_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_normal_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_normal_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_pressed_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_pressed_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_full_open_on_phone.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_full_open_on_phone.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_dis.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/star_dis.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_ic_googleplayservices.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_ic_googleplayservices.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_ic_googleplayservices.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_ic_googleplayservices.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_full_open_on_phone.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_full_open_on_phone.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_normal_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_normal_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_focus_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_dark.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_back_dis.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_back_dis.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_default.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_default.9.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/powered_by_google_light.png",
@@ -16,32 +228,24 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_light.9.png"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_light.9.png"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_back.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_back.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_stop.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_stop.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_small_off_client.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_small_off_client.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_pressed_dark.9.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_pressed_dark.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_focus_light.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_focus_light.9.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_focus_light.9.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_light.9.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_reload.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_reload.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_pressed.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_pressed.9.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_normal_dark.9.png",
@@ -60,12 +264,12 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.0.0/res/drawable-hdpi/powered_by_google_dark.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_light.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_light.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_pressed_new.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_pressed_new.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_pressed.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_pressed.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_dark.9.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_forward.png",
@@ -80,26 +284,6 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_gray_default.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_pressed_new.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_pressed_new.9.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_default.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_default.9.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_act.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/star_act.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_pressed_light.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_pressed_light.9.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_focus_dark.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_focus_dark.9.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_small_off_client.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_small_off_client.png"
     },
@@ -108,83 +292,87 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_tall_off_client.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/radar_inner.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/radar_inner.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_stop.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_stop.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_focus_light.9.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_focus_light.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_normal_dark.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_normal_dark.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_forward.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_forward.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_standard_off_client.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_standard_off_client.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_focus_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_focus_dark.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_focus_dark.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_focus_dark.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_act.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/star_act.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/star_dis.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/star_dis.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_close.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_close.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_forward_dis.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_forward_dis.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_focus_light.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_focus_light.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_forward_dis.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_forward_dis.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/icon_placeholder.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/icon_placeholder.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_pressed_dark.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_pressed_dark.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_default.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_default.9.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_gray_pressed.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/button_gray_pressed.9.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_normal_light.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_normal_light.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_focus_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_focus_light.9.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_dark.9.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_dark.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_pressed_dark.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_pressed_dark.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_blue_default.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_blue_default.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_ic_googleplayservices.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_ic_googleplayservices.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/share.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/share.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_standard_off_client.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_standard_off_client.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_normal_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_normal_light.9.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/powered_by_google_dark.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.0.0/res/drawable-hdpi/powered_by_google_dark.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_medium_off_client.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_medium_off_client.png"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/radar_inner.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/radar_inner.png"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_close.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/drawable-hdpi-v4/web_close.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_dark.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_dark.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_text_disabled_light.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_text_disabled_light.9.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_full_open_on_phone.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_full_open_on_phone.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/common_signin_btn_icon_disabled_focus_dark.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_dark.9.png"
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/ic_plusone_medium_off_client.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/drawable-hdpi/ic_plusone_medium_off_client.png"
     }
 ]

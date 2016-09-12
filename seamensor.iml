@@ -70,14 +70,6 @@
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/main/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/androidTest/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/androidTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/androidTest/assets" type="java-test-resource" />
@@ -86,12 +78,17 @@
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/androidTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/androidTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/seamensor/src/androidTest/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/seamensor/src/test/shaders" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/blame" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/builds" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/bundles" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.0.0/jars" />
@@ -113,22 +110,12 @@
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services/7.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/incremental" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/incremental-classes" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/incremental-runtime-classes" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/incremental-safeguard" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/incremental-verifier" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/instant-run-support" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/manifests" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/reload-dex" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/res" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/restart-dex" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/symbols" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/seamensor/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/seamensor/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
