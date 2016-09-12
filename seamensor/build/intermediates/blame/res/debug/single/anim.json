@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/anim/animalogoseamensor.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/src/main/res/anim/animalogoseamensor.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/anim/clockwise_rotation.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/src/main/res/anim/clockwise_rotation.xml"
+    }
+]

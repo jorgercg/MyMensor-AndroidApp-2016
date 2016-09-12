@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SMM</string>
+    <string name="double_bck_exit">Pressione Voltar rápido duas vezes para sair!</string>
+    <string name="no_seamensor_account">Não há conta SeaMensor neste dispositivo.</string>
+    <string name="action_settings">Configurações</string>
+    <string name="action_usrsigin">Entrar</string>
+    <string name="action_selectship">Selecionador de navio</string>
+    <string name="vp_name">VP#</string>
+    <string name="select_ship">Selecione um navio</string>
+    <string name="select_ship_negative_button">Cancelar</string>
+    <string name="select_ship_positive_button">OK</string>
+    <string name="read_tags_from_selected_ship">Ler Tags do navio selecionado</string>
+    <string name="configure_selected_ship">Configurar navio selecionado</string>
+    <string name="configure_dcis_from_selected_ship">Configurar DCI(s) do navio selecionado</string>
+    <string name="drawer_open">Abrir navigation drawer</string>
+    <string name="drawer_close">Fechar navigation drawer</string>
+</resources>

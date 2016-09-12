@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".SMM_MainActivity">
+    <item   android:id="@+id/action_settings"
+            android:title="@string/action_settings"
+            android:orderInCategory="100"
+            app:showAsAction="never" />
+    <item   android:id="@+id/action_usrsigin"
+            android:title="@string/action_usrsigin"
+            app:showAsAction="never" />
+    <item   android:id="@+id/action_selectship"
+            android:title="@string/action_selectship"
+            app:showAsAction="never" />
+
+
+</menu>

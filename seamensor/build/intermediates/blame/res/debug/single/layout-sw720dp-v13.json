@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/layout-sw720dp-v13/smc.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/src/main/res/layout-sw720dp/smc.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/layout-sw720dp-v13/seamensor.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/src/main/res/layout-sw720dp/seamensor.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/layout-sw720dp-v13/main.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/src/main/res/layout-sw720dp/main.xml"
+    }
+]

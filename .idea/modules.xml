@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/metaioSDK/metaioSDK.iml" filepath="$PROJECT_DIR$/metaioSDK/metaioSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/seamensor.iml" filepath="$PROJECT_DIR$/seamensor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/seamensor_sdk_6.iml" filepath="$PROJECT_DIR$/seamensor_sdk_6.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smm/smm.iml" filepath="$PROJECT_DIR$/smm/smm.iml" />
+    </modules>
+  </component>
+</project>
+

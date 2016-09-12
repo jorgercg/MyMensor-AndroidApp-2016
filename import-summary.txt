@@ -1,0 +1,84 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Manifest Merging:
+-----------------
+Your project uses libraries that provide manifests, and your Eclipse
+project did not explicitly turn on manifest merging. In Android Gradle
+projects, manifests are always merged (meaning that contents from your
+libraries' manifests will be merged into the app manifest. If you had
+manually copied contents from library manifests into your app manifest
+you may need to remove these for the app to build correctly.
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+From metaioSDK:
+* build.gradle
+* proguard-project.txt
+From seamensor:
+* ic_launcher-web.png
+* proguard-project.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:19.1.0
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+In metaioSDK:
+* AndroidManifest.xml => metaioSDK\src\main\AndroidManifest.xml
+* libs\armeabi-v7a\libavcodec.so => metaioSDK\src\main\jniLibs\armeabi-v7a\libavcodec.so
+* libs\armeabi-v7a\libavformat.so => metaioSDK\src\main\jniLibs\armeabi-v7a\libavformat.so
+* libs\armeabi-v7a\libavutil.so => metaioSDK\src\main\jniLibs\armeabi-v7a\libavutil.so
+* libs\armeabi-v7a\libDropboxSync.so => metaioSDK\src\main\jniLibs\armeabi-v7a\libDropboxSync.so
+* libs\armeabi-v7a\libmetaiosdk.so => metaioSDK\src\main\jniLibs\armeabi-v7a\libmetaiosdk.so
+* libs\armeabi-v7a\libswresample.so => metaioSDK\src\main\jniLibs\armeabi-v7a\libswresample.so
+* libs\armeabi-v7a\libswscale.so => metaioSDK\src\main\jniLibs\armeabi-v7a\libswscale.so
+* libs\metaiosdk.jar => metaioSDK\libs\metaiosdk.jar
+* libs\x86\libavcodec.so => metaioSDK\src\main\jniLibs\x86\libavcodec.so
+* libs\x86\libavformat.so => metaioSDK\src\main\jniLibs\x86\libavformat.so
+* libs\x86\libavutil.so => metaioSDK\src\main\jniLibs\x86\libavutil.so
+* libs\x86\libcilkrts.so => metaioSDK\src\main\jniLibs\x86\libcilkrts.so
+* libs\x86\libmetaiosdk.so => metaioSDK\src\main\jniLibs\x86\libmetaiosdk.so
+* libs\x86\libswresample.so => metaioSDK\src\main\jniLibs\x86\libswresample.so
+* libs\x86\libswscale.so => metaioSDK\src\main\jniLibs\x86\libswscale.so
+* lint.xml => metaioSDK\lint.xml
+* res\ => metaioSDK\src\main\res\
+* src\ => metaioSDK\src\main\java\
+In seamensor:
+* AndroidManifest.xml => seamensor\src\main\AndroidManifest.xml
+* assets\ => seamensor\src\main\assets\
+* libs\dropbox-sync-sdk-android.jar => seamensor\libs\dropbox-sync-sdk-android.jar
+* lint.xml => seamensor\lint.xml
+* res\ => seamensor\src\main\res\
+* src\ => seamensor\src\main\java\
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

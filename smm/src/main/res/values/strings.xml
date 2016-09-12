@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SMM</string>
+    <string name="double_bck_exit">Press Back twice quickly to exit!</string>
+    <string name="no_seamensor_account">No SeaMensor Account in this Device</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_usrsigin">Sign in</string>
+    <string name="action_selectship">Ship selector</string>
+    <string name="vp_name">VP#</string>
+    <string name="select_ship">Select one Ship</string>
+    <string name="select_ship_positive_button">OK</string>
+    <string name="select_ship_negative_button">Cancel</string>
+    <string name="read_tags_from_selected_ship">Read Tags from selected ship</string>
+    <string name="configure_selected_ship">Configure selected ship</string>
+    <string name="configure_dcis_from_selected_ship">Configure DCI(s) from selected ship</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+</resources>
