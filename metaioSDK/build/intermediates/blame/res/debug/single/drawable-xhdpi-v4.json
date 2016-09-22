@@ -1,43 +1,19 @@
 [
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/star_def.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/star_def.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/share.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/share.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/star_act.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/star_act.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_stop.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/web_stop.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_reload.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/web_reload.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/radar_inner.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/radar_inner.png"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_reload.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/web_reload.png"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_close.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/web_close.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_close.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/web_close.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_back_dis.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/web_back_dis.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_stop.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/web_stop.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/share.png",
@@ -52,24 +28,8 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/web_forward_dis.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_reload.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/web_reload.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/radar_inner.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/radar_inner.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_back.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/web_back.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/star_act.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/star_act.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_forward_dis.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/web_forward_dis.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/star_def.png",
@@ -82,9 +42,5 @@
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_back.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xhdpi/web_back.png"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/drawable-xhdpi-v4/web_forward.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/drawable-xhdpi/web_forward.png"
     }
 ]

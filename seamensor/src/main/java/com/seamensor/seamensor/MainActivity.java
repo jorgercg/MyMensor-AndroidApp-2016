@@ -16,20 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -48,6 +38,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
@@ -73,7 +64,9 @@ import com.dropbox.sync.android.DbxPath;
 import com.metaio.sdk.MetaioDebug;
 import com.metaio.tools.io.AssetsManager;
 
-public class MainActivity extends Activity implements LocationListener, GpsStatus.NmeaListener
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
+
+public class MainActivity extends Activity implements LocationListener
 {
 	public static final String appKey = "0yrlhapf89ytpwi";
 	public static final String appSecret = "neg16q87i8rpym3";
@@ -164,8 +157,8 @@ public class MainActivity extends Activity implements LocationListener, GpsStatu
         // Location Manager
         MetaioDebug.log("onCreate: Calling LocationManager");
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
-        lm.addNmeaListener(this);
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PERMISSION_GRANTED)
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
 
         // Creating AsyncTask
         loadDefinitionsBeforeCallingActivity = new LoadDefinitionsBeforeCallingActivity();
@@ -424,63 +417,6 @@ public class MainActivity extends Activity implements LocationListener, GpsStatu
     }
 
 
-    @Override
-    public void onNmeaReceived(long timestamp, String nmea)
-    {
-        //final String gpsId = "$GPGGA";
-        //final String gnsId = "$GNGNS";
-        final String gpsId = "$GPRMC";
-        final String gnsId = "$GNRMC";
-        String gpsTimeStr = null;
-        String gpsddmmyyStr = null;
-        int endOfTimeStr = 0;
-        int delimiterCount = 0;
-        //nmea="$GPRMC,004722.0,B,2300.771181,S,04318.791524,W,0.0,,310115,0.0,E,A*2A";
-        if ((nmea.startsWith(gpsId))||(nmea.startsWith(gnsId)))
-        {
-            StringBuilder sb = new StringBuilder(nmea);
-            String delimiter = sb.substring(7,8);
-            //MetaioDebug.log("Delimitr: NMEA Sentence: "+delimiter);
-            if (!(delimiter.equals(",")))
-            {
-                MetaioDebug.log("onNmeaReceived: GPS Time FOUND: NMEA Sentence: "+nmea);
-                endOfTimeStr = sb.indexOf(",",7);
-                gpsTimeStr = sb.substring(7,endOfTimeStr);
-                final String gpsTime = gpsTimeStr;
-                endOfTimeStr = endOfTimeStr+1;
-                MetaioDebug.log("onNmeaReceived: GPS Time FOUND: gpsTimeStr: "+gpsTimeStr);
-                do
-                {
-                    endOfTimeStr = sb.indexOf(",",endOfTimeStr);
-                    endOfTimeStr = endOfTimeStr+1;
-                    delimiterCount=delimiterCount+1;
-                } while (delimiterCount < 7);
-                int endOfddmmyyStr = sb.indexOf(",",(endOfTimeStr+1));
-                gpsddmmyyStr = sb.substring(endOfTimeStr,endOfddmmyyStr);
-                final String gpsDdmmyy = gpsddmmyyStr;
-                if (null == currentMillisString)
-                {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            Toast toast = Toast.makeText(getApplicationContext(),getString(R.string.gps_time_acquired) , Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
-                            toast.show();
-                        }
-                    });
-                }
-                systemMillisWhenGPSTimereceived = System.currentTimeMillis();
-                gpsUTCTime = gpsTime;
-                gpsUTCddmmyy = gpsDdmmyy;
-                MetaioDebug.log("onNmeaReceived: "+gpsUTCTime);
-                MetaioDebug.log("onNmeaReceived: "+gpsUTCddmmyy);
-                lm.removeUpdates(this);
-                lm.removeNmeaListener(this);
-            }
-        }
-    }
-
     public void setTime(long time)
     {
         if (ShellInterface.isSuAvailable())
@@ -580,8 +516,8 @@ public class MainActivity extends Activity implements LocationListener, GpsStatu
         super.onDestroy();
         MetaioDebug.log("onDestroy(): CALLED");
         loadDefinitionsBeforeCallingActivity.cancel(true);
-        lm.removeUpdates(this);
-        lm.removeNmeaListener(this);
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PERMISSION_GRANTED)
+            lm.removeUpdates(this);
         MetaioDebug.log("onDestroy(): cancelled loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
     }
 
@@ -615,228 +551,6 @@ public class MainActivity extends Activity implements LocationListener, GpsStatu
         toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
         toast.show();
     }
-
-	protected String getASCIIContentFromEntity(HttpEntity entity)
-	        throws IllegalStateException, IOException 
-	{
-	    InputStream in = entity.getContent();
-	    StringBuffer out = new StringBuffer();
-	    int n = 1;
-	    while (n > 0) 
-	    {
-	        byte[] b = new byte[4096];
-	        n = in.read(b);
-	        if (n > 0)out.append(new String(b, 0, n));
-	    }
-	    return out.toString();
-	}
-
-    /*
-    public void readingCurrentMillisOnCreate()
-    {
-        new AsyncTask<Void, Void, Void>()
-        {
-            @Override
-            protected void onPreExecute()
-            {
-                MetaioDebug.log("readingCurrentMillisOnCreate(): Method called: onPreExecute()");
-            }
-
-
-            @Override
-            protected Void doInBackground(Void... params)
-            {
-                String text = null;
-                MetaioDebug.log("readingCurrentMillisOnCreate(): starting to retrieve from currentmillis.com");
-                HttpClient httpClient = new DefaultHttpClient();
-                HttpContext localContext = new BasicHttpContext();
-                HttpGet httpGet = new HttpGet("http://currentmillis.com/api/millis-since-unix-epoch.php");
-                try
-                {
-                    HttpResponse response = httpClient.execute(httpGet, localContext);
-                    HttpEntity entity = response.getEntity();
-                    text = getASCIIContentFromEntity(entity);
-                }
-                catch (Exception e)
-                {
-                    MetaioDebug.log("readingCurrentMillisOnCreate(): Error retrieving currentmillis.com:"+e.getMessage());
-                }
-                MetaioDebug.log("readingCurrentMillis: currentmillis.com:"+text);
-                currentMillisString = text;
-                localCurrentMillis = System.currentTimeMillis();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result)
-            {
-                MetaioDebug.log("readingCurrentMillisOnCreate(): Method called: onPostExecute()");
-                if (null != currentMillisString)
-                {
-                    if ((Math.abs(Long.parseLong(currentMillisString)-System.currentTimeMillis()))>1000)
-                    {
-                        MetaioDebug.log("readingCurrentMillisOnCreate: calling setTime:"+currentMillisString);
-                        setTime(Long.parseLong(currentMillisString));
-                    }
-                }
-            }
-        }.execute();
-    }
-    */
-
-/*
-	public void readingCurrentMillis()
-	{
-        new AsyncTask<Void, Void, Void>()
-        {
-            @Override
-            protected void onPreExecute()
-            {
-                MetaioDebug.log("readingCurrentMillis(): onPreExecute()");
-                TextView message = (TextView) findViewById(R.id.bottom_message);
-                message.setText(R.string.waiting_for_internet_time);
-            }
-
-            @Override
-            protected Void doInBackground(Void... params)
-            {
-                boolean isInternetAvailable = false;
-                MetaioDebug.log("readingCurrentMillis(): starting to retrieve from currentmillis.com");
-
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                if (activeNetworkInfo != null)
-                {
-                    try {
-                        HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
-                        urlc.setRequestProperty("User-Agent", "Test");
-                        urlc.setRequestProperty("Connection", "close");
-                        urlc.setConnectTimeout(1500);
-                        urlc.connect();
-                        if (urlc.getResponseCode() == 200) isInternetAvailable=true;
-                        MetaioDebug.log("readingCurrentMillis(): isInternetAvailable="+isInternetAvailable);
-                    } catch (IOException e) {
-                        MetaioDebug.log("readingCurrentMillis(): Error checking internet connection:"+e.getLocalizedMessage());
-                    }
-                }
-                else
-                {
-                    MetaioDebug.log("readingCurrentMillis(): No network available!");
-                }
-
-                String text = null;
-
-                if (isInternetAvailable)
-                {
-                    Long loopStart = System.currentTimeMillis();
-                    MetaioDebug.log("readingCurrentMillis(): starting the loop querying currentmillis.com for 20 seconds max");
-                    do
-                    {
-                        HttpClient httpClient = new DefaultHttpClient();
-                        HttpContext localContext = new BasicHttpContext();
-                        HttpGet httpGet = new HttpGet("http://currentmillis.com/api/millis-since-unix-epoch.php");
-                        try
-                        {
-                            HttpResponse response = httpClient.execute(httpGet, localContext);
-                            HttpEntity entity = response.getEntity();
-                            text = getASCIIContentFromEntity(entity);
-                        }
-                        catch (Exception e)
-                        {
-                            MetaioDebug.log("readingCurrentMillis(): Error retrieving currentmillis.com:"+e.getMessage());
-                        }
-                    } while ((text==null)&&((System.currentTimeMillis()-loopStart)<20000));
-                    MetaioDebug.log("readingCurrentMillis(): ending the loop querying currentmillis.com for 20 seconds max:"+(System.currentTimeMillis()-loopStart));
-                }
-
-                MetaioDebug.log("readingCurrentMillis(): currentmillis.com:"+text);
-                currentMillisString = text;
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result)
-            {
-                MetaioDebug.log("readingCurrentMillis(): onPostExecute()");
-                if (null != currentMillisString)
-                {
-                    if ((Math.abs(Long.parseLong(currentMillisString)-System.currentTimeMillis()))>1000)
-                    {
-                        MetaioDebug.log("readingCurrentMillis(): calling setTime:"+currentMillisString);
-                        setTime(Long.parseLong(currentMillisString));
-                    }
-                    TextView message = (TextView) findViewById(R.id.bottom_message);
-                    message.setText(R.string.waiting_to_load_assets);
-                }
-                else
-                {
-                    //if (null == currentMillisString) retrieveTimeFromGPS("SeaMensor");
-                }
-
-            }
-        }.execute();
-	}
-*/
-/*
-    public void retrieveTimeFromGPS()
-    {
-        new AsyncTask<Void, Void, Void>()
-        {
-            @Override
-            protected void onPreExecute()
-            {
-                MetaioDebug.log("retrieveTimeFromGPS: Method called: onPreExecute()");
-                TextView message = (TextView) findViewById(R.id.bottom_message);
-                message.setText(R.string.waiting_for_gps_time);
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                MetaioDebug.log("retrieveTimeFromGPS: Method called; keyPadLinearLayout.isShown()=" + keyPadLinearLayout.isShown() + " logoLinearLayout.isShown()=" + logoLinearLayout.isShown());
-                long millisRetrievedFromGPS = 0;
-                boolean wait = true;
-                while (wait)
-                {
-                    //MetaioDebug.log("retrieveTimeFromGPS: currentMillis ="+System.currentTimeMillis());
-                    if ((gpsUTCTime != null) && (gpsUTCddmmyy != null))
-                    {
-                        String gpsCapturedTimeStamp = gpsUTCddmmyy + " " + gpsUTCTime;
-                        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy HHmmss.SS");
-                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-                        Date date = null;
-                        try
-                        {
-                            date = sdf.parse(gpsCapturedTimeStamp);
-                        }
-                        catch (ParseException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        millisRetrievedFromGPS = date.getTime();
-                        long currentMillis = millisRetrievedFromGPS + (System.currentTimeMillis() - systemMillisWhenGPSTimereceived);
-                        MetaioDebug.log("retrieveTimeFromGPS: new time will be set to currentMillis = " + currentMillis);
-                        setTime(currentMillis);
-                        MetaioDebug.log("retrieveTimeFromGPS: new time is set to currentMillis = " + currentMillis);
-                        currentMillisString = Long.toString(currentMillis);
-                        wait = false;
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result)
-            {
-                MetaioDebug.log("retrieveTimeFromGPS: onPostExecute()");
-                TextView message = (TextView) findViewById(R.id.bottom_message);
-                message.setText(R.string.waiting_to_load_assets);
-
-            }
-
-        }.execute();
-    }
-*/
 
     protected void setupPinItem(EditText item){
         item.setInputType(InputType.TYPE_NULL);

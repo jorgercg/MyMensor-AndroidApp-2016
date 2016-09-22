@@ -4,15 +4,7 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.0.0/res/raw/gtm_analytics"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/raw/gtm_analytics",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.0.0/res/raw/gtm_analytics"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/raw/success.mp3",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/raw/success.mp3"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/res/merged/debug/raw/success.mp3",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6/metaioSDK/unspecified/res/raw/success.mp3"
     }
 ]

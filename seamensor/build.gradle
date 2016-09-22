@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '22.0.1'
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
 
     defaultConfig {
         applicationId "com.seamensor.seamensor"
         minSdkVersion 17
-        targetSdkVersion 19
+        targetSdkVersion 24
     }
 
     buildTypes {
@@ -20,7 +20,13 @@ android {
 
 dependencies {
     compile project(':metaioSDK')
-    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:support-core-utils:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile files('libs/dropbox-sync-sdk-android.jar')
+    compile 'net.openid:appauth:0.3.0'
+    compile 'com.amazonaws:aws-android-sdk-core:2.3.+'
+    compile 'com.amazonaws:aws-android-sdk-s3:2.3.+'
+    compile 'com.amazonaws:aws-android-sdk-cognito:2.3.+'
+    compile 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.3.+'
 }

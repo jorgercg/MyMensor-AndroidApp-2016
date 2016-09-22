@@ -1,9 +1,5 @@
 [
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/debug/raw/success.mp3",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/res/raw/success.mp3"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/raw/success.mp3",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/raw/success.mp3"
     }

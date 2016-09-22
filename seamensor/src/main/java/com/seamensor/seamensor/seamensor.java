@@ -9,7 +9,9 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -47,6 +49,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileStatus;
@@ -314,6 +324,42 @@ public class seamensor extends ARViewActivity implements
 	public Drawable drawableRoll14;
 	public Drawable drawableRoll15;
 
+	public AmazonS3 s3;
+	public TransferUtility transferUtility;
+	public CognitoCachingCredentialsProvider credentialsProvider;
+
+
+	public void credentialsProvider(){
+
+		// Initialize the Amazon Cognito credentials provider
+		credentialsProvider = new CognitoCachingCredentialsProvider(
+				getApplicationContext(),
+				"eu-west-1:963bc158-d9dd-4ae2-8279-b5a8b1524f73", // Identity Pool ID
+				Regions.EU_WEST_1 // Region
+		);
+
+		setAmazonS3Client(credentialsProvider);
+	}
+
+	/**
+	 *  Create a AmazonS3Client constructor and pass the credentialsProvider.
+	 * @param credentialsProvider
+	 */
+	public void setAmazonS3Client(CognitoCachingCredentialsProvider credentialsProvider){
+
+		// Create an S3 client
+		s3 = new AmazonS3Client(credentialsProvider);
+
+		// Set the region of your S3 bucket
+		s3.setRegion(Region.getRegion(Regions.SA_EAST_1));
+
+	}
+
+	public void setTransferUtility(){
+
+		transferUtility = new TransferUtility(s3, getApplicationContext());
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -368,6 +414,21 @@ public class seamensor extends ARViewActivity implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+
+		// Creating Temporary Credentials
+
+		// Initialize the Amazon Cognito credentials provider
+		credentialsProvider();
+
+		setTransferUtility();
+
+
+
+		Map<String, String> logins = new HashMap<String, String>();
+		logins.put("https://mymensor.herokuapp.com/openid/", "304053");
+		credentialsProvider.setLogins(logins);
+
 
 		// Enable Dropbox
 		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
@@ -3782,7 +3843,7 @@ public class seamensor extends ARViewActivity implements
 							MetaioDebug.log("onNewCameraFrame: Saving a new camera frame image to: "+capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg");
 							bitMap.writeFromExistingFile(pictureFile, false);
 							bitMap.close();
-							pictureFile.delete();
+							//pictureFile.delete();
 							if (resultSpecialTrk)
 							{
 								waitingForMarkerlessTrackingConfigurationToLoad = true;
@@ -3799,7 +3860,7 @@ public class seamensor extends ARViewActivity implements
 							DbxFile bitMap = dbxFs.create(new DbxPath(DbxPath.ROOT,capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg"));
 							bitMap.writeFromExistingFile(pictureFile, false);
 							bitMap.close();
-							pictureFile.delete();
+							//pictureFile.delete();
 							if (resultSpecialTrk)
 							{
 								waitingForMarkerlessTrackingConfigurationToLoad = true;
@@ -3818,6 +3879,22 @@ public class seamensor extends ARViewActivity implements
 						//waitingToCaptureVpAfterDisambiguationProcedureSuccessful =true;
 						e.printStackTrace();
 					}
+
+					try {
+						setAmazonS3Client(credentialsProvider);
+						setTransferUtility();
+						File fileToUpload = pictureFile;
+						transferUtility.upload(
+								"mymstoragebr",     /* The bucket to upload to */
+								"cap/"+momento+".jpg",    /* The key for the uploaded object */
+								fileToUpload       /* The file where the data to upload exists */
+						);
+					}
+					catch (Exception e)
+					{
+
+					}
+
 					vpPhotoAccepted = false;
 					vpPhotoRequestInProgress = false;
 					MetaioDebug.log("onNewCameraFrame: vpPhotoAccepted: vpPhotoRequestInProgress = "+vpPhotoRequestInProgress);

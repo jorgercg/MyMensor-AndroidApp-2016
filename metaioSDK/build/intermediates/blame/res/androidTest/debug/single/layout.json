@@ -4,32 +4,12 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/layout/poidetaildialog.xml"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/poidetaildialog.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/bundles/debug/res/layout/poidetaildialog.xml"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/html5container.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/layout/html5container.xml"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/button_action_detail.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/bundles/debug/res/layout/button_action_detail.xml"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/webview.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/bundles/debug/res/layout/webview.xml"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/html5container.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/bundles/debug/res/layout/html5container.xml"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/poiactivity.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/layout/poiactivity.xml"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/webviewnav.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/bundles/debug/res/layout/webviewnav.xml"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/button_action_detail.xml",
@@ -38,10 +18,6 @@
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/webviewnav.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/layout/webviewnav.xml"
-    },
-    {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/poiactivity.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6/metaioSDK/build/intermediates/bundles/debug/res/layout/poiactivity.xml"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/layout/webview.xml",
