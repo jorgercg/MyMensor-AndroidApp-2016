@@ -61,4 +61,5 @@
     <string name="not_all_vps_acquired">Erro: nem todos vps foram capturados - capture todos antes de salvar - vps NÃO FORAM salvos"</string>
     <string name="vp_location_des_text_missing">Erro: faltando texto de descrição de vp"</string>
     <string name="no_photo_captured_in_this_vp">Nenhuma foto capturada neste vp!!!</string>
+    <string name="logging_in">Conectando ao servidor...</string>
 </resources>

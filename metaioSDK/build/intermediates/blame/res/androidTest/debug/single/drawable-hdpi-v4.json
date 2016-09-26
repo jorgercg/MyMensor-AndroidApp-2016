@@ -48,12 +48,12 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-hdpi-v4/icon_placeholder.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/web_forward_dis.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-hdpi-v4/web_forward_dis.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/web_stop.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-hdpi-v4/web_stop.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/web_forward_dis.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-hdpi-v4/web_forward_dis.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-hdpi-v4/share.png",

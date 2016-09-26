@@ -65,7 +65,18 @@
             android:screenOrientation="landscape"
             >
         </activity>
-
+        <activity
+            android:name="com.seamensor.seamensor.MymensorAuthenticatorActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+            android:theme="@style/Theme.FullScreen"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.mymensor.app" android:host="login"/>
+            </intent-filter>
+        </activity>
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
 		<activity
   			android:name="com.dropbox.client2.android.AuthActivity"
@@ -85,6 +96,13 @@
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
+        <service android:name="com.seamensor.seamensor.MymensorAuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

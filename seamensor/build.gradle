@@ -20,10 +20,14 @@ android {
 
 dependencies {
     compile project(':metaioSDK')
-    compile 'com.android.support:support-core-utils:24.2.1'
+    compile 'com.android.support:support-core-utils:24.2.0'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile files('libs/dropbox-sync-sdk-android.jar')
     compile 'net.openid:appauth:0.3.0'
+    compile 'com.google.oauth-client:google-oauth-client:1.21.0'
+    compile 'com.google.http-client:google-http-client-jackson2:1.21.0'
+    compile 'com.google.android.gms:play-services-appindexing:7.0.0'
+    compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.amazonaws:aws-android-sdk-core:2.3.+'
     compile 'com.amazonaws:aws-android-sdk-s3:2.3.+'
     compile 'com.amazonaws:aws-android-sdk-cognito:2.3.+'

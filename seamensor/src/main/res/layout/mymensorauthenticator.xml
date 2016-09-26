@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    android:layout_gravity="center"
+    android:background="#FFFFFF" >
+
+    <LinearLayout
+        android:id="@+id/SeaMensorLogoLinearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:padding="2dp"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/seamensor_logo"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:visibility="visible"
+            android:src="@anim/animalogoseamensor" />
+
+        <TextView
+            android:id="@+id/bottom_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingTop="30dp"
+            android:text="@string/logging_in"
+            android:textAlignment="center"
+            android:textColor="#FF464646"
+            android:visibility="visible"
+            android:textSize="18sp" />
+    </LinearLayout>
+</RelativeLayout>

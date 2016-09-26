@@ -184,6 +184,9 @@ public class MainActivity extends Activity implements LocationListener
         seamensorLogoAnimation.setVisible(true, true);
         seamensorLogoAnimation.start();
 
+        AccountManager accountManager = AccountManager.get(getApplicationContext());
+        accountManager.addAccount(MymensorAccAuthenticator.ACCOUNT_TYPE, null, null, null, this, null, null);
+
         // Retrieving SeaMensor Account information, if account does not exist then app is closed
 		try
 		{

@@ -61,6 +61,22 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.FullScreen" >
         </activity>
+        <activity
+            android:name="com.seamensor.seamensor.MymensorAuthenticatorActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.FullScreen" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="login"
+                    android:scheme="com.mymensor.app" />
+            </intent-filter>
+        </activity>
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"

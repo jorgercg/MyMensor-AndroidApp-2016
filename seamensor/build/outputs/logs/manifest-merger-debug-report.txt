@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:2:1-93:12
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:2:1-105:12
 	package
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:3:5-38
 		INJECTED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml
@@ -21,8 +21,8 @@ uses-sdk
 ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:8:5-10:41
 MERGED from [seamensor_sdk_6_dj:metaioSDK:unspecified] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support:support-v4:24.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-core-utils:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/AndroidManifest.xml:21:5-23:61
-MERGED from [com.android.support:support-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:24.2.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:24.2.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/AndroidManifest.xml:21:5-23:58
 MERGED from [com.google.android.gms:play-services:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services/7.0.0/AndroidManifest.xml:18:5-42
 MERGED from [com.google.android.gms:play-services-ads:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/AndroidManifest.xml:18:5-42
 MERGED from [com.google.android.gms:play-services-base:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/AndroidManifest.xml:18:5-42
@@ -133,10 +133,10 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 	android:name
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:31:19-63
 application
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:33:5-91:19
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:33:5-103:19
 MERGED from [com.android.support:support-v4:24.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-core-utils:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-utils:24.2.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-compat:24.2.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/AndroidManifest.xml:25:5-20
 MERGED from [com.google.android.gms:play-services:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services/7.0.0/AndroidManifest.xml:19:5-20
 MERGED from [com.google.android.gms:play-services-ads:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/AndroidManifest.xml:19:5-20
 MERGED from [com.google.android.gms:play-services-base:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/AndroidManifest.xml:20:5-24:19
@@ -216,54 +216,66 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:64:13-52
 	android:name
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:62:13-55
-activity#com.dropbox.sync.android.DbxAuthActivity
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:69:9-77
+activity#com.seamensor.seamensor.MymensorAuthenticatorActivity
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:68:9-79:20
+	android:screenOrientation
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:72:13-50
+	android:configChanges
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:70:13-170
+	android:theme
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:71:13-52
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:69:19-74
-activity#com.dropbox.client2.android.AuthActivity
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:70:3-79:14
-	android:launchMode
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:72:6-37
-	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:71:6-61
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:69:13-81
 intent-filter#android.intent.action.VIEW+android.intent.category.BROWSABLE+android.intent.category.DEFAULT
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:73:5-78:21
-data
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:74:7-51
-	android:scheme
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:74:13-48
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:73:13-78:29
 action#android.intent.action.VIEW
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:75:7-59
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:74:17-69
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:75:15-56
-category#android.intent.category.BROWSABLE
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:76:7-68
-	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:76:17-65
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:74:25-66
 category#android.intent.category.DEFAULT
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:7-66
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:75:17-76
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:17-63
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:75:27-73
+category#android.intent.category.BROWSABLE
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:76:17-78
+	android:name
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:76:27-75
+data
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:17-79
+	android:host
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:57-77
+	android:scheme
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:23-56
+activity#com.dropbox.sync.android.DbxAuthActivity
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:80:9-77
+	android:name
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:80:19-74
+activity#com.dropbox.client2.android.AuthActivity
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:81:3-90:14
+	android:launchMode
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:83:6-37
+	android:name
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:82:6-61
 service#com.dropbox.sync.android.DbxSyncService
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:80:3-84:36
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:91:3-95:36
 	android:enabled
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:82:6-28
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:93:6-28
 	android:label
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:84:5-33
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:95:5-33
 	android:exported
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:83:6-30
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:94:6-30
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:81:6-60
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:92:6-60
 service#com.amazonaws.mobileconnectors.s3.transferutility.TransferService
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:85:9-87:38
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:96:9-98:38
 	android:enabled
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:87:13-35
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:98:13-35
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:86:13-93
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:97:13-93
 meta-data#com.google.android.gms.version
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:88:9-90:69
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:100:9-102:69
 MERGED from [com.google.android.gms:play-services-base:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/AndroidManifest.xml:21:9-23:69
 	android:value
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:90:13-66
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:102:13-66
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:89:13-58
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:101:13-58

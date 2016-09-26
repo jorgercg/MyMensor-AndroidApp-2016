@@ -61,5 +61,6 @@
     <string name="not_all_vps_acquired">Error: not all vps acquired</string>
     <string name="vp_location_des_text_missing">Error: vp location text missing</string>
     <string name="no_photo_captured_in_this_vp">No photo captured in this vp!!!</string>
-    <string name="metaioSDKSignature">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
+    <string name="metaioSDKSignature" translatable="false">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
+    <string name="logging_in">Logging in to server...</string>
 </resources>
