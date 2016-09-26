@@ -1,2 +1,338 @@
 <?xml version="1.0" encoding="utf-8"?>
-<items version="2" />
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/dropbox-sync-sdk-android.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="45fb26781bc311772660c697996801f8f39d3ce0">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/dropbox-sync-sdk-android_a3d2e11458592488c65250a1f83db0aa6738da70/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-s3/2.3.1/af368afb5bc136b6ce605870336699e7bf38dcdb/aws-android-sdk-s3-2.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="af368afb5bc136b6ce605870336699e7bf38dcdb">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-s3-2.3.1_9716023c0efac779cb169ea46ddf32b578ba4a30/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="fb04b12526b0073c7fb1ebb70c5842d82ee95596">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-identity-7.0.0_31eb097f7c8e43980aa33fc4c5372af78023a827/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="e3d791b42eaa90416cd0b2d2e608092794a3baa4">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-7.0.0_aeb8e3c82bf0d6dc395019ef4597ab9319a87393/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="055783146ba9654a725442563be78cad303aad1f">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-games-7.0.0_7ffce743bc63d958946ffa8e5ba9d29ba5e689ee/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-cognitoidentityprovider/2.3.1/b679ba12e9f133f96dda1839403392e95d6bd662/aws-android-sdk-cognitoidentityprovider-2.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="b679ba12e9f133f96dda1839403392e95d6bd662">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-cognitoidentityprovider-2.3.1_5e961d90c3cc9442133aeb70ec9a115602cec6c0/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="4cd0b093824b3228fffc21ea369b98d0b1db6566">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-7.0.0_a3459275540b418f019024ade078f6df7a3b9c61/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="1c5a76debf0c2857ccad422c4a80ed785982f8df">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-panorama-7.0.0_d453b880b01a16a53686882bc13de6ba2ce48f11/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="9c4c3bc902450c39ed54de170db4fb12aea20a35">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-core-utils-24.2.1_2ab457dc3e42f9bcd7ec7bc1201d30511f6ac466/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="41b3870cbe5fa546d8095b5b89d42cb69f3dd175">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-drive-7.0.0_9defbefef5792cb61c18786f4913f367da15c7ae/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="c976518693e89ad44fbfccfc654941eaec198d08">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-safetynet-7.0.0_5ad5a700e5e365dbc3af3f0fba6d2ea1e40777e6/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/24.2.1/support-annotations-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="8de3aafecbdf98a61db6427f008f2d515bcd2544">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-24.2.1_39431337fe1a677d7e7d152f534daf9296b401dd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="3c0b099f9de16b265ecd6122fcb603e7d0d29f90">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-fitness-7.0.0_ac685c16547ae34c2e2273af5416d2c970ac46b4/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="29fd6d3794b71491c2789708cd8d03c71feb8954">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-7.0.0_a637d6e28f27dbe1443483bb8896f0e169d09503/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="ef5f051e7308febe289dc93c67c5f32785b4260a">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-nearby-7.0.0_cc5442a2aa35e18d176f5149b1c3c4b93059ca43/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7ff613bf78ab057293892fdbd4169eda899c89b9">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appstate-7.0.0_59d7232138cf20eb1128de3bd308c4b2b04c7255/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e704f1c005b2c919b5f7a6f36af16a0695f6c033/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="4c93d99d454c975536bbe3b42283eee847f03ea3">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-7.0.0_d5c3b724f97d9d203e125827e6b820e79c650c26/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/net.openid/appauth/0.3.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="6180194003ac62c9ea8489052312b09384113184">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/net.openid-appauth-0.3.0_74620f0b50737fcd5e0be1cb80d84d1e9919210e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0ecb4b595fa0f0f8018a149ace3ea6525624f94e">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-compat-24.2.1_87972a4d88f1b33b965ab0417bd08c5c4b99658c/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/jars/libs/internal_impl-24.0.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="fcaf463e10e69c1923ccf1edeba3b4196d239e00">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.0.0_c5a63eeaff78a0d0e0f04bc068656a7a404b20d8/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-core/2.3.1/8b5163bfb0ca4b823c3a22509f8c49a732c44754/aws-android-sdk-core-2.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="8b5163bfb0ca4b823c3a22509f8c49a732c44754">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-core-2.3.1_72f418edeb6fb2a7705742131abc0b987901721b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="0e8228b4bc69c6a2c8d7c18498a77e53417d2574">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-plus-7.0.0_bf2f65a07736d04ee2d7dfacf72d816cc49adf7b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="9224bc4c54ba95147c7eabd874573763c07cb6be">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-7.0.0_25f3470de59ed9f5de464a354e18fa6cc64de68a/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="3033cc3a2c68dff3e5b646d6d084bdbdf7d00b25">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wearable-7.0.0_4578d1d7a09a3d6f95b5eb1027582937bc21cffe/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="79beefb7d6d6949adf6629d51e7cb1aaabd65079">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_451a72833b94a889e6af1ab6e7ee3b9d36392055/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="73ccb92b70112f2e463e415ef8d7275de7da6516">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-location-7.0.0_4b3e0b3b6a4de6d4c1604a28a1f8d33de700339b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/jars/libs/metaiosdk.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="d88da97d03e6e21f7db9b0aaec1cef4ea04bcc1c">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/8/metaiosdk_4dd14df93765d0d5a062244a5cca5d416db671ad/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="a96b762bde4139de855735f175ec4d17dca55a6d">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wallet-7.0.0_bb97409b499193ffd25c06148090af43a44c6e34/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_2e91ef41b8bde2c20c848dcd7e4be5336a018706/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-cognito/2.3.1/2aeb0330862ab47d9bfc884c6ed202aa65f75e00/aws-android-sdk-cognito-2.3.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="2aeb0330862ab47d9bfc884c6ed202aa65f75e00">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-cognito-2.3.1_77fcfa4f3cbea8fd4dea3895bd580c9a943d00d7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Applications/Android Studio.app/Contents/gradle/m2repository/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="a60a5e993c98c864010053cb901b7eab25306568">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.2.4_d0ce76b63ce905fbab3c5d385c8e1b8692010f19/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/customtabs/24.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="b24e0a6d84a759f2094cbb27afd5ac9cb30275c9">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-customtabs-24.0.0_c4a060cf564f1eb2186684d21a4fc11b13a96eaa/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="2f7e6e2dad1bccaf68a8820820adc6c0d5b96d37">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-24.0.0_91e6c0568ce4394df383c5c1b3234ba5e7e624cf/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="a08d65794b844d8e7540bf9a33859bf3b2482d7f">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appindexing-7.0.0_c0eb03d81df776cb084eed1e9db5430f5fda39b7/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="3b92fc19beb6201322af4ca616d7a8281162883e">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_45de722bb9cab215a15af80addd370948735e1bb/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/7.0.0/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="17f8750d5c0749e44dd7c54aa390d9c937803825">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-7.0.0_7ca21f6eb204992a396b829f781acabc9d9dd4b0/classes.dex" />
+    </item>
+
+</items>

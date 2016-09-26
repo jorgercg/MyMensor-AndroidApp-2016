@@ -7,369 +7,8 @@
                     "startLine": 2,
                     "startColumn": 4,
                     "startOffset": 105,
-                    "endColumn": 112,
-                    "endOffset": 213
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 2,
-                        "startColumn": 4,
-                        "startOffset": 55,
-                        "endColumn": 112,
-                        "endOffset": 163
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 3,
-                    "startColumn": 4,
-                    "startOffset": 218,
-                    "endColumn": 107,
-                    "endOffset": 321
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 3,
-                        "startColumn": 4,
-                        "startOffset": 168,
-                        "endColumn": 107,
-                        "endOffset": 271
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 4,
-                    "startColumn": 4,
-                    "startOffset": 326,
-                    "endColumn": 122,
-                    "endOffset": 444
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 276,
-                        "endColumn": 122,
-                        "endOffset": 394
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 5,
-                    "startColumn": 4,
-                    "startOffset": 449,
-                    "endColumn": 99,
-                    "endOffset": 544
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 5,
-                        "startColumn": 4,
-                        "startOffset": 399,
-                        "endColumn": 99,
-                        "endOffset": 494
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 6,
-                    "startColumn": 4,
-                    "startOffset": 549,
-                    "endColumn": 112,
-                    "endOffset": 657
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 6,
-                        "startColumn": 4,
-                        "startOffset": 499,
-                        "endColumn": 112,
-                        "endOffset": 607
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 7,
-                    "startColumn": 4,
-                    "startOffset": 662,
-                    "endColumn": 86,
-                    "endOffset": 744
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 7,
-                        "startColumn": 4,
-                        "startOffset": 612,
-                        "endColumn": 86,
-                        "endOffset": 694
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 8,
-                    "startColumn": 4,
-                    "startOffset": 749,
-                    "endColumn": 105,
-                    "endOffset": 850
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 8,
-                        "startColumn": 4,
-                        "startOffset": 699,
-                        "endColumn": 105,
-                        "endOffset": 800
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 9,
-                    "startColumn": 4,
-                    "startOffset": 855,
-                    "endColumn": 111,
-                    "endOffset": 962
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 9,
-                        "startColumn": 4,
-                        "startOffset": 805,
-                        "endColumn": 111,
-                        "endOffset": 912
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 10,
-                    "startColumn": 4,
-                    "startOffset": 967,
-                    "endColumn": 81,
-                    "endOffset": 1044
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 10,
-                        "startColumn": 4,
-                        "startOffset": 917,
-                        "endColumn": 81,
-                        "endOffset": 994
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 11,
-                    "startColumn": 4,
-                    "startOffset": 1049,
-                    "endColumn": 81,
-                    "endOffset": 1126
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 11,
-                        "startColumn": 4,
-                        "startOffset": 999,
-                        "endColumn": 81,
-                        "endOffset": 1076
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 12,
-                    "startColumn": 4,
-                    "startOffset": 1131,
-                    "endColumn": 81,
-                    "endOffset": 1208
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 12,
-                        "startColumn": 4,
-                        "startOffset": 1081,
-                        "endColumn": 81,
-                        "endOffset": 1158
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 13,
-                    "startColumn": 4,
-                    "startOffset": 1213,
-                    "endColumn": 108,
-                    "endOffset": 1317
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 13,
-                        "startColumn": 4,
-                        "startOffset": 1163,
-                        "endColumn": 108,
-                        "endOffset": 1267
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 14,
-                    "startColumn": 4,
-                    "startOffset": 1322,
-                    "endColumn": 103,
-                    "endOffset": 1421
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 14,
-                        "startColumn": 4,
-                        "startOffset": 1272,
-                        "endColumn": 103,
-                        "endOffset": 1371
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 15,
-                    "startColumn": 4,
-                    "startOffset": 1426,
-                    "endColumn": 96,
-                    "endOffset": 1518
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 15,
-                        "startColumn": 4,
-                        "startOffset": 1376,
-                        "endColumn": 96,
-                        "endOffset": 1468
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 16,
-                    "startColumn": 4,
-                    "startOffset": 1523,
-                    "endColumn": 107,
-                    "endOffset": 1626
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 16,
-                        "startColumn": 4,
-                        "startOffset": 1473,
-                        "endColumn": 107,
-                        "endOffset": 1576
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 17,
-                    "startColumn": 4,
-                    "startOffset": 1631,
-                    "endColumn": 100,
-                    "endOffset": 1727
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 17,
-                        "startColumn": 4,
-                        "startOffset": 1581,
-                        "endColumn": 100,
-                        "endOffset": 1677
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 18,
-                    "startColumn": 4,
-                    "startOffset": 1732,
-                    "endColumn": 102,
-                    "endOffset": 1830
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 18,
-                        "startColumn": 4,
-                        "startOffset": 1682,
-                        "endColumn": 102,
-                        "endOffset": 1780
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 19,
-                    "startColumn": 4,
-                    "startOffset": 1835,
-                    "endColumn": 121,
-                    "endOffset": 1952
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 19,
-                        "startColumn": 4,
-                        "startOffset": 1785,
-                        "endColumn": 121,
-                        "endOffset": 1902
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 20,
-                    "startColumn": 4,
-                    "startOffset": 1957,
-                    "endColumn": 96,
-                    "endOffset": 2049
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 20,
-                        "startColumn": 4,
-                        "startOffset": 1907,
-                        "endColumn": 96,
-                        "endOffset": 1999
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 21,
-                    "startColumn": 4,
-                    "startOffset": 2054,
                     "endColumn": 170,
-                    "endOffset": 2220
+                    "endOffset": 271
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -384,11 +23,11 @@
             },
             {
                 "to": {
-                    "startLine": 22,
+                    "startLine": 3,
                     "startColumn": 4,
-                    "startOffset": 2225,
+                    "startOffset": 276,
                     "endColumn": 148,
-                    "endOffset": 2369
+                    "endOffset": 420
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -403,11 +42,11 @@
             },
             {
                 "to": {
-                    "startLine": 23,
+                    "startLine": 4,
                     "startColumn": 4,
-                    "startOffset": 2374,
+                    "startOffset": 425,
                     "endColumn": 118,
-                    "endOffset": 2488
+                    "endOffset": 539
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -422,11 +61,11 @@
             },
             {
                 "to": {
-                    "startLine": 24,
+                    "startLine": 5,
                     "startColumn": 4,
-                    "startOffset": 2493,
+                    "startOffset": 544,
                     "endColumn": 134,
-                    "endOffset": 2623
+                    "endOffset": 674
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -441,11 +80,11 @@
             },
             {
                 "to": {
-                    "startLine": 25,
+                    "startLine": 6,
                     "startColumn": 4,
-                    "startOffset": 2628,
+                    "startOffset": 679,
                     "endColumn": 171,
-                    "endOffset": 2795
+                    "endOffset": 846
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -460,11 +99,11 @@
             },
             {
                 "to": {
-                    "startLine": 26,
+                    "startLine": 7,
                     "startColumn": 4,
-                    "startOffset": 2800,
+                    "startOffset": 851,
                     "endColumn": 132,
-                    "endOffset": 2928
+                    "endOffset": 979
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -479,11 +118,11 @@
             },
             {
                 "to": {
-                    "startLine": 27,
+                    "startLine": 8,
                     "startColumn": 4,
-                    "startOffset": 2933,
+                    "startOffset": 984,
                     "endColumn": 171,
-                    "endOffset": 3100
+                    "endOffset": 1151
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -498,11 +137,11 @@
             },
             {
                 "to": {
-                    "startLine": 28,
+                    "startLine": 9,
                     "startColumn": 4,
-                    "startOffset": 3105,
+                    "startOffset": 1156,
                     "endColumn": 127,
-                    "endOffset": 3228
+                    "endOffset": 1279
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -517,11 +156,11 @@
             },
             {
                 "to": {
-                    "startLine": 29,
+                    "startLine": 10,
                     "startColumn": 4,
-                    "startOffset": 3233,
+                    "startOffset": 1284,
                     "endColumn": 202,
-                    "endOffset": 3431
+                    "endOffset": 1482
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -536,11 +175,11 @@
             },
             {
                 "to": {
-                    "startLine": 30,
+                    "startLine": 11,
                     "startColumn": 4,
-                    "startOffset": 3436,
+                    "startOffset": 1487,
                     "endColumn": 198,
-                    "endOffset": 3630
+                    "endOffset": 1681
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -555,11 +194,11 @@
             },
             {
                 "to": {
-                    "startLine": 31,
+                    "startLine": 12,
                     "startColumn": 4,
-                    "startOffset": 3635,
+                    "startOffset": 1686,
                     "endColumn": 124,
-                    "endOffset": 3755
+                    "endOffset": 1806
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -574,11 +213,11 @@
             },
             {
                 "to": {
-                    "startLine": 32,
+                    "startLine": 13,
                     "startColumn": 4,
-                    "startOffset": 3760,
+                    "startOffset": 1811,
                     "endColumn": 177,
-                    "endOffset": 3933
+                    "endOffset": 1984
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -593,11 +232,11 @@
             },
             {
                 "to": {
-                    "startLine": 33,
+                    "startLine": 14,
                     "startColumn": 4,
-                    "startOffset": 3938,
+                    "startOffset": 1989,
                     "endColumn": 120,
-                    "endOffset": 4054
+                    "endOffset": 2105
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -612,11 +251,11 @@
             },
             {
                 "to": {
-                    "startLine": 34,
+                    "startLine": 15,
                     "startColumn": 4,
-                    "startOffset": 4059,
+                    "startOffset": 2110,
                     "endColumn": 172,
-                    "endOffset": 4227
+                    "endOffset": 2278
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -631,11 +270,11 @@
             },
             {
                 "to": {
-                    "startLine": 35,
+                    "startLine": 16,
                     "startColumn": 4,
-                    "startOffset": 4232,
+                    "startOffset": 2283,
                     "endColumn": 172,
-                    "endOffset": 4400
+                    "endOffset": 2451
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -650,11 +289,11 @@
             },
             {
                 "to": {
-                    "startLine": 36,
+                    "startLine": 17,
                     "startColumn": 4,
-                    "startOffset": 4405,
+                    "startOffset": 2456,
                     "endColumn": 121,
-                    "endOffset": 4522
+                    "endOffset": 2573
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -669,11 +308,11 @@
             },
             {
                 "to": {
-                    "startLine": 37,
+                    "startLine": 18,
                     "startColumn": 4,
-                    "startOffset": 4527,
+                    "startOffset": 2578,
                     "endColumn": 179,
-                    "endOffset": 4702
+                    "endOffset": 2753
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -688,11 +327,11 @@
             },
             {
                 "to": {
-                    "startLine": 38,
+                    "startLine": 19,
                     "startColumn": 4,
-                    "startOffset": 4707,
+                    "startOffset": 2758,
                     "endColumn": 175,
-                    "endOffset": 4878
+                    "endOffset": 2929
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -707,11 +346,11 @@
             },
             {
                 "to": {
-                    "startLine": 39,
+                    "startLine": 20,
                     "startColumn": 4,
-                    "startOffset": 4883,
+                    "startOffset": 2934,
                     "endColumn": 139,
-                    "endOffset": 5018
+                    "endOffset": 3069
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -726,11 +365,11 @@
             },
             {
                 "to": {
-                    "startLine": 40,
+                    "startLine": 21,
                     "startColumn": 4,
-                    "startOffset": 5023,
+                    "startOffset": 3074,
                     "endColumn": 156,
-                    "endOffset": 5175
+                    "endOffset": 3226
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -745,11 +384,11 @@
             },
             {
                 "to": {
-                    "startLine": 41,
+                    "startLine": 22,
                     "startColumn": 4,
-                    "startOffset": 5180,
+                    "startOffset": 3231,
                     "endColumn": 145,
-                    "endOffset": 5321
+                    "endOffset": 3372
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -764,11 +403,11 @@
             },
             {
                 "to": {
-                    "startLine": 42,
+                    "startLine": 23,
                     "startColumn": 4,
-                    "startOffset": 5326,
+                    "startOffset": 3377,
                     "endColumn": 153,
-                    "endOffset": 5475
+                    "endOffset": 3526
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -783,11 +422,11 @@
             },
             {
                 "to": {
-                    "startLine": 43,
+                    "startLine": 24,
                     "startColumn": 4,
-                    "startOffset": 5480,
+                    "startOffset": 3531,
                     "endColumn": 251,
-                    "endOffset": 5727
+                    "endOffset": 3778
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -802,11 +441,11 @@
             },
             {
                 "to": {
-                    "startLine": 44,
+                    "startLine": 25,
                     "startColumn": 4,
-                    "startOffset": 5732,
+                    "startOffset": 3783,
                     "endColumn": 125,
-                    "endOffset": 5853
+                    "endOffset": 3904
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -821,11 +460,11 @@
             },
             {
                 "to": {
-                    "startLine": 45,
+                    "startLine": 26,
                     "startColumn": 4,
-                    "startOffset": 5858,
+                    "startOffset": 3909,
                     "endColumn": 108,
-                    "endOffset": 5962
+                    "endOffset": 4013
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -840,11 +479,11 @@
             },
             {
                 "to": {
-                    "startLine": 46,
+                    "startLine": 27,
                     "startColumn": 4,
-                    "startOffset": 5967,
+                    "startOffset": 4018,
                     "endColumn": 165,
-                    "endOffset": 6128
+                    "endOffset": 4179
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -859,11 +498,11 @@
             },
             {
                 "to": {
-                    "startLine": 47,
+                    "startLine": 28,
                     "startColumn": 4,
-                    "startOffset": 6133,
+                    "startOffset": 4184,
                     "endColumn": 130,
-                    "endOffset": 6259
+                    "endOffset": 4310
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -878,11 +517,11 @@
             },
             {
                 "to": {
-                    "startLine": 48,
+                    "startLine": 29,
                     "startColumn": 4,
-                    "startOffset": 6264,
+                    "startOffset": 4315,
                     "endColumn": 93,
-                    "endOffset": 6353
+                    "endOffset": 4404
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -897,11 +536,11 @@
             },
             {
                 "to": {
-                    "startLine": 49,
+                    "startLine": 30,
                     "startColumn": 4,
-                    "startOffset": 6358,
+                    "startOffset": 4409,
                     "endColumn": 91,
-                    "endOffset": 6445
+                    "endOffset": 4496
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -916,11 +555,11 @@
             },
             {
                 "to": {
-                    "startLine": 50,
+                    "startLine": 31,
                     "startColumn": 4,
-                    "startOffset": 6450,
+                    "startOffset": 4501,
                     "endColumn": 106,
-                    "endOffset": 6552
+                    "endOffset": 4603
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -935,11 +574,11 @@
             },
             {
                 "to": {
-                    "startLine": 51,
+                    "startLine": 32,
                     "startColumn": 4,
-                    "startOffset": 6557,
+                    "startOffset": 4608,
                     "endColumn": 272,
-                    "endOffset": 6825
+                    "endOffset": 4876
                 },
                 "from": {
                     "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/res/values-mn-rMN/common_strings.xml",
@@ -949,44 +588,6 @@
                         "startOffset": 4374,
                         "endColumn": 272,
                         "endOffset": 4642
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 52,
-                    "startColumn": 4,
-                    "startOffset": 6830,
-                    "endColumn": 80,
-                    "endOffset": 6906
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 21,
-                        "startColumn": 4,
-                        "startOffset": 2004,
-                        "endColumn": 80,
-                        "endOffset": 2080
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 53,
-                    "startColumn": 4,
-                    "startOffset": 6911,
-                    "endColumn": 100,
-                    "endOffset": 7007
-                },
-                "from": {
-                    "file": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/res/values-mn-rMN/values-mn-rMN.xml",
-                    "position": {
-                        "startLine": 22,
-                        "startColumn": 4,
-                        "startOffset": 2085,
-                        "endColumn": 100,
-                        "endOffset": 2181
                     }
                 }
             }

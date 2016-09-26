@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 19
     buildToolsVersion '24.0.2'
 
     defaultConfig {
         applicationId "com.seamensor.seamensor"
         minSdkVersion 17
-        targetSdkVersion 24
+        targetSdkVersion 19
     }
 
     buildTypes {
@@ -21,7 +21,6 @@ android {
 dependencies {
     compile project(':metaioSDK')
     compile 'com.android.support:support-core-utils:24.2.1'
-    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile files('libs/dropbox-sync-sdk-android.jar')
     compile 'net.openid:appauth:0.3.0'

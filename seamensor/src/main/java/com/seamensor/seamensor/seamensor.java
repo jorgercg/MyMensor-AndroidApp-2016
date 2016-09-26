@@ -20,6 +20,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -50,11 +51,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.dropbox.sync.android.DbxException;
@@ -324,41 +327,7 @@ public class seamensor extends ARViewActivity implements
 	public Drawable drawableRoll14;
 	public Drawable drawableRoll15;
 
-	public AmazonS3 s3;
-	public TransferUtility transferUtility;
-	public CognitoCachingCredentialsProvider credentialsProvider;
-
-
-	public void credentialsProvider(){
-
-		// Initialize the Amazon Cognito credentials provider
-		credentialsProvider = new CognitoCachingCredentialsProvider(
-				getApplicationContext(),
-				"eu-west-1:963bc158-d9dd-4ae2-8279-b5a8b1524f73", // Identity Pool ID
-				Regions.EU_WEST_1 // Region
-		);
-
-		setAmazonS3Client(credentialsProvider);
-	}
-
-	/**
-	 *  Create a AmazonS3Client constructor and pass the credentialsProvider.
-	 * @param credentialsProvider
-	 */
-	public void setAmazonS3Client(CognitoCachingCredentialsProvider credentialsProvider){
-
-		// Create an S3 client
-		s3 = new AmazonS3Client(credentialsProvider);
-
-		// Set the region of your S3 bucket
-		s3.setRegion(Region.getRegion(Regions.SA_EAST_1));
-
-	}
-
-	public void setTransferUtility(){
-
-		transferUtility = new TransferUtility(s3, getApplicationContext());
-	}
+	private TransferUtility transferUtility;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -414,20 +383,6 @@ public class seamensor extends ARViewActivity implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-
-		// Creating Temporary Credentials
-
-		// Initialize the Amazon Cognito credentials provider
-		credentialsProvider();
-
-		setTransferUtility();
-
-
-
-		Map<String, String> logins = new HashMap<String, String>();
-		logins.put("https://mymensor.herokuapp.com/openid/", "304053");
-		credentialsProvider.setLogins(logins);
 
 
 		// Enable Dropbox
@@ -1162,7 +1117,9 @@ public class seamensor extends ARViewActivity implements
                 long lonMinInteger = (long) ((60*(gps[1]-lonDegInteger))-((60*(gps[1]-lonDegInteger)) % 1));
                 long lonSecInteger = (long) (((60*(gps[1]-lonDegInteger)) % 1)*60*1000);
                 gpsString[2]=""+lonDegInteger+"/1,"+lonMinInteger+"/1,"+lonSecInteger+"/1000";
-                gpsString[4]=Float.toString(l.getAccuracy());
+				gpsString[0]= Double.toString(gps[0]);
+				gpsString[1]= Double.toString(gps[1]);
+				gpsString[4]=Float.toString(l.getAccuracy());
 				gpsString[5]=mLastUpdateTime;
 				gpsString[6]=l.getProvider();
 				if (usingLastLocation) gpsString[6]="getLastLocation";
@@ -3881,14 +3838,35 @@ public class seamensor extends ARViewActivity implements
 					}
 
 					try {
-						setAmazonS3Client(credentialsProvider);
-						setTransferUtility();
+						ObjectMetadata myObjectMetadata = new ObjectMetadata();
+						//create a map to store user metadata
+						Map<String, String> userMetadata = new HashMap<String,String>();
+						userMetadata.put("GPSLatitude", locPhotoToExif[0]);
+						userMetadata.put("GPSLongitude", locPhotoToExif[1]);
+						userMetadata.put("VP", ""+(coordinateSystemTrackedInPoseI));
+						userMetadata.put("seamensorAccount", seamensorAccount);
+						userMetadata.put("Precisioninm", locPhotoToExif[4]);
+						userMetadata.put("LocationMillis", locPhotoToExif[5]);
+						userMetadata.put("LocationMethod", locPhotoToExif[6]);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+						sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+						String formattedDateTime = sdf.format(photoTakenTimeMillis[coordinateSystemTrackedInPoseI - 1]);
+						userMetadata.put("DateTime", formattedDateTime);
+						//call setUserMetadata on our ObjectMetadata object, passing it our map
+						myObjectMetadata.setUserMetadata(userMetadata);
+						//uploading the objects
+						transferUtility = AwsUtil.getTransferUtility(getApplicationContext());
 						File fileToUpload = pictureFile;
-						transferUtility.upload(
-								"mymstoragebr",     /* The bucket to upload to */
-								"cap/"+momento+".jpg",    /* The key for the uploaded object */
-								fileToUpload       /* The file where the data to upload exists */
+						TransferObserver observer = transferUtility.upload(
+								Constants.BUCKET_NAME,		/* The bucket to upload to */
+								"cap/"+seamensorAccount+"/"+momento+".jpg",		/* The key for the uploaded object */
+								fileToUpload,				/* The file where the data to upload exists */
+								myObjectMetadata			/* The ObjectMetadata associated with the object*/
 						);
+						Log.d("Cognito",observer.getState().toString());
+						Log.d("Cognito",observer.getAbsoluteFilePath());
+						Log.d("Cognito",observer.getBucket());
+						Log.d("Cognito",observer.getKey());
 					}
 					catch (Exception e)
 					{

@@ -163,48 +163,6 @@ public class MainActivity extends Activity implements LocationListener
         // Creating AsyncTask
         loadDefinitionsBeforeCallingActivity = new LoadDefinitionsBeforeCallingActivity();
 
-        // Retrieving wifi state
-        WifiManager m_wm = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-        if (!m_wm.isWifiEnabled())
-        {
-            MetaioDebug.log("OnCreate: DCI WiFi is OFF, turning WiFi ON");
-            m_wm.setWifiEnabled(true);
-        }
-
-        // Retrieving wifi MAC address to identify the DCI uniquely
-        dciWifiMAC = m_wm.getConnectionInfo().getMacAddress();
-        if (dciWifiMAC!=null)
-        {
-            MetaioDebug.log("OnCreate: DCI WiFi MAC: " + dciWifiMAC);
-            StringBuilder sb = new StringBuilder(dciWifiMAC);
-            sb = sb.deleteCharAt(2);
-            sb = sb.deleteCharAt(4);
-            sb = sb.deleteCharAt(6);
-            sb = sb.deleteCharAt(8);
-            sb = sb.deleteCharAt(10);
-            dciFileName = sb.toString() + ".xml";
-            MetaioDebug.log("OnCreate: DCI File Name: " + dciFileName);
-        }
-        else
-        {
-            MetaioDebug.log("OnCreate: dciWifiMAC==null, trying again");
-            m_wm.setWifiEnabled(true);
-            if((m_wm.getWifiState()== WifiManager.WIFI_STATE_ENABLED)||(m_wm.getWifiState()== WifiManager.WIFI_STATE_ENABLING))
-            {
-                dciWifiMAC = m_wm.getConnectionInfo().getMacAddress();
-            }
-        }
-
-        if (dciWifiMAC==null)
-        {
-            showNoWiFiError();
-            showNoWiFiError();
-            finish();
-        }
-
-        //MetaioDebug.log("OnCreate: calling readingCurrentMillisOnCreate()");
-        //readingCurrentMillisOnCreate();
-
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

@@ -20,15 +20,9 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 uses-sdk
 ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:8:5-10:41
 MERGED from [seamensor_sdk_6_dj:metaioSDK:unspecified] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/AndroidManifest.xml:7:5-9:41
-MERGED from [com.android.support:support-v4:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/AndroidManifest.xml:21:5-23:58
-MERGED from [com.android.support:support-media-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-v4:24.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:21:5-23:54
 MERGED from [com.android.support:support-core-utils:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/AndroidManifest.xml:21:5-23:61
-MERGED from [com.android.support:support-core-ui:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/AndroidManifest.xml:21:5-23:58
-MERGED from [com.android.support:support-fragment:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/AndroidManifest.xml:21:5-23:60
-MERGED from [com.android.support:appcompat-v7:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/AndroidManifest.xml:21:5-23:78
-MERGED from [com.android.support:support-vector-drawable:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/AndroidManifest.xml:21:5-43
-MERGED from [com.android.support:animated-vector-drawable:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/AndroidManifest.xml:21:5-23:58
 MERGED from [com.google.android.gms:play-services:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services/7.0.0/AndroidManifest.xml:18:5-42
 MERGED from [com.google.android.gms:play-services-ads:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/AndroidManifest.xml:18:5-42
 MERGED from [com.google.android.gms:play-services-base:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/AndroidManifest.xml:18:5-42
@@ -52,7 +46,7 @@ MERGED from [com.google.android.gms:play-services-wearable:7.0.0] /Users/jorgerc
 MERGED from [net.openid:appauth:0.3.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/net.openid/appauth/0.3.0/AndroidManifest.xml:20:5-22:41
 MERGED from [com.android.support:customtabs:24.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/customtabs/24.0.0/AndroidManifest.xml:20:5-44
 	tools:overrideLibrary
-		ADDED from [com.android.support:support-v4:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/AndroidManifest.xml:23:9-51
+		ADDED from [com.android.support:support-v4:24.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:23:9-51
 	android:targetSdkVersion
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:10:9-38
 		INJECTED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml
@@ -140,15 +134,9 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:31:19-63
 application
 ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:33:5-91:19
-MERGED from [com.android.support:support-v4:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.2.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-media-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-media-compat/24.2.1/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-v4:24.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-core-utils:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-core-ui:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-ui/24.2.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-fragment:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-fragment/24.2.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:appcompat-v7:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.2.1/AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-vector-drawable:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.2.1/AndroidManifest.xml:23:5-20
-MERGED from [com.android.support:animated-vector-drawable:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.2.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-compat:24.2.1] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/AndroidManifest.xml:25:5-20
 MERGED from [com.google.android.gms:play-services:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services/7.0.0/AndroidManifest.xml:19:5-20
 MERGED from [com.google.android.gms:play-services-ads:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.0.0/AndroidManifest.xml:19:5-20
 MERGED from [com.google.android.gms:play-services-base:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/AndroidManifest.xml:20:5-24:19
