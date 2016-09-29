@@ -63,4 +63,5 @@
     <string name="no_photo_captured_in_this_vp">No photo captured in this vp!!!</string>
     <string name="metaioSDKSignature" translatable="false">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
     <string name="logging_in">Logging in to server...</string>
+    <string name="authlabel" translatable="false">MyMensor</string>
 </resources>

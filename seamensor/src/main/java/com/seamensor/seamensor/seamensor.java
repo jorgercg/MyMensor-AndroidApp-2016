@@ -337,34 +337,9 @@ public class seamensor extends ARViewActivity implements
 		seamensorAccount = getIntent().getExtras().get("seamensoraccount").toString();
 		dciNumber = Integer.parseInt(getIntent().getExtras().get("dcinumber").toString());
 		qtyVps = Short.parseShort(getIntent().getExtras().get("QtyVps").toString());
-        /*
-		try
-		{
-			currentMillisStartAppString = getIntent().getExtras().get("currentmillis").toString();
-		}
-		catch (Exception e) 
-    	{
-			currentMillisStartAppString ="0000";
-        }
-        try
-        {
-            localCurrentMillisStartApp = ((Long) getIntent().getExtras().get("localcurrentmillis"));
-        }
-        catch (Exception e)
-        {
-            localCurrentMillisStartApp = (localCurrentMillisStartApp * 0);
-        }
-        */
-
-
-        //markerlesstrackingConfigFileContents = getIntent().getExtras().getString("MarkerlessTrkCfg");
-        //idMarkersTrackingConfigFileContents = getIntent().getExtras().getString("IdMarkerTrkCfg");
-
-
 		MetaioDebug.log("SeaMensor onCreate:Package: "+this.getPackageName());
 		MetaioDebug.log("SeaMensor onCreate:SeaMensor Account: "+seamensorAccount);
 		MetaioDebug.log("SeaMensor onCreate:Qty Vps: "+qtyVps);
-		//MetaioDebug.log("SeaMensor onCreate:Current Millis since Epoch: "+currentMillisStartAppString);
 
         // Fused Location Provider
         MetaioDebug.log("SeaMensor onCreate: Setting up Fused Location Provider");
@@ -376,14 +351,12 @@ public class seamensor extends ARViewActivity implements
         }
         else MetaioDebug.log("SeaMensor onCreate: isGooglePlayServicesAvailable()=true");
 
-
         createLocationRequest();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
 
 		// Enable Dropbox
 		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
@@ -534,67 +507,10 @@ public class seamensor extends ARViewActivity implements
         }
     }
 
-    /*
-    public void callLocationSystem()
-    {
-        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        locationListener = new LocationListener()
-        {
-            public void onLocationChanged(Location location)
-            {
-                //accuracy = location.getAccuracy();
-                currentLocationToPhotoToExif = getGPSToExif(location);
-                MetaioDebug.log("onLocationChanged: location received");
-
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras)
-            {
-
-            }
-
-            public void onProviderEnabled(String provider)
-            {
-
-            }
-
-            public void onProviderDisabled(String provider)
-            {
-
-            }
-        };
-
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
-
-        lastKnowLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        Criteria criteria = new Criteria();
-        provider = lm.getBestProvider(criteria, false);
-
-    }
-    */
-
-
 	@Override
 	protected void onStart() 
 	{
 		super.onStart();
-		/*
-        long currentMillis = System.currentTimeMillis();
-		if (currentMillis < Long.parseLong(currentMillisStartAppString))
-		{
-			//MetaioDebug.log("SeaMensor onStart:Device clock with problems: please reset time");
-			//Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.device_clock_problem), Toast.LENGTH_LONG);
-	        //toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
-	        //toast.show();
-            Long presentLocalCurrentMillis = System.currentTimeMillis();
-            presentLocalCurrentMillis = Long.parseLong(currentMillisStartAppString)+presentLocalCurrentMillis-localCurrentMillisStartApp;
-            setTime(presentLocalCurrentMillis);
-            //finish();
-		}
-        */
 
         mGoogleApiClient.connect();
 

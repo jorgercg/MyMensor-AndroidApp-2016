@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -22,33 +21,29 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Spanned;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +56,7 @@ import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileStatus;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
+import com.google.android.gms.common.AccountPicker;
 import com.metaio.sdk.MetaioDebug;
 import com.metaio.tools.io.AssetsManager;
 
@@ -184,9 +180,6 @@ public class MainActivity extends Activity implements LocationListener
         seamensorLogoAnimation.setVisible(true, true);
         seamensorLogoAnimation.start();
 
-        AccountManager accountManager = AccountManager.get(getApplicationContext());
-        accountManager.addAccount(MymensorAccAuthenticator.ACCOUNT_TYPE, null, null, null, this, null, null);
-
         // Retrieving SeaMensor Account information, if account does not exist then app is closed
 		try
 		{
@@ -269,90 +262,11 @@ public class MainActivity extends Activity implements LocationListener
             finish();
         }
 
-		//MetaioDebug.log("OnCreate: currentmillis.com:"+currentMillisString);
+        loadConfiguration();
 
-        if (seamensorAdminPresent)
-        {
+        activityToBeCalled = "SeaMensor"; //activityToBeCalled = "SMC";
 
-            MetaioDebug.log("OnCreate: seamensorAdminPresent="+seamensorAdminPresent+" calling loadConfiguration() and changing Layout");
-            loadConfiguration();
-            logoLinearLayout.setVisibility(View.GONE);
-            keyPadLinearLayout.setVisibility(View.VISIBLE);
-
-            topMessage = (TextView) findViewById(R.id.top_message);
-
-            filters = new InputFilter[2];
-            filters[0]= new InputFilter.LengthFilter(1);
-            filters[1] = onlyNumber;
-
-            //Setup the pin fields row
-            pinCodeField1 = (EditText) findViewById(R.id.pincode_1);
-            setupPinItem(pinCodeField1);
-
-            pinCodeField2 = (EditText) findViewById(R.id.pincode_2);
-            setupPinItem(pinCodeField2);
-
-            pinCodeField3 = (EditText) findViewById(R.id.pincode_3);
-            setupPinItem(pinCodeField3);
-
-            pinCodeField4 = (EditText) findViewById(R.id.pincode_4);
-            setupPinItem(pinCodeField4);
-
-            pinCodeField5 = (EditText) findViewById(R.id.pincode_5);
-            setupPinItem(pinCodeField5);
-
-            pinCodeField6 = (EditText) findViewById(R.id.pincode_6);
-            setupPinItem(pinCodeField6);
-
-            //setup the keyboard
-            ((Button) findViewById(R.id.button0)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button1)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button2)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button3)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button4)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button5)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button6)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button7)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button8)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button9)).setOnClickListener(defaultButtonListener);
-            ((Button) findViewById(R.id.button_erase)).setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View arg0) {
-                            if( pinCodeField1.isFocused() ) {
-
-                            }
-                            else if( pinCodeField2.isFocused() ) {
-                                pinCodeField1.requestFocus();
-                                pinCodeField1.setText("");
-                            }
-                            else if( pinCodeField3.isFocused() ) {
-                                pinCodeField2.requestFocus();
-                                pinCodeField2.setText("");
-                            }
-                            else if( pinCodeField4.isFocused() ) {
-                                pinCodeField3.requestFocus();
-                                pinCodeField3.setText("");
-                            }
-                            else if( pinCodeField5.isFocused() ) {
-                                pinCodeField4.requestFocus();
-                                pinCodeField4.setText("");
-                            }
-                            else if( pinCodeField6.isFocused() ) {
-                                pinCodeField5.requestFocus();
-                                pinCodeField5.setText("");
-                            }
-                        }
-                    });
-        }
-        else
-        {
-            MetaioDebug.log("OnCreate: seamensorAdminPresent="+seamensorAdminPresent+" calling loadConfiguration()");
-            loadConfiguration();
-            MetaioDebug.log("OnCreate: seamensorAdminPresent="+seamensorAdminPresent+" calling loadDefinitionsFromDropboxBeforeCallingSeamensor()");
-            activityToBeCalled = "SeaMensor";
-            loadDefinitionsBeforeCallingActivity.execute();
-        }
+        loadDefinitionsBeforeCallingActivity.execute();
 
     } // End onCreate
 
@@ -377,51 +291,34 @@ public class MainActivity extends Activity implements LocationListener
 
     }
 
-
-    public void setTime(long time)
-    {
-        if (ShellInterface.isSuAvailable())
-        {
-            ShellInterface.runCommand("chmod 666 /dev/alarm");
-            SystemClock.setCurrentTimeMillis(time);
-            ShellInterface.runCommand("chmod 664 /dev/alarm");
-        }
-    }
-
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == REQUEST_LINK_TO_DBX)
-        {
-            if (resultCode == Activity.RESULT_OK)
-            {
-                try
+        super.onActivityResult(requestCode, resultCode, data);
+
+                if (requestCode == REQUEST_LINK_TO_DBX)
                 {
-                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    if (resultCode == Activity.RESULT_OK)
+                    {
+                        try
+                        {
+                            dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                        }
+                        catch (DbxException.Unauthorized unauthorized)
+                        {
+                            unauthorized.printStackTrace();
+                        }
+                    }
+                    else
+                    {
+                        MetaioDebug.log("onActivityResult: Link to DROPBOX FAILED");
+                        Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.dropboxlinkerror), Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
+                        toast.show();
+                        finish();
+                    }
                 }
-                catch (DbxException.Unauthorized unauthorized)
-                {
-                    unauthorized.printStackTrace();
-                }
-                //MetaioDebug.log("onActivityResult: Link to DROPBOX OK : seamensorAdminPresent="+seamensorAdminPresent+" calling loadConfiguration()");
-                //loadConfiguration();
-                //MetaioDebug.log("onActivityResult: Link to DROPBOX OK : seamensorAdminPresent="+seamensorAdminPresent+" calling loadDefinitionsFromDropboxBeforeCallingSeamensor()");
-                //loadDefinitionsBeforeCallingActivity.execute();
-            }
-            else
-            {
-                MetaioDebug.log("onActivityResult: Link to DROPBOX FAILED");
-                Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.dropboxlinkerror), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
-                toast.show();
-                finish();
-            }
-        }
-        else
-        {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+
+
     }
 
 		
@@ -443,16 +340,23 @@ public class MainActivity extends Activity implements LocationListener
         }
 	}
 
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        AccountManager accountManager = AccountManager.get(this);
+        accountManager.addAccount(Constants.ACCOUNT_TYPE, null, null, null, this, null, null);
+    }
+
+
     @Override
     public void onPause()
     {
         super.onPause();
         MetaioDebug.log("onPause(): CALLED");
         finish();
-        /*
-        loadDefinitionsBeforeCallingActivity.cancel(true);
-        MetaioDebug.log("onPause(): loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
-        */
     }
 
     /*
@@ -512,190 +416,6 @@ public class MainActivity extends Activity implements LocationListener
         toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
         toast.show();
     }
-
-    protected void setupPinItem(EditText item){
-        item.setInputType(InputType.TYPE_NULL);
-        item.setFilters(filters);
-        item.setOnTouchListener(otl);
-        item.setTransformationMethod(PasswordTransformationMethod.getInstance());
-    }
-
-    private View.OnClickListener defaultButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View arg0) {
-            int currentValue = -1;
-            int id = arg0.getId();
-            if (id == R.id.button0) {
-                currentValue = 0;
-            } else if (id == R.id.button1) {
-                currentValue = 1;
-            } else if (id == R.id.button2) {
-                currentValue = 2;
-            } else if (id == R.id.button3) {
-                currentValue = 3;
-            } else if (id == R.id.button4) {
-                currentValue = 4;
-            } else if (id == R.id.button5) {
-                currentValue = 5;
-            } else if (id == R.id.button6) {
-                currentValue = 6;
-            } else if (id == R.id.button7) {
-                currentValue = 7;
-            } else if (id == R.id.button8) {
-                currentValue = 8;
-            } else if (id == R.id.button9) {
-                currentValue = 9;
-            } else {
-            }
-
-            //set the value and move the focus
-            String currentValueString = String.valueOf(currentValue);
-            if( pinCodeField1.isFocused() ) {
-                pinCodeField1.setText(currentValueString);
-                pinCodeField2.requestFocus();
-                pinCodeField2.setText("");
-            }
-            else if( pinCodeField2.isFocused() ) {
-                pinCodeField2.setText(currentValueString);
-                pinCodeField3.requestFocus();
-                pinCodeField3.setText("");
-            }
-            else if( pinCodeField3.isFocused() ) {
-                pinCodeField3.setText(currentValueString);
-                pinCodeField4.requestFocus();
-                pinCodeField4.setText("");
-            }
-            else if( pinCodeField4.isFocused() ) {
-                pinCodeField4.setText(currentValueString);
-                pinCodeField5.requestFocus();
-                pinCodeField5.setText("");
-            }
-            else if( pinCodeField5.isFocused() ) {
-                pinCodeField5.setText(currentValueString);
-                pinCodeField6.requestFocus();
-                pinCodeField6.setText("");
-            }
-            else if( pinCodeField6.isFocused() ) {
-                pinCodeField6.setText(currentValueString);
-            }
-
-            if(pinCodeField6.getText().toString().length() > 0 &&
-                    pinCodeField5.getText().toString().length() > 0 &&
-                    pinCodeField4.getText().toString().length() > 0 &&
-                    pinCodeField3.getText().toString().length() > 0 &&
-                    pinCodeField2.getText().toString().length() > 0 &&
-                    pinCodeField1.getText().toString().length() > 0
-                    ) {
-                onPinLockInserted();
-            }
-        }
-    };
-
-    protected void showPasswordError()
-    {
-        Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.passcode_wrong_passcode), Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
-        toast.show();
-    }
-
-    public boolean verifyPassword( String password )
-    {
-        boolean isPasswordOK = false;
-        for (int i=0; i<(userCounter+1); i++)
-        {
-            MetaioDebug.log("i="+i);
-            MetaioDebug.log("password="+password);
-            MetaioDebug.log("userNumber[i]="+userNumber[i]);
-            if (password.equals(userNumber[i]))
-            {
-                isPasswordOK = true;
-                userLoggedCounter = i;
-            }
-        }
-
-        if(isPasswordOK)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    protected void onPinLockInserted()
-    {
-        String userNum = pinCodeField1.getText().toString()+
-                pinCodeField2.getText().toString()+
-                pinCodeField3.getText().toString()+
-                pinCodeField4.getText().toString()+
-                pinCodeField5.getText().toString()+
-                pinCodeField6.getText().toString();
-
-        if (verifyPassword(userNum))
-        {
-            logoLinearLayout.setVisibility(View.VISIBLE);
-            keyPadLinearLayout.setVisibility(View.GONE);
-            seamensorLogo.setVisibility(View.VISIBLE);
-            seamensorLogoAnimation.start();
-
-            if (userActivity[userLoggedCounter].equalsIgnoreCase("SMC"))
-            {
-                activityToBeCalled = "SMC";
-                if (loadDefinitionsBeforeCallingActivity.getStatus()== AsyncTask.Status.PENDING) loadDefinitionsBeforeCallingActivity.execute();
-            }
-            if (userActivity[userLoggedCounter].equalsIgnoreCase("SeaMensor"))
-            {
-                activityToBeCalled = "SeaMensor";
-                if (loadDefinitionsBeforeCallingActivity.getStatus()== AsyncTask.Status.PENDING) loadDefinitionsBeforeCallingActivity.execute();
-            }
-        }
-        else
-        {
-            showPasswordError();
-            pinCodeField1.setText("");
-            pinCodeField2.setText("");
-            pinCodeField3.setText("");
-            pinCodeField4.setText("");
-            pinCodeField5.setText("");
-            pinCodeField6.setText("");
-            pinCodeField1.requestFocus();
-        }
-
-    }
-
-    private InputFilter onlyNumber = new InputFilter()
-    {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
-        {
-            if( source.length() > 1 )
-                return "";
-            if( source.length() == 0 ) //erase
-                return null;
-            try {
-                int number = Integer.parseInt(source.toString());
-                if( ( number >= 0 ) && ( number <= 9 ) )
-                    return String.valueOf(number);
-                else
-                    return "";
-            } catch (NumberFormatException e) {
-                return "";
-            }
-        }
-    };
-
-    private View.OnTouchListener otl = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch (View v, MotionEvent event)
-        {
-            if( v instanceof EditText )
-            {
-                ((EditText)v).setText("");
-            }
-            return false;
-        }
-    };
 
     public void defineVpsConfiguredFileInUse(String oldFileInUse, String newFileInUse)
     {
@@ -845,70 +565,14 @@ public class MainActivity extends Activity implements LocationListener
         return vpConfiguredTime;
     }
 
+
     public void loadConfiguration()
     {
         MetaioDebug.log("loadConfiguration(): Loading Definitions from Dropbox and writing to local DCI storage");
         // Loading DCI Number from dciFileName.xml file
         try
         {
-            try
-            {
-                //dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                DbxPath dciFileNameFilePath = new DbxPath(DbxPath.ROOT,""+seamensorAccount+"/"+dciFileName);
-                MetaioDebug.log("loadConfiguration(): ####### LOADING: DCIFILE CONTENTS");
-                MetaioDebug.log("loadConfiguration(): dciFileName Dropbox path = "+dciFileNameFilePath);
-                DbxFile dciFileNameFile = dbxFs.open(dciFileNameFilePath);
-                DbxFileStatus dciFileNameFileStatus = dciFileNameFile.getSyncStatus();
-                if (!dciFileNameFileStatus.isLatest) dciFileNameFile.update();
-                try
-                {
-                    FileInputStream fis = dciFileNameFile.getReadStream();
-                    XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
-                    XmlPullParser myparser = xmlFactoryObject.newPullParser();
-                    myparser.setInput(fis, null);
-                    int eventType = myparser.getEventType();
-                    while (eventType != XmlPullParser.END_DOCUMENT)
-                    {
-                        if(eventType == XmlPullParser.START_DOCUMENT)
-                        {
-                            //MetaioDebug.log("Start document");
-                        }
-                        else if(eventType == XmlPullParser.START_TAG)
-                        {
-                            //MetaioDebug.log("Start tag "+myparser.getName());
-                            if(myparser.getName().equalsIgnoreCase("DCINumber"))
-                            {
-                                eventType = myparser.next();
-                                dciNumber = Integer.parseInt(myparser.getText());
-                            }
-                        }
-                        else if(eventType == XmlPullParser.END_TAG)
-                        {
-                            //MetaioDebug.log("End tag "+myparser.getName());
-                        }
-                        else if(eventType == XmlPullParser.TEXT)
-                        {
-                            //MetaioDebug.log("Text "+myparser.getText());
-                        }
-                        eventType = myparser.next();
-                    }
-                }
-                finally
-                {
-                    dciFileNameFile.close();
-                    MetaioDebug.log("loadConfiguration(): DCI Number: "+dciNumber);
-                }
-
-                MetaioDebug.log("loadConfiguration(): dciFileName DROPBOX file = "+dciFileNameFile);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                MetaioDebug.log(Log.ERROR, "loadConfiguration(): dciFile loading failed, see stack trace");
-                dciNumber = 1;
-                MetaioDebug.log("loadConfiguration(): Default DCI Number: "+dciNumber);
-            }
-
+            dciNumber = 1;
             descvpDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"dsc"+"/"+"descvp";
             markervpDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"mrk"+"/"+"markervp";
             vpsDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/";
@@ -1172,7 +836,6 @@ public class MainActivity extends Activity implements LocationListener
                     if (now!=0)
                     {
                         MetaioDebug.log("loadDefinitionsBeforeCallingActivity: System.currentTimeMillis() before setTime="+System.currentTimeMillis());
-                        setTime(now);
                         clockSetSuccess = true;
                         MetaioDebug.log("loadDefinitionsBeforeCallingActivity: System.currentTimeMillis() AFTER setTime="+System.currentTimeMillis());
                     }
@@ -1216,7 +879,6 @@ public class MainActivity extends Activity implements LocationListener
                                 millisRetrievedFromGPS = date.getTime();
                                 long currentMillis = millisRetrievedFromGPS + (System.currentTimeMillis() - systemMillisWhenGPSTimereceived);
                                 MetaioDebug.log("loadDefinitionsBeforeCallingActivity: new time will be set to currentMillis = " + currentMillis);
-                                setTime(currentMillis);
                                 clockSetSuccess = true;
                                 MetaioDebug.log("loadDefinitionsBeforeCallingActivity: new time is set to currentMillis = " + currentMillis);
                                 currentMillisString = Long.toString(currentMillis);
@@ -1627,60 +1289,6 @@ public class MainActivity extends Activity implements LocationListener
             buffer[offset++] = (byte)(Math.random() * 255.0);
         }
     }
-
-
-
-
-
-
-
-
-
-    /*
-
-    public void callingARVewactivity(boolean loadSucess)
-    {
-        MetaioDebug.log("callingARVewactivity(): called");
-        Intent intent = new Intent(this, seamensor.class);
-        if (loadSucess)
-        {
-            if (null == currentMillisString)
-            {
-                readingCurrentMillis();
-
-
-                Long loopStart = System.currentTimeMillis();
-                MetaioDebug.log("callingARVewactivity(): starting the loop querying currentmillis.com for 20 seconds max");
-                do
-                {
-                    //MetaioDebug.log("Calling ARVIEW waiting....: currentMillisString ="+currentMillisString+" "+(System.currentTimeMillis() - loopStart)+" "+((currentMillisString == null) && ((System.currentTimeMillis() - loopStart) < 20000)));
-                }
-                while ((currentMillisString == null) && ((System.currentTimeMillis() - loopStart) < 20000));
-
-            }
-
-        }
-
-        if ((loadSucess)&&(null != currentMillisString))
-        {
-            MetaioDebug.log("Calling ARViewactivity");
-            try {
-                intent.putExtra("seamensoraccount", seamensorAccount);
-                intent.putExtra("DciNumber", dciNumber);
-                intent.putExtra("QtyVps", qtyVps);
-                startActivity(intent);
-            } catch (Exception e) {
-                MetaioDebug.log("Problem when calling ARViewactivity");
-                e.printStackTrace();
-            }
-            finish();
-        }
-        else
-        {
-            finish();
-        }
-    }
-                */
 }
 
 

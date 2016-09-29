@@ -373,6 +373,7 @@
     <string name="app_name">SeaMensor</string>
     <string name="app_version_seamensor">SeaMensor 1.0.0.4</string>
     <string name="app_version_smc">SMC 1.0.0.4</string>
+    <string name="authlabel" translatable="false">MyMensor</string>
     <string name="button_accept_vp_photo">OK</string>
     <string name="button_alpha_toggle">Transparent</string>
     <string name="button_ambiguous_vp_toggle">Amb VP</string>
@@ -442,7 +443,8 @@ available. Please contact the developer for assistance.</string>
     <string name="gps_time_acquired">GPS signal acquired... GPS UTC date and time acquired</string>
     <string name="is_photo_ok">Is Photo captured ok? (You can zoom in!!!)</string>
     <string name="load_assets_finished">The wait is over!!!</string>
-    <string name="metaioSDKSignature">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
+    <string name="logging_in">Logging in to server...</string>
+    <string name="metaioSDKSignature" translatable="false">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
     <string name="no_inttime">Cannot retrieve certified time</string>
     <string name="no_photo_captured_in_this_vp">No photo captured in this vp!!!</string>
     <string name="no_seamensor_account">No SeaMensor Account in this Device</string>

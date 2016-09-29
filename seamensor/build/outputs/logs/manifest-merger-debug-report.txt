@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:2:1-105:12
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:2:1-111:12
 	package
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:3:5-38
 		INJECTED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml
@@ -133,7 +133,7 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 	android:name
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:31:19-63
 application
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:33:5-103:19
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:33:5-109:19
 MERGED from [com.android.support:support-v4:24.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-v4/24.0.0/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-core-utils:24.2.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-core-utils/24.2.0/AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-compat:24.2.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.0/AndroidManifest.xml:25:5-20
@@ -216,7 +216,7 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:64:13-52
 	android:name
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:62:13-55
-activity#com.seamensor.seamensor.MymensorAuthenticatorActivity
+activity#com.seamensor.seamensor.MymAuthActivity
 ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:68:9-79:20
 	android:screenOrientation
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:72:13-50
@@ -225,7 +225,7 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 	android:theme
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:71:13-52
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:69:13-81
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:69:13-67
 intent-filter#android.intent.action.VIEW+android.intent.category.BROWSABLE+android.intent.category.DEFAULT
 ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:73:13-78:29
 action#android.intent.action.VIEW
@@ -241,9 +241,9 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 	android:name
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:76:27-75
 data
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:17-79
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:17-82
 	android:host
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:57-77
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:57-80
 	android:scheme
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:77:23-56
 activity#com.dropbox.sync.android.DbxAuthActivity
@@ -272,10 +272,26 @@ ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/Android
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:98:13-35
 	android:name
 		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:97:13-93
+service#com.seamensor.seamensor.MymAuthService
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:99:9-105:19
+	android:name
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:99:18-71
+intent-filter#android.accounts.AccountAuthenticator
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:100:13-102:29
+action#android.accounts.AccountAuthenticator
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:101:17-80
+	android:name
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:101:25-77
+meta-data#android.accounts.AccountAuthenticator
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:103:13-104:57
+	android:resource
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:104:17-54
+	android:name
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:103:24-76
 meta-data#com.google.android.gms.version
-ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:100:9-102:69
+ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:106:9-108:69
 MERGED from [com.google.android.gms:play-services-base:7.0.0] /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.0.0/AndroidManifest.xml:21:9-23:69
 	android:value
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:102:13-66
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:108:13-66
 	android:name
-		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:101:13-58
+		ADDED from /Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/AndroidManifest.xml:107:13-58

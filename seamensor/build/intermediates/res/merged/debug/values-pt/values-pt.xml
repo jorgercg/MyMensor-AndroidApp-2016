@@ -70,6 +70,7 @@
     <string name="gps_time_acquired">Sinal GPS adquirido... Data e hora GPS UTC adquiridos</string>
     <string name="is_photo_ok">A Foto foi bem capturada? (Você pode usar o zoom!!!)</string>
     <string name="load_assets_finished">A espera acabou!!!</string>
+    <string name="logging_in">Conectando ao servidor...</string>
     <string name="no_inttime">Não é possível recuperar o horário certificado</string>
     <string name="no_photo_captured_in_this_vp">Nenhuma foto capturada neste vp!!!</string>
     <string name="no_seamensor_account">Não há conta SeaMensor neste dispositivo.</string>
