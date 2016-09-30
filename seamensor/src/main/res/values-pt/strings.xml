@@ -32,7 +32,7 @@
     <string name="vp_out_of_bounds">VP fora do Limite!!!!</string>
     <string name="camera_focusing">Aguarde!!! Câmera Focalizando!!!</string>
     <string name="camera_image_captured">Imagem capturada</string>
-    <string name="user_name">Nome de usuário:"</string>
+    <string name="user_name">Nome de usuário:</string>
     <string name="user_number">Número de usuário:</string>
     <string name="button_ok">OK</string>
     <string name="button_text">Fechar Foto do VP</string>
@@ -62,4 +62,10 @@
     <string name="vp_location_des_text_missing">Erro: faltando texto de descrição de vp"</string>
     <string name="no_photo_captured_in_this_vp">Nenhuma foto capturada neste vp!!!</string>
     <string name="logging_in">Conectando ao servidor...</string>
+    <string name="userstate_loggedout">Por favor fornecer credenciais.</string>
+    <string name="userstate_loggedin">Autorizado, usando credencias de</string>
+    <string name="start_config">Configuração</string>
+    <string name="start_cap">Captura de Imagens</string>
+    <string name="login_btn_txt">LOGIN</string>
+    <string name="logout_btn_txt">LOGOUT</string>
 </resources>

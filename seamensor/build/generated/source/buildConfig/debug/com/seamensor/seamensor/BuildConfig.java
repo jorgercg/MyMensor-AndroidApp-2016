@@ -5,7 +5,7 @@ package com.seamensor.seamensor;
 
 public final class BuildConfig {
   public static final boolean DEBUG = Boolean.parseBoolean("true");
-  public static final String APPLICATION_ID = "com.seamensor.seamensor";
+  public static final String APPLICATION_ID = "com.ImageCapActivity.ImageCapActivity";
   public static final String BUILD_TYPE = "debug";
   public static final String FLAVOR = "";
   public static final int VERSION_CODE = 1;

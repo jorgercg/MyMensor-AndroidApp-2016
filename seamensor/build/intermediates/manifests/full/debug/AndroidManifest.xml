@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.seamensor.seamensor"
+    package="com.ImageCapActivity.ImageCapActivity"
     android:versionCode="1"
     android:versionName="1.0.0.4" >
 
@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SET_TIME" />
     <uses-permission android:name="android.permission.SET_TIME_ZONE" />
     <uses-permission android:name="android.permission.SET_DEBUG_APP" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -49,20 +48,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.seamensor.seamensor.seamensor"
-            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
-            android:permission="android.permission.SET_TIME"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.FullScreen" >
-        </activity>
-        <activity
-            android:name="com.seamensor.seamensor.smc"
+            android:name="com.seamensor.seamensor.LoaderActivity"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.FullScreen" >
         </activity>
         <activity
-            android:name="com.seamensor.seamensor.MymAuthActivity"
+            android:name="com.seamensor.seamensor.ImageCapActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.FullScreen" >
+        </activity>
+        <activity
+            android:name="com.seamensor.seamensor.ConfigActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.FullScreen" >
+        </activity>
+        <activity
+            android:name="com.seamensor.seamensor.MymAccAuthenticatorActivity"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.FullScreen" >
@@ -99,7 +103,7 @@
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
-        <service android:name="com.seamensor.seamensor.MymAuthService" >
+        <service android:name="com.seamensor.seamensor.MymAuthenticatorService" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>

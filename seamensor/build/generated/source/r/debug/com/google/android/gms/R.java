@@ -143,7 +143,7 @@ public final class R {
 		public static final int gtm_analytics = 0x7f060000;
 	}
 	public static final class string {
-		public static final int accept = 0x7f07016c;
+		public static final int accept = 0x7f070172;
 		public static final int common_android_wear_notification_needs_update_text = 0x7f070000;
 		public static final int common_android_wear_update_text = 0x7f070001;
 		public static final int common_android_wear_update_title = 0x7f070002;
@@ -175,19 +175,19 @@ public final class R {
 		public static final int common_signin_button_text = 0x7f07001c;
 		public static final int common_signin_button_text_long = 0x7f07001d;
 		public static final int commono_google_play_services_api_unavailable_text = 0x7f07001e;
-		public static final int create_calendar_message = 0x7f07016e;
-		public static final int create_calendar_title = 0x7f07016f;
-		public static final int decline = 0x7f070170;
-		public static final int store_picture_message = 0x7f070172;
-		public static final int store_picture_title = 0x7f070173;
+		public static final int create_calendar_message = 0x7f070174;
+		public static final int create_calendar_title = 0x7f070175;
+		public static final int decline = 0x7f070176;
+		public static final int store_picture_message = 0x7f070178;
+		public static final int store_picture_title = 0x7f070179;
 		public static final int wallet_buy_button_place_holder = 0x7f07001f;
 	}
 	public static final class style {
-		public static final int Theme_IAPTheme = 0x7f0d0007;
-		public static final int WalletFragmentDefaultButtonTextAppearance = 0x7f0d000a;
-		public static final int WalletFragmentDefaultDetailsHeaderTextAppearance = 0x7f0d000b;
-		public static final int WalletFragmentDefaultDetailsTextAppearance = 0x7f0d000c;
-		public static final int WalletFragmentDefaultStyle = 0x7f0d000d;
+		public static final int Theme_IAPTheme = 0x7f0d0005;
+		public static final int WalletFragmentDefaultButtonTextAppearance = 0x7f0d0008;
+		public static final int WalletFragmentDefaultDetailsHeaderTextAppearance = 0x7f0d0009;
+		public static final int WalletFragmentDefaultDetailsTextAppearance = 0x7f0d000a;
+		public static final int WalletFragmentDefaultStyle = 0x7f0d000b;
 	}
 	public static final class styleable {
 		public static final int[] AdsAttrs = { 0x7f010000, 0x7f010001, 0x7f010002 };

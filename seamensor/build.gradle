@@ -5,7 +5,7 @@ android {
     buildToolsVersion '24.0.2'
 
     defaultConfig {
-        applicationId "com.seamensor.seamensor"
+        applicationId "com.ImageCapActivity.ImageCapActivity"
         minSdkVersion 17
         targetSdkVersion 19
     }
@@ -20,7 +20,7 @@ android {
 
 dependencies {
     compile project(':metaioSDK')
-    compile 'com.android.support:support-core-utils:24.2.0'
+    compile 'com.android.support:support-core-utils:24.2.1'
     compile 'com.google.android.gms:play-services:7.0.0'
     compile files('libs/dropbox-sync-sdk-android.jar')
     compile 'net.openid:appauth:0.3.0'

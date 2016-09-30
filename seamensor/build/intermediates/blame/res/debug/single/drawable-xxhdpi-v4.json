@@ -52,12 +52,12 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/res/drawable-xxhdpi/custom_button_option_selected.xml"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/passcode_keyboard_button.xml",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/res/drawable-xxhdpi/passcode_keyboard_button.xml"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/descvpblank.jpg",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/res/drawable-xxhdpi/descvpblank.jpg"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/passcode_keyboard_button.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/res/drawable-xxhdpi/passcode_keyboard_button.xml"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/web_forward.png",

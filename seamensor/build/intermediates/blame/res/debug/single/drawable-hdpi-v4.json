@@ -1,11 +1,11 @@
 [
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_default.9.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_default.9.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_forward.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/web_forward.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/button_green_default.9.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-hdpi-v4/button_green_default.9.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-hdpi-v4/web_reload.png",

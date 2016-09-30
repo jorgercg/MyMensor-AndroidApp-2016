@@ -32,7 +32,7 @@
     <string name="vp_out_of_bounds">VP out of Bounds!!!!</string>
     <string name="camera_focusing">Wait!!! Camera Focusing!!!</string>
     <string name="camera_image_captured">image captured</string>
-    <string name="user_name">User name:"</string>
+    <string name="user_name">User name:</string>
     <string name="user_number">User number:</string>
     <string name="button_ok">OK</string>
     <string name="button_text">Close VP Photo</string>
@@ -64,4 +64,10 @@
     <string name="metaioSDKSignature" translatable="false">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
     <string name="logging_in">Logging in to server...</string>
     <string name="authlabel" translatable="false">MyMensor</string>
+    <string name="userstate_loggedout">Please enter your credentials.</string>
+    <string name="userstate_loggedin">Authorized, using credentials from</string>
+    <string name="start_config">Configuration</string>
+    <string name="start_cap">Image Capture</string>
+    <string name="login_btn_txt">LOGIN</string>
+    <string name="logout_btn_txt">LOGOUT</string>
 </resources>

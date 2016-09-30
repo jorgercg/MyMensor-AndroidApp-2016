@@ -444,6 +444,8 @@ available. Please contact the developer for assistance.</string>
     <string name="is_photo_ok">Is Photo captured ok? (You can zoom in!!!)</string>
     <string name="load_assets_finished">The wait is over!!!</string>
     <string name="logging_in">Logging in to server...</string>
+    <string name="login_btn_txt">LOGIN</string>
+    <string name="logout_btn_txt">LOGOUT</string>
     <string name="metaioSDKSignature" translatable="false">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
     <string name="no_inttime">Cannot retrieve certified time</string>
     <string name="no_photo_captured_in_this_vp">No photo captured in this vp!!!</string>
@@ -452,12 +454,16 @@ available. Please contact the developer for assistance.</string>
     <string name="not_all_vps_acquired">Error: not all vps acquired</string>
     <string name="passcode_enter_passcode">Enter your user number</string>
     <string name="passcode_wrong_passcode">User number not registered, please try again.</string>
+    <string name="start_cap">Image Capture</string>
+    <string name="start_config">Configuration</string>
     <string name="starting_to_load_assets">Starting.....</string>
     <string name="still_loading_assets">Still loading.....</string>
     <string name="store_picture_message">"Allow Ad to store image in Picture gallery?"</string>
     <string name="store_picture_title">Save image</string>
-    <string name="user_name">User name:"</string>
+    <string name="user_name">User name:</string>
     <string name="user_number">User number:</string>
+    <string name="userstate_loggedin">Authorized, using credentials from</string>
+    <string name="userstate_loggedout">Please enter your credentials.</string>
     <string name="vpAcquiredStatus">Y</string>
     <string name="vpNotAcquiredStatus">N</string>
     <string name="vp_00">VP#00</string>
@@ -480,25 +486,6 @@ available. Please contact the developer for assistance.</string>
     <style name="POIButton.POIActionButton">
         <item name="android:background">@color/transparent</item>
     </style>
-    <style name="PasscodeInputItemStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:maxLength">1</item>
-        <item name="android:inputType">textPassword</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:singleLine">true</item>
-    </style>
-    <style name="PasscodeKeyboardButtonStyle" parent="@android:style/Widget.Button">
-       <item name="android:textSize">22sp</item>
-  	   <item name="android:textColor">#FF464646</item>
-       <item name="android:gravity">center</item>
-       <item name="android:background">@drawable/passcode_keyboard_button</item>
-       <item name="android:layout_margin">3dp</item>
-	   <item name="android:padding">5dp</item>
-	   <item name="android:layout_width">wrap_content</item>
-       <item name="android:layout_height">wrap_content</item>
-   </style>
     <style name="Theme.FullScreen" parent="android:Theme">
         <item name="android:windowBackground">@null</item>
         <item name="android:windowNoTitle">true</item>

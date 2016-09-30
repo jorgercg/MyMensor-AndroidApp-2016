@@ -71,6 +71,8 @@
     <string name="is_photo_ok">A Foto foi bem capturada? (Você pode usar o zoom!!!)</string>
     <string name="load_assets_finished">A espera acabou!!!</string>
     <string name="logging_in">Conectando ao servidor...</string>
+    <string name="login_btn_txt">LOGIN</string>
+    <string name="logout_btn_txt">LOGOUT</string>
     <string name="no_inttime">Não é possível recuperar o horário certificado</string>
     <string name="no_photo_captured_in_this_vp">Nenhuma foto capturada neste vp!!!</string>
     <string name="no_seamensor_account">Não há conta SeaMensor neste dispositivo.</string>
@@ -78,10 +80,14 @@
     <string name="not_all_vps_acquired">Erro: nem todos vps foram capturados - capture todos antes de salvar - vps NÃO FORAM salvos"</string>
     <string name="passcode_enter_passcode">Entre seu número de usuário</string>
     <string name="passcode_wrong_passcode">Usuário não registrado, favor tentar novamente.</string>
+    <string name="start_cap">Captura de Imagens</string>
+    <string name="start_config">Configuração</string>
     <string name="starting_to_load_assets">Começando.....</string>
     <string name="still_loading_assets">Ainda carregando.....</string>
-    <string name="user_name">Nome de usuário:"</string>
+    <string name="user_name">Nome de usuário:</string>
     <string name="user_number">Número de usuário:</string>
+    <string name="userstate_loggedin">Autorizado, usando credencias de</string>
+    <string name="userstate_loggedout">Por favor fornecer credenciais.</string>
     <string name="vpAcquiredStatus">S</string>
     <string name="vpNotAcquiredStatus">N</string>
     <string name="vp_00">VP#00</string>
