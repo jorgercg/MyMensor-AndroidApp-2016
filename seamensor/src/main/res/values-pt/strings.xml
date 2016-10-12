@@ -62,10 +62,18 @@
     <string name="vp_location_des_text_missing">Erro: faltando texto de descrição de vp"</string>
     <string name="no_photo_captured_in_this_vp">Nenhuma foto capturada neste vp!!!</string>
     <string name="logging_in">Conectando ao servidor...</string>
-    <string name="userstate_loggedout">Por favor fornecer credenciais.</string>
-    <string name="userstate_loggedin">Autorizado, usando credencias de</string>
+    <string name="userstate_loggedout">Por favor faça o log in.</string>
+    <string name="userstate_loggedin">Autorizado, usando credenciais de</string>
     <string name="start_config">Configuração</string>
     <string name="start_cap">Captura de Imagens</string>
     <string name="login_btn_txt">LOGIN</string>
     <string name="logout_btn_txt">LOGOUT</string>
+    <string name="Password">Senha</string>
+    <string name="accountname">Usuário</string>
+    <string name="SignIn">Entrar</string>
+    <string name="newuser">Usuário novo?</string>
+    <string name="Name">Nome</string>
+    <string name="CreateAcc">Criar Conta</string>
+    <string name="AlreadyMember">Já se inscreveu?</string>
+    <string name="emailusr">Email</string>
 </resources>

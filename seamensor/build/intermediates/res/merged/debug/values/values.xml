@@ -97,6 +97,7 @@
     <item name="routeButton" type="id"/>
     <item name="videoButton" type="id"/>
     <integer name="google_play_services_version">7095000</integer>
+    <string name="AlreadyMember">Already a member?</string>
     <string name="BTN_ACCEPT">Accept</string>
     <string name="BTN_ADD">Add</string>
     <string name="BTN_ADD_FAVORITE">Add to Favorites</string>
@@ -185,6 +186,7 @@
     <string name="CATEGORY_SEARCH">Search channels</string>
     <string name="CATEGORY_SHOPPING">Shopping</string>
     <string name="CATEGORY_TRAVEL">Travel</string>
+    <string name="CreateAcc">Create Account</string>
     <string name="HNT_CHANNELS_SEARCH">Type in search terms</string>
     <string name="HNT_EMAIL_ADDRESS">Email Address</string>
     <string name="HNT_PASSWORD">Password</string>
@@ -367,13 +369,17 @@
     <string name="MSG_TITLE_USERS_NOT_FOUND">No users found</string>
     <string name="MSG_TITLE_VALIDATION_ERROR">Validation error</string>
     <string name="MSG_TITLE_WARNING">Warning</string>
+    <string name="Name">Name</string>
+    <string name="Password">Password</string>
+    <string name="SignIn">Sign In</string>
     <string name="accept">Accept</string>
+    <string name="accountname">Username</string>
     <string name="admin_present_waiving_gps_time">Admin present... waiving the wait for GPS signal...</string>
     <string name="almost_finished_loading_assets">Almost there.....</string>
     <string name="app_name">SeaMensor</string>
     <string name="app_version_seamensor">SeaMensor 1.0.0.4</string>
     <string name="app_version_smc">SMC 1.0.0.4</string>
-    <string name="authlabel" translatable="false">MyMensor</string>
+    <string name="authlabel" translatable="false">SeaMensor</string>
     <string name="button_accept_vp_photo">OK</string>
     <string name="button_alpha_toggle">Transparent</string>
     <string name="button_ambiguous_vp_toggle">Amb VP</string>
@@ -440,6 +446,7 @@ available. Please contact the developer for assistance.</string>
     <string name="device_clock_problem">Please set correctly the Device Clock</string>
     <string name="double_bck_exit">Press Back twice quickly to exit!</string>
     <string name="dropboxlinkerror">Not linked to Dropbox - exiting app</string>
+    <string name="emailusr">Email</string>
     <string name="gps_time_acquired">GPS signal acquired... GPS UTC date and time acquired</string>
     <string name="is_photo_ok">Is Photo captured ok? (You can zoom in!!!)</string>
     <string name="load_assets_finished">The wait is over!!!</string>
@@ -447,6 +454,7 @@ available. Please contact the developer for assistance.</string>
     <string name="login_btn_txt">LOGIN</string>
     <string name="logout_btn_txt">LOGOUT</string>
     <string name="metaioSDKSignature" translatable="false">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
+    <string name="newuser">New User?</string>
     <string name="no_inttime">Cannot retrieve certified time</string>
     <string name="no_photo_captured_in_this_vp">No photo captured in this vp!!!</string>
     <string name="no_seamensor_account">No SeaMensor Account in this Device</string>
@@ -463,7 +471,7 @@ available. Please contact the developer for assistance.</string>
     <string name="user_name">User name:</string>
     <string name="user_number">User number:</string>
     <string name="userstate_loggedin">Authorized, using credentials from</string>
-    <string name="userstate_loggedout">Please enter your credentials.</string>
+    <string name="userstate_loggedout">Please log in.</string>
     <string name="vpAcquiredStatus">Y</string>
     <string name="vpNotAcquiredStatus">N</string>
     <string name="vp_00">VP#00</string>

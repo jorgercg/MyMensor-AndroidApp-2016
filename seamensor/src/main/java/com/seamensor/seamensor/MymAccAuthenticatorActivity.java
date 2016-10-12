@@ -3,169 +3,239 @@ package com.seamensor.seamensor;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
-import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
-import com.google.api.client.auth.oauth2.BearerToken;
-import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
-import com.google.api.client.auth.oauth2.TokenRequest;
-import com.google.api.client.auth.openidconnect.IdToken;
-import com.google.api.client.auth.openidconnect.IdTokenResponse;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.MemoryDataStoreFactory;
-import com.google.api.client.util.store.DataStoreFactory;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-import java.io.IOException;
-import java.util.Arrays;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * The MymAccAuthenticatorActivity activity.
+ * Called by the MymAccAuthenticator and in charge of identifing the user.
+ * It sends back to the MymAccAuthenticator the result.
+ */
 
 public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
+    private static final String TAG = "MymAccAuthActvty";
+
     public final static String ARG_ACCOUNT_TYPE = "ACCOUNT_TYPE";
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
 
-    private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
-    private static final DataStoreFactory DATA_STORE_FACTORY;
+    public final static String PARAM_USER_PASS = "USER_PASS";
+    public final static String PARAM_USER_COGID = "USER_COGID";
+    public final static String PARAM_USER_COGTOK = "USER_COGTOK";
 
-    static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-    private static final String TOKEN_SERVER_URL = "https://app.mymensor.com/openid/token";
-    private static final String AUTHORIZATION_SERVER_URL = "https://app.mymensor.com/openid/authorize";
-    private static final String API_KEY = "614348";
-    private static final String API_SECRET = " ";
-    private static final String[] SCOPES = new String[]{ "openid", "profile", "email" };
-    private static final String REDIRECT_URI = "com.mymensor.app://login";
+    private AccountManager mAccountManager;
+    private String mAuthTokenType;
 
-    private AccountManager accountManager;
-    private AuthorizationCodeFlow flow;
+    SharedPreferences sharedPref;
 
-    static {
-        DATA_STORE_FACTORY = new MemoryDataStoreFactory();
-    }
+    /*
+    private final int REQ_SIGNUP = 1;
+    */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.mymaccauth);
+        setContentView(R.layout.activity_mymaccauthenticator);
 
-        accountManager = AccountManager.get(getBaseContext());
+        sharedPref = this.getSharedPreferences("MYM",Context.MODE_PRIVATE);
 
-        try {
-            flow = new AuthorizationCodeFlow.Builder(
-                    BearerToken.authorizationHeaderAccessMethod(),
-                    HTTP_TRANSPORT,
-                    JSON_FACTORY,
-                    new GenericUrl(TOKEN_SERVER_URL),
-                    new ClientParametersAuthentication(API_KEY, API_SECRET),
-                    API_KEY,
-                    AUTHORIZATION_SERVER_URL)
-                    .setScopes(Arrays.asList(SCOPES))
-                    .setDataStoreFactory(DATA_STORE_FACTORY)
-                    .build();
+        mAccountManager = AccountManager.get(getBaseContext());
 
-            if (!isRedirect(getIntent())) {
-                String authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build();
+        String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
 
-                // Open the login page in the native browser
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(authorizationUrl));
+        Bundle response = getIntent().getExtras();
+
+        Log.d(TAG, "accountName:"+accountName+" Response: "+ response.toString());
+
+        mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
+
+        if (mAuthTokenType == null)
+            mAuthTokenType = Constants.AUTHTOKEN_TYPE_FULL_ACCESS;
+
+        Log.d(TAG, "mAuthTokenType:"+mAuthTokenType);
+
+        findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submit();
+            }
+        });
+        findViewById(R.id.signUp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.REGISTER_SERVER));
                 startActivity(browserIntent);
             }
-        } catch (Exception ex) {
-            Log.e("MymAccAuthtictrActivity", ex.getMessage());
-        }
+        });
     }
-
+/*
     @Override
-    protected void onNewIntent (Intent intent) {
-        super.onNewIntent(intent);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(isRedirect(intent)) {
-            String authorizationCode = extractAuthorizationCode(intent);
-            new GetTokens(flow).execute(authorizationCode);
-        }
+        // The sign up activity returned that the user has successfully created an account
+        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
+            finishLogin(data);
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+*/
+    public void submit() {
+
+        String userName = ((TextView) findViewById(R.id.accountName)).getText().toString();
+        String userPass = ((TextView) findViewById(R.id.accountPassword)).getText().toString();
+
+        final String accountType = getIntent().getStringExtra(ARG_ACCOUNT_TYPE);
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("username", userName);
+        params.put("password", userPass);
+        userPass = "";
+        final String userNameInner = userName;
+        final String userPassInner = userPass;
+        final Bundle data = new Bundle();
+        // Formulate the request and handle the response.
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Constants.AUTH_SERVER, new JSONObject(params),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                            Log.d(TAG, "Respose mym_auth:"+ response.toString());
+                            String authtoken = response.getString("token");
+                            data.putString(AccountManager.KEY_ACCOUNT_NAME, userNameInner);
+                            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                            data.putString(AccountManager.KEY_AUTHTOKEN, authtoken);
+                            data.putString(AccountManager.KEY_PASSWORD, userPassInner);
+                            final Intent res = new Intent();
+                            res.putExtras(data);
+                            getCognitoAuth(res);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error MYM AUTH TOKEN: ", error.getMessage());
+                data.putString(KEY_ERROR_MESSAGE, error.getMessage());
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        VolleyHelper.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
-    private boolean isRedirect(Intent intent) {
-        String data = intent.getDataString();
+    private void getCognitoAuth(Intent intent){
 
-        return Intent.ACTION_VIEW.equals(intent.getAction()) && data != null;
+        final String userName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        final String accountType = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
+        final String authToken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+        final String userPass = intent.getStringExtra(AccountManager.KEY_PASSWORD);
+        final Bundle data = new Bundle();
+        HashMap<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Authorization", "Token "+authToken+"");
+        // Formulate the request and handle the response.
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.AUTH_COGDEV_SERVER, new JSONObject(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4));
+                            Log.d(TAG, "Respose:"+ response.toString());
+                            String userCogIdentityId = response.getString("IdentityId");
+                            String userCogToken = response.getString("Token");
+                            data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
+                            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
+                            data.putString(AccountManager.KEY_AUTHTOKEN, authToken);
+                            data.putString(AccountManager.KEY_PASSWORD, userPass);
+                            data.putString(AccountManager.KEY_USERDATA, userCogIdentityId);
+                            data.putString(PARAM_USER_COGTOK, userCogToken);
+                            final Intent res = new Intent();
+                            res.putExtras(data);
+                            finishLogin(res);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            data.putString(KEY_ERROR_MESSAGE, e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error COG AUTH TOKEN: ", error.getMessage());
+                data.putString(KEY_ERROR_MESSAGE, error.getMessage());
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Authorization", "Token "+authToken);
+                return headers;
+            }
+        };
+
+        // Add the request to the RequestQueue.
+        VolleyHelper.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
-    private String extractAuthorizationCode(Intent intent){
-        String data = intent.getDataString();
-        Uri uri = Uri.parse(data);
+    private void finishLogin(Intent intent) {
+        Log.d(TAG,"finishLogin started");
 
-        return uri.getQueryParameter("code");
-    }
+        String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
+        String accountCognitoIdentityId = intent.getStringExtra(AccountManager.KEY_USERDATA);
+        final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
-    private class GetTokens extends AsyncTask<String, Integer, IdTokenResponse> {
+        if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
+            Log.d(TAG, "finishLogin > addAccountExplicitly");
+            Log.d(TAG, "Intent Extras:"+intent.getExtras().toString()+" mAuthTokenType: "+ mAuthTokenType);
+            String authtoken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
+            String authtokenType = mAuthTokenType;
 
-        private final AuthorizationCodeFlow flow;
-
-        public GetTokens(AuthorizationCodeFlow flow) {
-            this.flow = flow;
+            // Creating the account on the device and setting the auth token we got
+            // (Not setting the auth token will cause another call to the server to authenticate the user)
+            mAccountManager.addAccountExplicitly(account, accountPassword, null);
+            mAccountManager.setAuthToken(account, authtokenType, authtoken);
+            mAccountManager.setUserData(account, AccountManager.KEY_USERDATA, accountCognitoIdentityId);
+        } else {
+            Log.d(TAG, "finishLogin > setPassword");
+            mAccountManager.setPassword(account, accountPassword);
         }
 
-        protected IdTokenResponse doInBackground(String... params) {
-            try {
-                TokenRequest request = flow.newTokenRequest(params[0])
-                        .setRedirectUri(REDIRECT_URI);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("cog_identityId", intent.getStringExtra(AccountManager.KEY_USERDATA));
+        editor.putString("cog_openIdToken", intent.getStringExtra(PARAM_USER_COGTOK));
+        editor.putString("mym_authToken", intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
+        editor.commit();
+        setAccountAuthenticatorResult(intent.getExtras());
+        setResult(RESULT_OK, intent);
 
-                return IdTokenResponse.execute(request);
-            }
-            catch(IOException ex) {
-                Log.e("MymAccAuthtictrActivity", ex.getMessage());
-                return null;
-            }
-            catch (Exception ex) {
-                Log.e("MymAccAuthtictrActivity", ex.getMessage());
-                return null;
-            }
-        }
-
-        protected void onPostExecute(IdTokenResponse result) {
-            try {
-                IdToken idToken = result.parseIdToken();
-                Log.d("Info:idt",idToken.toString());
-                String userName = idToken.getPayload().get("email").toString();
-
-                Account account = new Account(userName, Constants.ACCOUNT_TYPE);
-
-                accountManager.addAccountExplicitly(account, null, null);
-                accountManager.setAuthToken(account, "accessToken", result.getAccessToken());
-                Log.d("Info:acc",result.getAccessToken());
-                accountManager.setAuthToken(account, "refreshToken", result.getRefreshToken());
-                Log.d("Info:rfs",result.getRefreshToken());
-                accountManager.setAuthToken(account, "idToken", result.getIdToken());
-                Log.d("Info:idt",result.getIdToken());
-
-                Bundle data = new Bundle();
-                data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-                data.putString(AccountManager.KEY_ACCOUNT_TYPE, Constants.ACCOUNT_TYPE);
-                data.putString(AccountManager.KEY_AUTHTOKEN, result.getAccessToken());
-
-                Intent intent = new Intent();
-                intent.putExtras(data);
-
-                setAccountAuthenticatorResult(intent.getExtras());
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-            catch(IOException ex) {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        }
-
+        finish();
     }
 
 }

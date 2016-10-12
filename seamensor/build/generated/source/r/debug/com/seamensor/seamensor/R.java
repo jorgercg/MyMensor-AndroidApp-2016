@@ -8,10 +8,6 @@
 package com.seamensor.seamensor;
 
 public final class R {
-    public static final class anim {
-        public static final int animalogoseamensor=0x7f040000;
-        public static final int clockwise_rotation=0x7f040001;
-    }
     public static final class attr {
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
@@ -357,748 +353,762 @@ containing a value of this type.
         public static final int zOrderOnTop=0x7f010015;
     }
     public static final class bool {
-        public static final int isTablet=0x7f090000;
+        public static final int isTablet=0x7f080000;
     }
     public static final class color {
-        public static final int button_pressed_background=0x7f0a0000;
-        public static final int common_action_bar_splitter=0x7f0a0001;
-        public static final int common_signin_btn_dark_text_default=0x7f0a0002;
-        public static final int common_signin_btn_dark_text_disabled=0x7f0a0003;
-        public static final int common_signin_btn_dark_text_focused=0x7f0a0004;
-        public static final int common_signin_btn_dark_text_pressed=0x7f0a0005;
-        public static final int common_signin_btn_default_background=0x7f0a0006;
-        public static final int common_signin_btn_light_text_default=0x7f0a0007;
-        public static final int common_signin_btn_light_text_disabled=0x7f0a0008;
-        public static final int common_signin_btn_light_text_focused=0x7f0a0009;
-        public static final int common_signin_btn_light_text_pressed=0x7f0a000a;
-        public static final int common_signin_btn_text_dark=0x7f0a0026;
-        public static final int common_signin_btn_text_light=0x7f0a0027;
-        public static final int gray=0x7f0a000b;
-        public static final int light_gray=0x7f0a000c;
-        public static final int listViewBackground=0x7f0a000d;
-        public static final int listViewText=0x7f0a000e;
-        public static final int list_row_selected=0x7f0a000f;
-        public static final int metaiocolor=0x7f0a0010;
-        public static final int poiDetailBackground=0x7f0a0011;
-        public static final int screenTitle=0x7f0a0012;
-        public static final int sponsoredBackground=0x7f0a0013;
-        public static final int tableViewBackground=0x7f0a0014;
-        public static final int toastBackground=0x7f0a0015;
-        public static final int toastBorder=0x7f0a0016;
-        public static final int toastText=0x7f0a0017;
-        public static final int transparent=0x7f0a0018;
-        public static final int wallet_bright_foreground_disabled_holo_light=0x7f0a0019;
-        public static final int wallet_bright_foreground_holo_dark=0x7f0a001a;
-        public static final int wallet_bright_foreground_holo_light=0x7f0a001b;
-        public static final int wallet_dim_foreground_disabled_holo_dark=0x7f0a001c;
-        public static final int wallet_dim_foreground_holo_dark=0x7f0a001d;
-        public static final int wallet_dim_foreground_inverse_disabled_holo_dark=0x7f0a001e;
-        public static final int wallet_dim_foreground_inverse_holo_dark=0x7f0a001f;
-        public static final int wallet_highlighted_text_holo_dark=0x7f0a0020;
-        public static final int wallet_highlighted_text_holo_light=0x7f0a0021;
-        public static final int wallet_hint_foreground_holo_dark=0x7f0a0022;
-        public static final int wallet_hint_foreground_holo_light=0x7f0a0023;
-        public static final int wallet_holo_blue_light=0x7f0a0024;
-        public static final int wallet_link_text_light=0x7f0a0025;
-        public static final int wallet_primary_text_holo_light=0x7f0a0028;
-        public static final int wallet_secondary_text_holo_dark=0x7f0a0029;
+        public static final int button_pressed_background=0x7f090000;
+        public static final int common_action_bar_splitter=0x7f090001;
+        public static final int common_signin_btn_dark_text_default=0x7f090002;
+        public static final int common_signin_btn_dark_text_disabled=0x7f090003;
+        public static final int common_signin_btn_dark_text_focused=0x7f090004;
+        public static final int common_signin_btn_dark_text_pressed=0x7f090005;
+        public static final int common_signin_btn_default_background=0x7f090006;
+        public static final int common_signin_btn_light_text_default=0x7f090007;
+        public static final int common_signin_btn_light_text_disabled=0x7f090008;
+        public static final int common_signin_btn_light_text_focused=0x7f090009;
+        public static final int common_signin_btn_light_text_pressed=0x7f09000a;
+        public static final int common_signin_btn_text_dark=0x7f090026;
+        public static final int common_signin_btn_text_light=0x7f090027;
+        public static final int gray=0x7f09000b;
+        public static final int light_gray=0x7f09000c;
+        public static final int listViewBackground=0x7f09000d;
+        public static final int listViewText=0x7f09000e;
+        public static final int list_row_selected=0x7f09000f;
+        public static final int metaiocolor=0x7f090010;
+        public static final int poiDetailBackground=0x7f090011;
+        public static final int screenTitle=0x7f090012;
+        public static final int sponsoredBackground=0x7f090013;
+        public static final int tableViewBackground=0x7f090014;
+        public static final int toastBackground=0x7f090015;
+        public static final int toastBorder=0x7f090016;
+        public static final int toastText=0x7f090017;
+        public static final int transparent=0x7f090018;
+        public static final int wallet_bright_foreground_disabled_holo_light=0x7f090019;
+        public static final int wallet_bright_foreground_holo_dark=0x7f09001a;
+        public static final int wallet_bright_foreground_holo_light=0x7f09001b;
+        public static final int wallet_dim_foreground_disabled_holo_dark=0x7f09001c;
+        public static final int wallet_dim_foreground_holo_dark=0x7f09001d;
+        public static final int wallet_dim_foreground_inverse_disabled_holo_dark=0x7f09001e;
+        public static final int wallet_dim_foreground_inverse_holo_dark=0x7f09001f;
+        public static final int wallet_highlighted_text_holo_dark=0x7f090020;
+        public static final int wallet_highlighted_text_holo_light=0x7f090021;
+        public static final int wallet_hint_foreground_holo_dark=0x7f090022;
+        public static final int wallet_hint_foreground_holo_light=0x7f090023;
+        public static final int wallet_holo_blue_light=0x7f090024;
+        public static final int wallet_link_text_light=0x7f090025;
+        public static final int wallet_primary_text_holo_light=0x7f090028;
+        public static final int wallet_secondary_text_holo_dark=0x7f090029;
     }
     public static final class dimen {
-        public static final int activity_horizontal_margin=0x7f080000;
+        public static final int activity_horizontal_margin=0x7f070000;
     }
     public static final class drawable {
-        public static final int animlogoseamensor00=0x7f020000;
-        public static final int animlogoseamensor01=0x7f020001;
-        public static final int animlogoseamensor02=0x7f020002;
-        public static final int animlogoseamensor03=0x7f020003;
-        public static final int animlogoseamensor04=0x7f020004;
-        public static final int animlogoseamensor05=0x7f020005;
-        public static final int animlogoseamensor06=0x7f020006;
-        public static final int animlogoseamensor07=0x7f020007;
-        public static final int animlogoseamensor08=0x7f020008;
-        public static final int animlogoseamensor09=0x7f020009;
-        public static final int animlogoseamensor10=0x7f02000a;
-        public static final int animlogoseamensor11=0x7f02000b;
-        public static final int animlogoseamensor12=0x7f02000c;
-        public static final int animlogoseamensor13=0x7f02000d;
-        public static final int animlogoseamensor14=0x7f02000e;
-        public static final int animlogoseamensor15=0x7f02000f;
-        public static final int animlogoseamensor16=0x7f020010;
-        public static final int animlogoseamensor17=0x7f020011;
-        public static final int animlogoseamensor18=0x7f020012;
-        public static final int animlogoseamensor19=0x7f020013;
-        public static final int animlogoseamensor20=0x7f020014;
-        public static final int button_blue_default=0x7f020015;
-        public static final int button_blue_pressed=0x7f020016;
-        public static final int button_blue_pressed_new=0x7f020017;
-        public static final int button_detail_blue=0x7f020018;
-        public static final int button_detail_green=0x7f020019;
-        public static final int button_gray_default=0x7f02001a;
-        public static final int button_gray_pressed=0x7f02001b;
-        public static final int button_green_default=0x7f02001c;
-        public static final int button_green_pressed=0x7f02001d;
-        public static final int cancel=0x7f02001e;
-        public static final int circulo_seamensor=0x7f02001f;
-        public static final int common_full_open_on_phone=0x7f020020;
-        public static final int common_ic_googleplayservices=0x7f020021;
-        public static final int common_signin_btn_icon_dark=0x7f020022;
-        public static final int common_signin_btn_icon_disabled_dark=0x7f020023;
-        public static final int common_signin_btn_icon_disabled_focus_dark=0x7f020024;
-        public static final int common_signin_btn_icon_disabled_focus_light=0x7f020025;
-        public static final int common_signin_btn_icon_disabled_light=0x7f020026;
-        public static final int common_signin_btn_icon_focus_dark=0x7f020027;
-        public static final int common_signin_btn_icon_focus_light=0x7f020028;
-        public static final int common_signin_btn_icon_light=0x7f020029;
-        public static final int common_signin_btn_icon_normal_dark=0x7f02002a;
-        public static final int common_signin_btn_icon_normal_light=0x7f02002b;
-        public static final int common_signin_btn_icon_pressed_dark=0x7f02002c;
-        public static final int common_signin_btn_icon_pressed_light=0x7f02002d;
-        public static final int common_signin_btn_text_dark=0x7f02002e;
-        public static final int common_signin_btn_text_disabled_dark=0x7f02002f;
-        public static final int common_signin_btn_text_disabled_focus_dark=0x7f020030;
-        public static final int common_signin_btn_text_disabled_focus_light=0x7f020031;
-        public static final int common_signin_btn_text_disabled_light=0x7f020032;
-        public static final int common_signin_btn_text_focus_dark=0x7f020033;
-        public static final int common_signin_btn_text_focus_light=0x7f020034;
-        public static final int common_signin_btn_text_light=0x7f020035;
-        public static final int common_signin_btn_text_normal_dark=0x7f020036;
-        public static final int common_signin_btn_text_normal_light=0x7f020037;
-        public static final int common_signin_btn_text_pressed_dark=0x7f020038;
-        public static final int common_signin_btn_text_pressed_light=0x7f020039;
-        public static final int custom_button=0x7f02003a;
-        public static final int custom_button_option_notselected=0x7f02003b;
-        public static final int custom_button_option_selected=0x7f02003c;
-        public static final int default_video_poster=0x7f02003d;
-        public static final int descvpblank=0x7f02003e;
-        public static final int divider=0x7f02003f;
-        public static final int heave_down=0x7f020040;
-        public static final int heave_up=0x7f020041;
-        public static final int ic_launcher=0x7f020042;
-        public static final int ic_plusone_medium_off_client=0x7f020043;
-        public static final int ic_plusone_small_off_client=0x7f020044;
-        public static final int ic_plusone_standard_off_client=0x7f020045;
-        public static final int ic_plusone_tall_off_client=0x7f020046;
-        public static final int icon_placeholder=0x7f020047;
-        public static final int logoseamensor300dpi=0x7f020048;
-        public static final int nobutton=0x7f020049;
-        public static final int passcode_keyboard_button=0x7f02004a;
-        public static final int pitch_c=0x7f02004b;
-        public static final int pitch_h1=0x7f02004c;
-        public static final int pitch_h2=0x7f02004d;
-        public static final int pitch_h3=0x7f02004e;
-        public static final int pitch_h4=0x7f02004f;
-        public static final int pitch_l1=0x7f020050;
-        public static final int pitch_l2=0x7f020051;
-        public static final int pitch_l3=0x7f020052;
-        public static final int pitch_l4=0x7f020053;
-        public static final int poi_background=0x7f020054;
-        public static final int powered_by_google_dark=0x7f020055;
-        public static final int powered_by_google_light=0x7f020056;
-        public static final int progress_bar=0x7f020057;
-        public static final int radar_inner=0x7f020058;
-        public static final int radarscan=0x7f020059;
-        public static final int rating_drawable=0x7f02005a;
-        public static final int roll_01=0x7f02005b;
-        public static final int roll_02=0x7f02005c;
-        public static final int roll_03=0x7f02005d;
-        public static final int roll_04=0x7f02005e;
-        public static final int roll_05=0x7f02005f;
-        public static final int roll_06=0x7f020060;
-        public static final int roll_07=0x7f020061;
-        public static final int roll_08=0x7f020062;
-        public static final int roll_09=0x7f020063;
-        public static final int roll_10=0x7f020064;
-        public static final int roll_11=0x7f020065;
-        public static final int roll_12=0x7f020066;
-        public static final int roll_13=0x7f020067;
-        public static final int roll_14=0x7f020068;
-        public static final int roll_15=0x7f020069;
-        public static final int roll_c=0x7f02006a;
-        public static final int selector_darker=0x7f02006b;
-        public static final int selector_web_back=0x7f02006c;
-        public static final int selector_web_forward=0x7f02006d;
-        public static final int share=0x7f02006e;
-        public static final int simple_button_background_selector=0x7f02006f;
-        public static final int star_act=0x7f020070;
-        public static final int star_def=0x7f020071;
-        public static final int star_dis=0x7f020072;
-        public static final int surge_a1=0x7f020073;
-        public static final int surge_a2=0x7f020074;
-        public static final int surge_a3=0x7f020075;
-        public static final int surge_b1=0x7f020076;
-        public static final int surge_b2=0x7f020077;
-        public static final int surge_b3=0x7f020078;
-        public static final int surge_m=0x7f020079;
-        public static final int sway_left=0x7f02007a;
-        public static final int sway_right=0x7f02007b;
-        public static final int targetgreen=0x7f02007c;
-        public static final int targetwhite=0x7f02007d;
-        public static final int toastbackground=0x7f02007e;
-        public static final int topmessage_detectingvp=0x7f02007f;
-        public static final int web_back=0x7f020080;
-        public static final int web_back_dis=0x7f020081;
-        public static final int web_close=0x7f020082;
-        public static final int web_forward=0x7f020083;
-        public static final int web_forward_dis=0x7f020084;
-        public static final int web_reload=0x7f020085;
-        public static final int web_stop=0x7f020086;
-        public static final int yaw_c=0x7f020087;
-        public static final int yaw_l1=0x7f020088;
-        public static final int yaw_l2=0x7f020089;
-        public static final int yaw_l3=0x7f02008a;
-        public static final int yaw_l4=0x7f02008b;
-        public static final int yaw_r1=0x7f02008c;
-        public static final int yaw_r2=0x7f02008d;
-        public static final int yaw_r3=0x7f02008e;
-        public static final int yaw_r4=0x7f02008f;
-        public static final int yesbutton=0x7f020090;
+        public static final int animalogoseamensor=0x7f020000;
+        public static final int animlogoseamensor00=0x7f020001;
+        public static final int animlogoseamensor01=0x7f020002;
+        public static final int animlogoseamensor02=0x7f020003;
+        public static final int animlogoseamensor03=0x7f020004;
+        public static final int animlogoseamensor04=0x7f020005;
+        public static final int animlogoseamensor05=0x7f020006;
+        public static final int animlogoseamensor06=0x7f020007;
+        public static final int animlogoseamensor07=0x7f020008;
+        public static final int animlogoseamensor08=0x7f020009;
+        public static final int animlogoseamensor09=0x7f02000a;
+        public static final int animlogoseamensor10=0x7f02000b;
+        public static final int animlogoseamensor11=0x7f02000c;
+        public static final int animlogoseamensor12=0x7f02000d;
+        public static final int animlogoseamensor13=0x7f02000e;
+        public static final int animlogoseamensor14=0x7f02000f;
+        public static final int animlogoseamensor15=0x7f020010;
+        public static final int animlogoseamensor16=0x7f020011;
+        public static final int animlogoseamensor17=0x7f020012;
+        public static final int animlogoseamensor18=0x7f020013;
+        public static final int animlogoseamensor19=0x7f020014;
+        public static final int animlogoseamensor20=0x7f020015;
+        public static final int button_blue_default=0x7f020016;
+        public static final int button_blue_pressed=0x7f020017;
+        public static final int button_blue_pressed_new=0x7f020018;
+        public static final int button_detail_blue=0x7f020019;
+        public static final int button_detail_green=0x7f02001a;
+        public static final int button_gray_default=0x7f02001b;
+        public static final int button_gray_pressed=0x7f02001c;
+        public static final int button_green_default=0x7f02001d;
+        public static final int button_green_pressed=0x7f02001e;
+        public static final int cancel=0x7f02001f;
+        public static final int circulo_seamensor=0x7f020020;
+        public static final int clockwise_rotation=0x7f020021;
+        public static final int common_full_open_on_phone=0x7f020022;
+        public static final int common_ic_googleplayservices=0x7f020023;
+        public static final int common_signin_btn_icon_dark=0x7f020024;
+        public static final int common_signin_btn_icon_disabled_dark=0x7f020025;
+        public static final int common_signin_btn_icon_disabled_focus_dark=0x7f020026;
+        public static final int common_signin_btn_icon_disabled_focus_light=0x7f020027;
+        public static final int common_signin_btn_icon_disabled_light=0x7f020028;
+        public static final int common_signin_btn_icon_focus_dark=0x7f020029;
+        public static final int common_signin_btn_icon_focus_light=0x7f02002a;
+        public static final int common_signin_btn_icon_light=0x7f02002b;
+        public static final int common_signin_btn_icon_normal_dark=0x7f02002c;
+        public static final int common_signin_btn_icon_normal_light=0x7f02002d;
+        public static final int common_signin_btn_icon_pressed_dark=0x7f02002e;
+        public static final int common_signin_btn_icon_pressed_light=0x7f02002f;
+        public static final int common_signin_btn_text_dark=0x7f020030;
+        public static final int common_signin_btn_text_disabled_dark=0x7f020031;
+        public static final int common_signin_btn_text_disabled_focus_dark=0x7f020032;
+        public static final int common_signin_btn_text_disabled_focus_light=0x7f020033;
+        public static final int common_signin_btn_text_disabled_light=0x7f020034;
+        public static final int common_signin_btn_text_focus_dark=0x7f020035;
+        public static final int common_signin_btn_text_focus_light=0x7f020036;
+        public static final int common_signin_btn_text_light=0x7f020037;
+        public static final int common_signin_btn_text_normal_dark=0x7f020038;
+        public static final int common_signin_btn_text_normal_light=0x7f020039;
+        public static final int common_signin_btn_text_pressed_dark=0x7f02003a;
+        public static final int common_signin_btn_text_pressed_light=0x7f02003b;
+        public static final int custom_button=0x7f02003c;
+        public static final int custom_button_option_notselected=0x7f02003d;
+        public static final int custom_button_option_selected=0x7f02003e;
+        public static final int default_video_poster=0x7f02003f;
+        public static final int descvpblank=0x7f020040;
+        public static final int divider=0x7f020041;
+        public static final int heave_down=0x7f020042;
+        public static final int heave_up=0x7f020043;
+        public static final int ic_launcher=0x7f020044;
+        public static final int ic_plusone_medium_off_client=0x7f020045;
+        public static final int ic_plusone_small_off_client=0x7f020046;
+        public static final int ic_plusone_standard_off_client=0x7f020047;
+        public static final int ic_plusone_tall_off_client=0x7f020048;
+        public static final int icon_placeholder=0x7f020049;
+        public static final int logoseamensor300dpi=0x7f02004a;
+        public static final int nobutton=0x7f02004b;
+        public static final int passcode_keyboard_button=0x7f02004c;
+        public static final int pitch_c=0x7f02004d;
+        public static final int pitch_h1=0x7f02004e;
+        public static final int pitch_h2=0x7f02004f;
+        public static final int pitch_h3=0x7f020050;
+        public static final int pitch_h4=0x7f020051;
+        public static final int pitch_l1=0x7f020052;
+        public static final int pitch_l2=0x7f020053;
+        public static final int pitch_l3=0x7f020054;
+        public static final int pitch_l4=0x7f020055;
+        public static final int poi_background=0x7f020056;
+        public static final int powered_by_google_dark=0x7f020057;
+        public static final int powered_by_google_light=0x7f020058;
+        public static final int progress_bar=0x7f020059;
+        public static final int radar_inner=0x7f02005a;
+        public static final int radarscan=0x7f02005b;
+        public static final int rating_drawable=0x7f02005c;
+        public static final int roll_01=0x7f02005d;
+        public static final int roll_02=0x7f02005e;
+        public static final int roll_03=0x7f02005f;
+        public static final int roll_04=0x7f020060;
+        public static final int roll_05=0x7f020061;
+        public static final int roll_06=0x7f020062;
+        public static final int roll_07=0x7f020063;
+        public static final int roll_08=0x7f020064;
+        public static final int roll_09=0x7f020065;
+        public static final int roll_10=0x7f020066;
+        public static final int roll_11=0x7f020067;
+        public static final int roll_12=0x7f020068;
+        public static final int roll_13=0x7f020069;
+        public static final int roll_14=0x7f02006a;
+        public static final int roll_15=0x7f02006b;
+        public static final int roll_c=0x7f02006c;
+        public static final int selector_darker=0x7f02006d;
+        public static final int selector_web_back=0x7f02006e;
+        public static final int selector_web_forward=0x7f02006f;
+        public static final int share=0x7f020070;
+        public static final int simple_button_background_selector=0x7f020071;
+        public static final int star_act=0x7f020072;
+        public static final int star_def=0x7f020073;
+        public static final int star_dis=0x7f020074;
+        public static final int surge_a1=0x7f020075;
+        public static final int surge_a2=0x7f020076;
+        public static final int surge_a3=0x7f020077;
+        public static final int surge_b1=0x7f020078;
+        public static final int surge_b2=0x7f020079;
+        public static final int surge_b3=0x7f02007a;
+        public static final int surge_m=0x7f02007b;
+        public static final int sway_left=0x7f02007c;
+        public static final int sway_right=0x7f02007d;
+        public static final int targetgreen=0x7f02007e;
+        public static final int targetwhite=0x7f02007f;
+        public static final int toastbackground=0x7f020080;
+        public static final int topmessage_detectingvp=0x7f020081;
+        public static final int web_back=0x7f020082;
+        public static final int web_back_dis=0x7f020083;
+        public static final int web_close=0x7f020084;
+        public static final int web_forward=0x7f020085;
+        public static final int web_forward_dis=0x7f020086;
+        public static final int web_reload=0x7f020087;
+        public static final int web_stop=0x7f020088;
+        public static final int yaw_c=0x7f020089;
+        public static final int yaw_l1=0x7f02008a;
+        public static final int yaw_l2=0x7f02008b;
+        public static final int yaw_l3=0x7f02008c;
+        public static final int yaw_l4=0x7f02008d;
+        public static final int yaw_r1=0x7f02008e;
+        public static final int yaw_r2=0x7f02008f;
+        public static final int yaw_r3=0x7f020090;
+        public static final int yaw_r4=0x7f020091;
+        public static final int yesbutton=0x7f020092;
     }
     public static final class id {
-        public static final int AppUnlockLinearLayout1=0x7f0b005e;
-        public static final int MainActivityLinearLayout=0x7f0b0062;
-        public static final int SeaMensorLogoLinearLayout1=0x7f0b005b;
-        public static final int SeaMensorRootView=0x7f0b0038;
-        public static final int actionButton=0x7f0b0068;
-        public static final int adjust_height=0x7f0b0009;
-        public static final int adjust_width=0x7f0b000a;
-        public static final int animlogoseamensor=0x7f0b007e;
-        public static final int audioButton=0x7f0b0000;
-        public static final int book_now=0x7f0b0018;
-        public static final int bottom_message=0x7f0b005d;
-        public static final int button1=0x7f0b001f;
-        public static final int button2=0x7f0b002b;
-        public static final int button3=0x7f0b002a;
-        public static final int buttonAcceptVpPhoto=0x7f0b0059;
-        public static final int buttonAlphaToggle=0x7f0b0053;
-        public static final int buttonAmbiguousVpToggle=0x7f0b0030;
-        public static final int buttonClose=0x7f0b0069;
-        public static final int buttonDecreaseQtyVps=0x7f0b002e;
-        public static final int buttonFlashTorchVpToggle=0x7f0b0032;
-        public static final int buttonId100mmToggle=0x7f0b0035;
-        public static final int buttonId20mmToggle=0x7f0b0034;
-        public static final int buttonIncreaseQtyVps=0x7f0b002d;
-        public static final int buttonRejectVpPhoto=0x7f0b005a;
-        public static final int buttonRequestPhoto=0x7f0b002c;
-        public static final int buttonSaveTrackingVpsData=0x7f0b002f;
-        public static final int buttonShare=0x7f0b0079;
-        public static final int buttonShowNextVpCapture=0x7f0b0056;
-        public static final int buttonShowPreviousVpCapture=0x7f0b0055;
-        public static final int buttonShowVpCaptures=0x7f0b0054;
-        public static final int buttonSuperSingleVpToggle=0x7f0b0033;
-        public static final int buttonWebBack=0x7f0b007a;
-        public static final int buttonWebForward=0x7f0b007d;
-        public static final int buttonWebReload=0x7f0b007c;
-        public static final int buttonWebStop=0x7f0b007b;
-        public static final int buttoncap=0x7f0b0067;
-        public static final int buttonconfig=0x7f0b0066;
-        public static final int buttonlog=0x7f0b0065;
-        public static final int buyButton=0x7f0b0014;
-        public static final int buy_now=0x7f0b0019;
-        public static final int buy_with_google=0x7f0b001a;
-        public static final int callButton=0x7f0b0001;
-        public static final int classic=0x7f0b001c;
-        public static final int collapsible=0x7f0b0072;
-        public static final int descVPEditText=0x7f0b0031;
-        public static final int donate_with_google=0x7f0b001b;
-        public static final int emailButton=0x7f0b0002;
-        public static final int exitbutton=0x7f0b0061;
-        public static final int grayscale=0x7f0b001d;
-        public static final int holo_dark=0x7f0b000f;
-        public static final int holo_light=0x7f0b0010;
-        public static final int homePageButton=0x7f0b0003;
-        public static final int html5viewcontainer=0x7f0b006a;
-        public static final int hybrid=0x7f0b000b;
-        public static final int imageAttribution=0x7f0b006e;
-        public static final int imageButton=0x7f0b0004;
-        public static final int imagePOIThumbnail=0x7f0b006d;
-        public static final int imageView1=0x7f0b0028;
-        public static final int imageViewHeaveDown=0x7f0b003f;
-        public static final int imageViewHeaveUp=0x7f0b003e;
-        public static final int imageViewPitch=0x7f0b0051;
-        public static final int imageViewRadarScan=0x7f0b0039;
-        public static final int imageViewRoll01=0x7f0b0041;
-        public static final int imageViewRoll02=0x7f0b0042;
-        public static final int imageViewRoll03=0x7f0b0043;
-        public static final int imageViewRoll04=0x7f0b0044;
-        public static final int imageViewRoll05=0x7f0b0045;
-        public static final int imageViewRoll06=0x7f0b0046;
-        public static final int imageViewRoll07=0x7f0b0047;
-        public static final int imageViewRoll08=0x7f0b0048;
-        public static final int imageViewRoll09=0x7f0b0049;
-        public static final int imageViewRoll10=0x7f0b004a;
-        public static final int imageViewRoll11=0x7f0b004b;
-        public static final int imageViewRoll12=0x7f0b004c;
-        public static final int imageViewRoll13=0x7f0b004d;
-        public static final int imageViewRoll14=0x7f0b004e;
-        public static final int imageViewRoll15=0x7f0b004f;
-        public static final int imageViewRollCenter=0x7f0b0040;
-        public static final int imageViewSurge=0x7f0b003b;
-        public static final int imageViewSwayLeft=0x7f0b003c;
-        public static final int imageViewSwayRight=0x7f0b003d;
-        public static final int imageViewTarget=0x7f0b0029;
-        public static final int imageViewTopMessage=0x7f0b0052;
-        public static final int imageViewYaw=0x7f0b0050;
-        public static final int includeChannelBadge=0x7f0b0074;
-        public static final int layoutRotated=0x7f0b006c;
-        public static final int mainactivity_logo=0x7f0b0063;
-        public static final int match_parent=0x7f0b0016;
-        public static final int monochrome=0x7f0b001e;
-        public static final int none=0x7f0b0007;
-        public static final int normal=0x7f0b000c;
-        public static final int passcode_logo=0x7f0b005f;
-        public static final int poidetailfragment=0x7f0b006b;
-        public static final int production=0x7f0b0011;
-        public static final int progressBar=0x7f0b0076;
-        public static final int ratingbar=0x7f0b0070;
-        public static final int root=0x7f0b0077;
-        public static final int routeButton=0x7f0b0005;
-        public static final int sandbox=0x7f0b0012;
-        public static final int satellite=0x7f0b000d;
-        public static final int seamensor_logo=0x7f0b005c;
-        public static final int selectionDetails=0x7f0b0015;
-        public static final int slide=0x7f0b0008;
-        public static final int strict_sandbox=0x7f0b0013;
-        public static final int terrain=0x7f0b000e;
-        public static final int textPOIDescription=0x7f0b0073;
-        public static final int textPOILocation=0x7f0b0071;
-        public static final int textPOIName=0x7f0b006f;
-        public static final int textView1=0x7f0b0057;
-        public static final int textView2=0x7f0b0036;
-        public static final int textViewIsPhotoOK=0x7f0b0058;
-        public static final int top_message=0x7f0b0060;
-        public static final int trkQualityView=0x7f0b0027;
-        public static final int userlogstate_message=0x7f0b0064;
-        public static final int videoButton=0x7f0b0006;
-        public static final int vpAcquiredStatus=0x7f0b0037;
-        public static final int vp_list=0x7f0b0020;
-        public static final int waitingTrkLoading=0x7f0b003a;
-        public static final int webBottomBar=0x7f0b0078;
-        public static final int webView=0x7f0b0075;
-        public static final int wrap_content=0x7f0b0017;
-        public static final int xPosView=0x7f0b0021;
-        public static final int xRotView=0x7f0b0024;
-        public static final int yPosView=0x7f0b0022;
-        public static final int yRotView=0x7f0b0025;
-        public static final int zPosView=0x7f0b0023;
-        public static final int zRotView=0x7f0b0026;
+        public static final int AppUnlockLinearLayout1=0x7f0a005e;
+        public static final int MainActivityLinearLayout=0x7f0a0062;
+        public static final int SeaMensorLogoLinearLayout1=0x7f0a005b;
+        public static final int SeaMensorRootView=0x7f0a0038;
+        public static final int accountName=0x7f0a0068;
+        public static final int accountPassword=0x7f0a0069;
+        public static final int actionButton=0x7f0a006c;
+        public static final int adjust_height=0x7f0a0009;
+        public static final int adjust_width=0x7f0a000a;
+        public static final int animlogoseamensor=0x7f0a0082;
+        public static final int audioButton=0x7f0a0000;
+        public static final int book_now=0x7f0a0018;
+        public static final int bottom_message=0x7f0a005d;
+        public static final int button1=0x7f0a001f;
+        public static final int button2=0x7f0a002b;
+        public static final int button3=0x7f0a002a;
+        public static final int buttonAcceptVpPhoto=0x7f0a0059;
+        public static final int buttonAlphaToggle=0x7f0a0053;
+        public static final int buttonAmbiguousVpToggle=0x7f0a0030;
+        public static final int buttonClose=0x7f0a006d;
+        public static final int buttonDecreaseQtyVps=0x7f0a002e;
+        public static final int buttonFlashTorchVpToggle=0x7f0a0032;
+        public static final int buttonId100mmToggle=0x7f0a0035;
+        public static final int buttonId20mmToggle=0x7f0a0034;
+        public static final int buttonIncreaseQtyVps=0x7f0a002d;
+        public static final int buttonRejectVpPhoto=0x7f0a005a;
+        public static final int buttonRequestPhoto=0x7f0a002c;
+        public static final int buttonSaveTrackingVpsData=0x7f0a002f;
+        public static final int buttonShare=0x7f0a007d;
+        public static final int buttonShowNextVpCapture=0x7f0a0056;
+        public static final int buttonShowPreviousVpCapture=0x7f0a0055;
+        public static final int buttonShowVpCaptures=0x7f0a0054;
+        public static final int buttonSuperSingleVpToggle=0x7f0a0033;
+        public static final int buttonWebBack=0x7f0a007e;
+        public static final int buttonWebForward=0x7f0a0081;
+        public static final int buttonWebReload=0x7f0a0080;
+        public static final int buttonWebStop=0x7f0a007f;
+        public static final int buttoncap=0x7f0a0067;
+        public static final int buttonconfig=0x7f0a0066;
+        public static final int buttonlog=0x7f0a0065;
+        public static final int buyButton=0x7f0a0014;
+        public static final int buy_now=0x7f0a0019;
+        public static final int buy_with_google=0x7f0a001a;
+        public static final int callButton=0x7f0a0001;
+        public static final int classic=0x7f0a001c;
+        public static final int collapsible=0x7f0a0076;
+        public static final int descVPEditText=0x7f0a0031;
+        public static final int donate_with_google=0x7f0a001b;
+        public static final int emailButton=0x7f0a0002;
+        public static final int exitbutton=0x7f0a0061;
+        public static final int grayscale=0x7f0a001d;
+        public static final int holo_dark=0x7f0a000f;
+        public static final int holo_light=0x7f0a0010;
+        public static final int homePageButton=0x7f0a0003;
+        public static final int html5viewcontainer=0x7f0a006e;
+        public static final int hybrid=0x7f0a000b;
+        public static final int imageAttribution=0x7f0a0072;
+        public static final int imageButton=0x7f0a0004;
+        public static final int imagePOIThumbnail=0x7f0a0071;
+        public static final int imageView1=0x7f0a0028;
+        public static final int imageViewHeaveDown=0x7f0a003f;
+        public static final int imageViewHeaveUp=0x7f0a003e;
+        public static final int imageViewPitch=0x7f0a0051;
+        public static final int imageViewRadarScan=0x7f0a0039;
+        public static final int imageViewRoll01=0x7f0a0041;
+        public static final int imageViewRoll02=0x7f0a0042;
+        public static final int imageViewRoll03=0x7f0a0043;
+        public static final int imageViewRoll04=0x7f0a0044;
+        public static final int imageViewRoll05=0x7f0a0045;
+        public static final int imageViewRoll06=0x7f0a0046;
+        public static final int imageViewRoll07=0x7f0a0047;
+        public static final int imageViewRoll08=0x7f0a0048;
+        public static final int imageViewRoll09=0x7f0a0049;
+        public static final int imageViewRoll10=0x7f0a004a;
+        public static final int imageViewRoll11=0x7f0a004b;
+        public static final int imageViewRoll12=0x7f0a004c;
+        public static final int imageViewRoll13=0x7f0a004d;
+        public static final int imageViewRoll14=0x7f0a004e;
+        public static final int imageViewRoll15=0x7f0a004f;
+        public static final int imageViewRollCenter=0x7f0a0040;
+        public static final int imageViewSurge=0x7f0a003b;
+        public static final int imageViewSwayLeft=0x7f0a003c;
+        public static final int imageViewSwayRight=0x7f0a003d;
+        public static final int imageViewTarget=0x7f0a0029;
+        public static final int imageViewTopMessage=0x7f0a0052;
+        public static final int imageViewYaw=0x7f0a0050;
+        public static final int includeChannelBadge=0x7f0a0078;
+        public static final int layoutRotated=0x7f0a0070;
+        public static final int mainactivity_logo=0x7f0a0063;
+        public static final int match_parent=0x7f0a0016;
+        public static final int monochrome=0x7f0a001e;
+        public static final int none=0x7f0a0007;
+        public static final int normal=0x7f0a000c;
+        public static final int passcode_logo=0x7f0a005f;
+        public static final int poidetailfragment=0x7f0a006f;
+        public static final int production=0x7f0a0011;
+        public static final int progressBar=0x7f0a007a;
+        public static final int ratingbar=0x7f0a0074;
+        public static final int root=0x7f0a007b;
+        public static final int routeButton=0x7f0a0005;
+        public static final int sandbox=0x7f0a0012;
+        public static final int satellite=0x7f0a000d;
+        public static final int seamensor_logo=0x7f0a005c;
+        public static final int selectionDetails=0x7f0a0015;
+        public static final int signUp=0x7f0a006b;
+        public static final int slide=0x7f0a0008;
+        public static final int strict_sandbox=0x7f0a0013;
+        public static final int submit=0x7f0a006a;
+        public static final int terrain=0x7f0a000e;
+        public static final int textPOIDescription=0x7f0a0077;
+        public static final int textPOILocation=0x7f0a0075;
+        public static final int textPOIName=0x7f0a0073;
+        public static final int textView1=0x7f0a0057;
+        public static final int textView2=0x7f0a0036;
+        public static final int textViewIsPhotoOK=0x7f0a0058;
+        public static final int top_message=0x7f0a0060;
+        public static final int trkQualityView=0x7f0a0027;
+        public static final int userlogstate_message=0x7f0a0064;
+        public static final int videoButton=0x7f0a0006;
+        public static final int vpAcquiredStatus=0x7f0a0037;
+        public static final int vp_list=0x7f0a0020;
+        public static final int waitingTrkLoading=0x7f0a003a;
+        public static final int webBottomBar=0x7f0a007c;
+        public static final int webView=0x7f0a0079;
+        public static final int wrap_content=0x7f0a0017;
+        public static final int xPosView=0x7f0a0021;
+        public static final int xRotView=0x7f0a0024;
+        public static final int yPosView=0x7f0a0022;
+        public static final int yRotView=0x7f0a0025;
+        public static final int zPosView=0x7f0a0023;
+        public static final int zRotView=0x7f0a0026;
     }
     public static final class integer {
-        public static final int google_play_services_version=0x7f0c0000;
+        public static final int google_play_services_version=0x7f0b0000;
     }
     public static final class layout {
         public static final int activity_config=0x7f030000;
         public static final int activity_imagecap=0x7f030001;
         public static final int activity_loader=0x7f030002;
         public static final int activity_main=0x7f030003;
-        public static final int button_action_detail=0x7f030004;
-        public static final int html5container=0x7f030005;
-        public static final int mymaccauth=0x7f030006;
+        public static final int activity_mymaccauthenticator=0x7f030004;
+        public static final int button_action_detail=0x7f030005;
+        public static final int html5container=0x7f030006;
         public static final int poiactivity=0x7f030007;
         public static final int poidetaildialog=0x7f030008;
         public static final int webview=0x7f030009;
         public static final int webviewnav=0x7f03000a;
     }
     public static final class raw {
-        public static final int gtm_analytics=0x7f060000;
-        public static final int success=0x7f060001;
+        public static final int gtm_analytics=0x7f050000;
+        public static final int success=0x7f050001;
     }
     public static final class string {
-        public static final int BTN_ACCEPT=0x7f070064;
-        public static final int BTN_ADD=0x7f070065;
-        public static final int BTN_ADD_FAVORITE=0x7f070066;
-        public static final int BTN_AGREE_TERMS=0x7f070067;
-        public static final int BTN_ALL=0x7f070068;
-        public static final int BTN_APPLY=0x7f070069;
-        public static final int BTN_BACK=0x7f07006a;
-        public static final int BTN_BUY=0x7f07006b;
-        public static final int BTN_CALL=0x7f07006c;
-        public static final int BTN_CANCEL=0x7f07006d;
-        public static final int BTN_CLOSE=0x7f07006e;
-        public static final int BTN_CLOSE_HELPTXT=0x7f07006f;
-        public static final int BTN_DELETE=0x7f070070;
-        public static final int BTN_EMAIL=0x7f070071;
-        public static final int BTN_EXIT=0x7f070072;
-        public static final int BTN_FEEDBACK=0x7f070073;
-        public static final int BTN_FILTER=0x7f070074;
-        public static final int BTN_GETTING_STARTED=0x7f070075;
-        public static final int BTN_GET_INFORMATION=0x7f070076;
-        public static final int BTN_GO=0x7f070077;
-        public static final int BTN_HIDE=0x7f070078;
-        public static final int BTN_HOME=0x7f070079;
-        public static final int BTN_INFO=0x7f07007a;
-        public static final int BTN_LATEST=0x7f07007b;
-        public static final int BTN_LICENSE=0x7f07007c;
-        public static final int BTN_LIST=0x7f07007d;
-        public static final int BTN_LIVE=0x7f07007e;
-        public static final int BTN_LLAMARKER=0x7f07007f;
-        public static final int BTN_LOAD_3D=0x7f070080;
-        public static final int BTN_LOGIN=0x7f070081;
-        public static final int BTN_LOGOUT=0x7f070082;
-        public static final int BTN_MANAGE_CHANNEL=0x7f070083;
-        public static final int BTN_MAP=0x7f070084;
-        public static final int BTN_MOST_RELEVANT=0x7f070085;
-        public static final int BTN_MY_JUNAIO=0x7f070086;
-        public static final int BTN_NAVIGATE=0x7f070087;
-        public static final int BTN_NEW=0x7f070088;
-        public static final int BTN_NO=0x7f070089;
-        public static final int BTN_NO_THANKS=0x7f07008a;
-        public static final int BTN_OK=0x7f07008b;
-        public static final int BTN_OPEN=0x7f07008c;
-        public static final int BTN_OPEN_CHANNEL=0x7f07008d;
-        public static final int BTN_OPEN_WEB=0x7f07008e;
-        public static final int BTN_PLAY_AUDIO=0x7f07008f;
-        public static final int BTN_PLAY_MEDIA=0x7f070090;
-        public static final int BTN_PLAY_VIDEO=0x7f070091;
-        public static final int BTN_POPULAR=0x7f070092;
-        public static final int BTN_POST=0x7f070093;
-        public static final int BTN_RATE_IT=0x7f070094;
-        public static final int BTN_REFUSE=0x7f070095;
-        public static final int BTN_REMEBMER_LOGIN=0x7f070096;
-        public static final int BTN_REMOVE_FAVORITE=0x7f070097;
-        public static final int BTN_REMOVE_FRIEND=0x7f070098;
-        public static final int BTN_RETRY=0x7f070099;
-        public static final int BTN_ROUTE=0x7f07009a;
-        public static final int BTN_SAVE=0x7f07009b;
-        public static final int BTN_SAVE_SCREENSHOT=0x7f07009c;
-        public static final int BTN_SCAN=0x7f07009d;
-        public static final int BTN_SEARCH_JUNAIO=0x7f07009e;
-        public static final int BTN_SETTINGS=0x7f07009f;
-        public static final int BTN_SHARE_FACEBOOK=0x7f0700a0;
-        public static final int BTN_SHARING=0x7f0700a1;
-        public static final int BTN_SHOW_PASSWORD=0x7f0700a2;
-        public static final int BTN_SIGNUP_LOGIN=0x7f0700a3;
-        public static final int BTN_SIGNUP_NEWSLETTER=0x7f0700a4;
-        public static final int BTN_SIGN_UP=0x7f0700a5;
-        public static final int BTN_SOCIAL=0x7f0700a6;
-        public static final int BTN_SUPPORT=0x7f0700a7;
-        public static final int BTN_TAG_THE_WORLD=0x7f0700a8;
-        public static final int BTN_TAG_VISIBILITY=0x7f0700a9;
-        public static final int BTN_VIEW=0x7f0700aa;
-        public static final int BTN_VIEW_IMAGE=0x7f0700ab;
-        public static final int BTN_YES=0x7f0700ac;
-        public static final int CATEGORY_BANKING=0x7f0700ad;
-        public static final int CATEGORY_CULTURE=0x7f0700ae;
-        public static final int CATEGORY_FAVORITES=0x7f0700af;
-        public static final int CATEGORY_FEATURED=0x7f0700b0;
-        public static final int CATEGORY_FOOD=0x7f0700b1;
-        public static final int CATEGORY_FRIENDS_CHANNEL=0x7f0700b2;
-        public static final int CATEGORY_GAMES=0x7f0700b3;
-        public static final int CATEGORY_HISTORY=0x7f0700b4;
-        public static final int CATEGORY_MY_CHANNELS=0x7f0700b5;
-        public static final int CATEGORY_NEARBY=0x7f0700b6;
-        public static final int CATEGORY_NEWS=0x7f0700b7;
-        public static final int CATEGORY_NIGHTLIFE=0x7f0700b8;
-        public static final int CATEGORY_SEARCH=0x7f0700b9;
-        public static final int CATEGORY_SHOPPING=0x7f0700ba;
-        public static final int CATEGORY_TRAVEL=0x7f0700bb;
-        public static final int HNT_CHANNELS_SEARCH=0x7f0700bc;
-        public static final int HNT_EMAIL_ADDRESS=0x7f0700bd;
-        public static final int HNT_PASSWORD=0x7f0700be;
-        public static final int HNT_SEARCH_JUNAIO=0x7f0700bf;
-        public static final int HNT_SEARCH_USERS=0x7f0700c0;
-        public static final int HNT_TWITTER_PASSWORD=0x7f0700c1;
-        public static final int HNT_TWITTER_USERNAME=0x7f0700c2;
-        public static final int HNT_USERNAME=0x7f0700c3;
-        public static final int LBL_ABOUT_JUNAIO=0x7f0700c4;
-        public static final int LBL_ADD_COMMENT=0x7f0700c5;
-        public static final int LBL_ADD_FRIENDS=0x7f0700c6;
-        public static final int LBL_ADD_MODEL=0x7f0700c7;
-        public static final int LBL_APPLICATION_NAME=0x7f0700c8;
-        public static final int LBL_AUTOMATICALLY_SHARE_EVENTS=0x7f0700c9;
-        public static final int LBL_BY=0x7f0700ca;
-        public static final int LBL_CHANNELS=0x7f0700cb;
-        public static final int LBL_CHANNEL_STATE_ACTIVE=0x7f0700cc;
-        public static final int LBL_CHANNEL_STATE_INACTIVE=0x7f0700cd;
-        public static final int LBL_CHARACTERS_LEFT_FOR_INPUT=0x7f0700ce;
-        public static final int LBL_CHECK_EXT_STORAGE=0x7f0700cf;
-        public static final int LBL_CHECK_INTERNET=0x7f0700d0;
-        public static final int LBL_CHECK_INT_STORAGE=0x7f0700d1;
-        public static final int LBL_COMMENTS=0x7f0700d2;
-        public static final int LBL_CURRENTLY_SCANNING_FOR=0x7f0700d3;
-        public static final int LBL_DAYS_AGO=0x7f0700d4;
-        public static final int LBL_DAY_AGO=0x7f0700d5;
-        public static final int LBL_DESCRIPTION=0x7f0700d6;
-        public static final int LBL_DONE=0x7f0700d7;
-        public static final int LBL_EDIT_MODEL=0x7f0700d8;
-        public static final int LBL_ERROR=0x7f0700d9;
-        public static final int LBL_FEATURED_PICKS=0x7f0700da;
-        public static final int LBL_FRIENDS=0x7f0700db;
-        public static final int LBL_FRIENDSHIP_REQUESTS=0x7f0700dc;
-        public static final int LBL_HELPTEXT_BTN_GO_SCANVIEW=0x7f0700dd;
-        public static final int LBL_HELPTEXT_BTN_SEARCHJUNAIO_SCANVIEW=0x7f0700de;
-        public static final int LBL_HELPTEXT_SCANWINDOW_SCANVIEW=0x7f0700df;
-        public static final int LBL_HELPTXT_FEATUREDPICKS_HOMESCREEN=0x7f0700e0;
-        public static final int LBL_HELPTXT_NEARME_HOMESCREEN=0x7f0700e1;
-        public static final int LBL_HELPTXT_SCAN_HOMESCREEN=0x7f0700e2;
-        public static final int LBL_HELPTXT_SEARCHBAR_HOMESCREEN=0x7f0700e3;
-        public static final int LBL_HOURS_AGO=0x7f0700e4;
-        public static final int LBL_HOUR_AGO=0x7f0700e5;
-        public static final int LBL_IMAGE=0x7f0700e6;
-        public static final int LBL_KM_AWAY=0x7f0700e7;
-        public static final int LBL_LOADING=0x7f0700e8;
-        public static final int LBL_LOAD_MORE=0x7f0700e9;
-        public static final int LBL_LOGIN_JUNAIO=0x7f0700ea;
-        public static final int LBL_MINUTES_AGO=0x7f0700eb;
-        public static final int LBL_MINUTE_AGO=0x7f0700ec;
-        public static final int LBL_MODEL=0x7f0700ed;
-        public static final int LBL_MY_COMMENT=0x7f0700ee;
-        public static final int LBL_M_AWAY=0x7f0700ef;
-        public static final int LBL_NAME=0x7f0700f0;
-        public static final int LBL_NEARBY=0x7f0700f1;
-        public static final int LBL_NOTE=0x7f0700f2;
-        public static final int LBL_NOW_VIEWING=0x7f0700f3;
-        public static final int LBL_NO_COMMENTS=0x7f0700f4;
-        public static final int LBL_POSTING=0x7f0700f5;
-        public static final int LBL_POST_IMAGE=0x7f0700f6;
-        public static final int LBL_POST_MESSAGE=0x7f0700f7;
-        public static final int LBL_PRIVATE=0x7f0700f8;
-        public static final int LBL_PROFILE=0x7f0700f9;
-        public static final int LBL_PUBLIC=0x7f0700fa;
-        public static final int LBL_QRCODES_AND_BARCODES=0x7f0700fb;
-        public static final int LBL_RATE=0x7f0700fc;
-        public static final int LBL_RIGHT_NOW=0x7f0700fd;
-        public static final int LBL_SEARCHING_CHANNELS=0x7f0700fe;
-        public static final int LBL_SEARCHING_PRODUCTS=0x7f0700ff;
-        public static final int LBL_SECONDS_AGO=0x7f070100;
-        public static final int LBL_SHARE_SCREENSHOT=0x7f070101;
-        public static final int LBL_TAG_IT=0x7f070102;
-        public static final int LBL_TWITTER=0x7f070103;
-        public static final int LBL_UNTITLED=0x7f070104;
-        public static final int LBL_X_AWAY=0x7f070105;
-        public static final int MENU_OPEN_IMG_EXTERNAL=0x7f070106;
-        public static final int MENU_OPEN_LINK_EXTERNAL=0x7f070107;
-        public static final int MNU_CLEAR_CACHE=0x7f070108;
-        public static final int MNU_CLEAR_HISTORY=0x7f070109;
-        public static final int MNU_ZOOM_ALL=0x7f07010a;
-        public static final int MNU_ZOOM_HERE=0x7f07010b;
-        public static final int MSGE_ACCEPT_TERMS=0x7f07010c;
-        public static final int MSGE_ADDING_PLACEDMODEL=0x7f07010d;
-        public static final int MSGE_DELETE_POI=0x7f07010e;
-        public static final int MSGE_ENTER_ATLEAST_CHARS=0x7f07010f;
-        public static final int MSGE_FRIENDSHIP=0x7f070110;
-        public static final int MSGE_FRIENDSHIP_REQUEST=0x7f070111;
-        public static final int MSGE_FRIEND_REMOVED=0x7f070112;
-        public static final int MSGE_HISTORY_NOT_CLEARED=0x7f070113;
-        public static final int MSGE_IMAGE_SAVE_FAILED=0x7f070114;
-        public static final int MSGE_INTERNAL_SERVER=0x7f070115;
-        public static final int MSGE_INVALID_EMAIL_ENTERED=0x7f070116;
-        public static final int MSGE_INVALID_EMAIL_OPENED=0x7f070117;
-        public static final int MSGE_INVALID_PASSWORD=0x7f070118;
-        public static final int MSGE_INVALID_PHONE_NUMBER=0x7f070119;
-        public static final int MSGE_INVALID_URL=0x7f07011a;
-        public static final int MSGE_INVALID_USERNAME=0x7f07011b;
-        public static final int MSGE_LLA_MARKER_DETECTED=0x7f07011c;
-        public static final int MSGE_LOAD_TWITTER=0x7f07011d;
-        public static final int MSGE_LOGIN=0x7f07011e;
-        public static final int MSGE_NETWORK=0x7f07011f;
-        public static final int MSGE_NOT_AVAILABLE=0x7f070120;
-        public static final int MSGE_NO_EMAIL=0x7f070121;
-        public static final int MSGE_NO_EXTERNAL_MEMORY=0x7f070122;
-        public static final int MSGE_NO_GOOGLE_MAPS_NAV=0x7f070123;
-        public static final int MSGE_NO_INTERNAL_MEMORY=0x7f070124;
-        public static final int MSGE_NO_INTERNET=0x7f070125;
-        public static final int MSGE_NO_OPTICAL_TRACKING=0x7f070126;
-        public static final int MSGE_PLAYING_AUDIO=0x7f070127;
-        public static final int MSGE_POST_IMAGE=0x7f070128;
-        public static final int MSGE_POST_MESSAGE=0x7f070129;
-        public static final int MSGE_PUBLISH_COMMENT=0x7f07012a;
-        public static final int MSGE_SERVER=0x7f07012b;
-        public static final int MSGE_SIGNUP=0x7f07012c;
-        public static final int MSGE_SUBSCRIBE_CHANNEL=0x7f07012d;
-        public static final int MSGE_TIMEOUT=0x7f07012e;
-        public static final int MSGE_TRY_AGAIN=0x7f07012f;
-        public static final int MSGE_TWITTER_LOGIN=0x7f070130;
-        public static final int MSGE_UNAUTHORIZED_ACCESS=0x7f070131;
-        public static final int MSGE_UNKNOWN_NETWORK=0x7f070132;
-        public static final int MSGE_UPDATE_CHANNEL=0x7f070133;
-        public static final int MSGE_VERIFY_PASSWORD=0x7f070134;
-        public static final int MSGE_VERIFY_USERNAME=0x7f070135;
-        public static final int MSGI_AVAILABLE=0x7f070136;
-        public static final int MSGI_CACHE_CLEARED=0x7f070137;
-        public static final int MSGI_CHANNELS_NOT_FOUND=0x7f070138;
-        public static final int MSGI_DOWNLOADING=0x7f070139;
-        public static final int MSGI_DOWNLOADING_EXTERNAL_MODEL=0x7f07013a;
-        public static final int MSGI_FRIEND_REQUEST_SENT=0x7f07013b;
-        public static final int MSGI_GPS_WAITING=0x7f07013c;
-        public static final int MSGI_HISTORY_CLEARED=0x7f07013d;
-        public static final int MSGI_HISTORY_EMPTY=0x7f07013e;
-        public static final int MSGI_HW_NOT_SUPPORTED=0x7f07013f;
-        public static final int MSGI_IMAGE_SAVED=0x7f070140;
-        public static final int MSGI_LIKEAPP_MSG=0x7f070141;
-        public static final int MSGI_LLA_MARKER_DETECTED=0x7f070142;
-        public static final int MSGI_LOADING_POIS=0x7f070143;
-        public static final int MSGI_LOADING_TWITTER_FEED_FOR=0x7f070144;
-        public static final int MSGI_NOT_LOGGED_IN=0x7f070145;
-        public static final int MSGI_NO_CURRENT_TWEETS=0x7f070146;
-        public static final int MSGI_NO_MATCHES=0x7f070147;
-        public static final int MSGI_NO_RESULTS=0x7f070148;
-        public static final int MSGI_POIS_NOT_FOUND=0x7f070149;
-        public static final int MSGI_SEND_FRIENDREQUEST_TO=0x7f07014a;
-        public static final int MSGI_STARTING_JUNAIO=0x7f07014b;
-        public static final int MSGI_SYNCING_MODELS=0x7f07014c;
-        public static final int MSGI_THANK_YOU=0x7f07014d;
-        public static final int MSGI_USERS_NOT_FOUND=0x7f07014e;
-        public static final int MSGQ_FILL_IN=0x7f07014f;
-        public static final int MSGQ_LOGOUT=0x7f070150;
-        public static final int MSGQ_REMOVE_FRIEND=0x7f070151;
-        public static final int MSGQ_WANT_TO_CONTINUE=0x7f070152;
-        public static final int MSGW_ACCELEROMETER_UNAVAILABLE=0x7f070153;
-        public static final int MSGW_BARCODE_UNSUPPORTED=0x7f070154;
-        public static final int MSGW_BLACK_LIST=0x7f070155;
-        public static final int MSGW_CAMERA_UNAVAILABLE=0x7f070156;
-        public static final int MSGW_GPS_UNAVAILABLE=0x7f070157;
-        public static final int MSGW_IOS4_REQUIRED=0x7f070158;
-        public static final int MSGW_IPHONE_3GS_REQUIRED=0x7f070159;
-        public static final int MSGW_LIVEVIEW_ONLY_3GS=0x7f07015a;
-        public static final int MSGW_LOCATIONSERVICE_NEEDED=0x7f07015b;
-        public static final int MSGW_LOCATION_UNAVAILABLE=0x7f07015c;
-        public static final int MSGW_NOT_WHITE_LIST=0x7f07015d;
-        public static final int MSGW_OPEN_EXTERNAL_APP=0x7f07015e;
-        public static final int MSGW_ORIENTATION_UNAVAILABLE=0x7f07015f;
-        public static final int MSGW_SERVER_UNREACHABLE=0x7f070160;
-        public static final int MSG_TITLE_BARCODE_UNSUPPORTED=0x7f070161;
-        public static final int MSG_TITLE_DIRECTIONS=0x7f070162;
-        public static final int MSG_TITLE_LIKE_APP=0x7f070163;
-        public static final int MSG_TITLE_LLA_MARKER_DETECTED=0x7f070164;
-        public static final int MSG_TITLE_LOGIN_FAILED=0x7f070165;
-        public static final int MSG_TITLE_NO_LLA_MARKERS_DETECTED=0x7f070166;
-        public static final int MSG_TITLE_NO_MEMORY=0x7f070167;
-        public static final int MSG_TITLE_PLACING_MODEL_FAILED=0x7f070168;
-        public static final int MSG_TITLE_SEARCHING_CHANNELS=0x7f070169;
-        public static final int MSG_TITLE_SERVER_UNREACHABLE=0x7f07016a;
-        public static final int MSG_TITLE_SIGNUP_ERROR=0x7f07016b;
-        public static final int MSG_TITLE_SIGNUP_FAILED=0x7f07016c;
-        public static final int MSG_TITLE_TERMS_CONDITIONS=0x7f07016d;
-        public static final int MSG_TITLE_TERMS_SERVICE=0x7f07016e;
-        public static final int MSG_TITLE_USERS_NOT_FOUND=0x7f07016f;
-        public static final int MSG_TITLE_VALIDATION_ERROR=0x7f070170;
-        public static final int MSG_TITLE_WARNING=0x7f070171;
-        public static final int accept=0x7f070172;
-        public static final int admin_present_waiving_gps_time=0x7f070020;
-        public static final int almost_finished_loading_assets=0x7f070021;
-        public static final int app_name=0x7f070022;
-        public static final int app_version_seamensor=0x7f070023;
-        public static final int app_version_smc=0x7f070024;
-        public static final int authlabel=0x7f070173;
-        public static final int button_accept_vp_photo=0x7f070025;
-        public static final int button_alpha_toggle=0x7f070026;
-        public static final int button_ambiguous_vp_toggle=0x7f070027;
-        public static final int button_exit=0x7f070028;
-        public static final int button_flash_toggle=0x7f070029;
-        public static final int button_flash_torch_vp_toggle=0x7f07002a;
-        public static final int button_id_100mm_vp_toggle=0x7f07002b;
-        public static final int button_id_20mm_vp_toggle=0x7f07002c;
-        public static final int button_ok=0x7f07002d;
-        public static final int button_reject_vp_photo=0x7f07002e;
-        public static final int button_sav_desc_vp_text=0x7f07002f;
-        public static final int button_show_next_vp_capture=0x7f070030;
-        public static final int button_show_previous_vp_capture=0x7f070031;
-        public static final int button_show_vp_captures=0x7f070032;
-        public static final int button_super_single_vp_toggle=0x7f070033;
-        public static final int button_text=0x7f070034;
-        public static final int button_text_decrease_qtyvps=0x7f070035;
-        public static final int button_text_increase_qtyvps=0x7f070036;
-        public static final int button_text_request_photo=0x7f070037;
-        public static final int button_text_save_tracking_vps_data=0x7f070038;
-        public static final int camera_focusing=0x7f070039;
-        public static final int camera_image_captured=0x7f07003a;
-        public static final int common_android_wear_notification_needs_update_text=0x7f070000;
-        public static final int common_android_wear_update_text=0x7f070001;
-        public static final int common_android_wear_update_title=0x7f070002;
-        public static final int common_google_play_services_enable_button=0x7f070003;
-        public static final int common_google_play_services_enable_text=0x7f070004;
-        public static final int common_google_play_services_enable_title=0x7f070005;
-        public static final int common_google_play_services_error_notification_requested_by_msg=0x7f070006;
-        public static final int common_google_play_services_install_button=0x7f070007;
-        public static final int common_google_play_services_install_text_phone=0x7f070008;
-        public static final int common_google_play_services_install_text_tablet=0x7f070009;
-        public static final int common_google_play_services_install_title=0x7f07000a;
-        public static final int common_google_play_services_invalid_account_text=0x7f07000b;
-        public static final int common_google_play_services_invalid_account_title=0x7f07000c;
-        public static final int common_google_play_services_needs_enabling_title=0x7f07000d;
-        public static final int common_google_play_services_network_error_text=0x7f07000e;
-        public static final int common_google_play_services_network_error_title=0x7f07000f;
-        public static final int common_google_play_services_notification_needs_installation_title=0x7f070010;
-        public static final int common_google_play_services_notification_needs_update_title=0x7f070011;
-        public static final int common_google_play_services_notification_ticker=0x7f070012;
-        public static final int common_google_play_services_sign_in_failed_text=0x7f070013;
-        public static final int common_google_play_services_sign_in_failed_title=0x7f070014;
-        public static final int common_google_play_services_unknown_issue=0x7f070015;
-        public static final int common_google_play_services_unsupported_text=0x7f070016;
-        public static final int common_google_play_services_unsupported_title=0x7f070017;
-        public static final int common_google_play_services_update_button=0x7f070018;
-        public static final int common_google_play_services_update_text=0x7f070019;
-        public static final int common_google_play_services_update_title=0x7f07001a;
-        public static final int common_open_on_phone=0x7f07001b;
-        public static final int common_signin_button_text=0x7f07001c;
-        public static final int common_signin_button_text_long=0x7f07001d;
-        public static final int commono_google_play_services_api_unavailable_text=0x7f07001e;
-        public static final int create_calendar_message=0x7f070174;
-        public static final int create_calendar_title=0x7f070175;
-        public static final int date_vp_capture_shown=0x7f07003b;
-        public static final int date_vp_touched_first_acquisition=0x7f07003c;
-        public static final int date_vp_touched_free_to_be_acquired=0x7f07003d;
-        public static final int date_vp_touched_last_acquired=0x7f07003e;
-        public static final int date_vp_touched_not_acquired=0x7f07003f;
-        public static final int decline=0x7f070176;
-        public static final int desc_vp_empty=0x7f070040;
-        public static final int device_clock_problem=0x7f070041;
-        public static final int double_bck_exit=0x7f070042;
-        public static final int dropboxlinkerror=0x7f070043;
-        public static final int gps_time_acquired=0x7f070044;
-        public static final int is_photo_ok=0x7f070045;
-        public static final int load_assets_finished=0x7f070046;
-        public static final int logging_in=0x7f070047;
-        public static final int login_btn_txt=0x7f070048;
-        public static final int logout_btn_txt=0x7f070049;
-        public static final int metaioSDKSignature=0x7f070177;
-        public static final int no_inttime=0x7f07004a;
-        public static final int no_photo_captured_in_this_vp=0x7f07004b;
-        public static final int no_seamensor_account=0x7f07004c;
-        public static final int no_wifi=0x7f07004d;
-        public static final int not_all_vps_acquired=0x7f07004e;
-        public static final int passcode_enter_passcode=0x7f07004f;
-        public static final int passcode_wrong_passcode=0x7f070050;
-        public static final int start_cap=0x7f070051;
-        public static final int start_config=0x7f070052;
-        public static final int starting_to_load_assets=0x7f070053;
-        public static final int still_loading_assets=0x7f070054;
-        public static final int store_picture_message=0x7f070178;
-        public static final int store_picture_title=0x7f070179;
-        public static final int user_name=0x7f070055;
-        public static final int user_number=0x7f070056;
-        public static final int userstate_loggedin=0x7f070057;
-        public static final int userstate_loggedout=0x7f070058;
-        public static final int vpAcquiredStatus=0x7f070059;
-        public static final int vpNotAcquiredStatus=0x7f07005a;
-        public static final int vp_00=0x7f07005b;
-        public static final int vp_location_des_text_missing=0x7f07005c;
-        public static final int vp_name=0x7f07005d;
-        public static final int vp_out_of_bounds=0x7f07005e;
-        public static final int vp_touched=0x7f07005f;
-        public static final int vp_touched_info=0x7f070060;
-        public static final int waiting_for_gps_time=0x7f070061;
-        public static final int waiting_for_internet_time=0x7f070062;
-        public static final int waiting_to_load_assets=0x7f070063;
-        public static final int wallet_buy_button_place_holder=0x7f07001f;
+        public static final int AlreadyMember=0x7f060020;
+        public static final int BTN_ACCEPT=0x7f06006c;
+        public static final int BTN_ADD=0x7f06006d;
+        public static final int BTN_ADD_FAVORITE=0x7f06006e;
+        public static final int BTN_AGREE_TERMS=0x7f06006f;
+        public static final int BTN_ALL=0x7f060070;
+        public static final int BTN_APPLY=0x7f060071;
+        public static final int BTN_BACK=0x7f060072;
+        public static final int BTN_BUY=0x7f060073;
+        public static final int BTN_CALL=0x7f060074;
+        public static final int BTN_CANCEL=0x7f060075;
+        public static final int BTN_CLOSE=0x7f060076;
+        public static final int BTN_CLOSE_HELPTXT=0x7f060077;
+        public static final int BTN_DELETE=0x7f060078;
+        public static final int BTN_EMAIL=0x7f060079;
+        public static final int BTN_EXIT=0x7f06007a;
+        public static final int BTN_FEEDBACK=0x7f06007b;
+        public static final int BTN_FILTER=0x7f06007c;
+        public static final int BTN_GETTING_STARTED=0x7f06007d;
+        public static final int BTN_GET_INFORMATION=0x7f06007e;
+        public static final int BTN_GO=0x7f06007f;
+        public static final int BTN_HIDE=0x7f060080;
+        public static final int BTN_HOME=0x7f060081;
+        public static final int BTN_INFO=0x7f060082;
+        public static final int BTN_LATEST=0x7f060083;
+        public static final int BTN_LICENSE=0x7f060084;
+        public static final int BTN_LIST=0x7f060085;
+        public static final int BTN_LIVE=0x7f060086;
+        public static final int BTN_LLAMARKER=0x7f060087;
+        public static final int BTN_LOAD_3D=0x7f060088;
+        public static final int BTN_LOGIN=0x7f060089;
+        public static final int BTN_LOGOUT=0x7f06008a;
+        public static final int BTN_MANAGE_CHANNEL=0x7f06008b;
+        public static final int BTN_MAP=0x7f06008c;
+        public static final int BTN_MOST_RELEVANT=0x7f06008d;
+        public static final int BTN_MY_JUNAIO=0x7f06008e;
+        public static final int BTN_NAVIGATE=0x7f06008f;
+        public static final int BTN_NEW=0x7f060090;
+        public static final int BTN_NO=0x7f060091;
+        public static final int BTN_NO_THANKS=0x7f060092;
+        public static final int BTN_OK=0x7f060093;
+        public static final int BTN_OPEN=0x7f060094;
+        public static final int BTN_OPEN_CHANNEL=0x7f060095;
+        public static final int BTN_OPEN_WEB=0x7f060096;
+        public static final int BTN_PLAY_AUDIO=0x7f060097;
+        public static final int BTN_PLAY_MEDIA=0x7f060098;
+        public static final int BTN_PLAY_VIDEO=0x7f060099;
+        public static final int BTN_POPULAR=0x7f06009a;
+        public static final int BTN_POST=0x7f06009b;
+        public static final int BTN_RATE_IT=0x7f06009c;
+        public static final int BTN_REFUSE=0x7f06009d;
+        public static final int BTN_REMEBMER_LOGIN=0x7f06009e;
+        public static final int BTN_REMOVE_FAVORITE=0x7f06009f;
+        public static final int BTN_REMOVE_FRIEND=0x7f0600a0;
+        public static final int BTN_RETRY=0x7f0600a1;
+        public static final int BTN_ROUTE=0x7f0600a2;
+        public static final int BTN_SAVE=0x7f0600a3;
+        public static final int BTN_SAVE_SCREENSHOT=0x7f0600a4;
+        public static final int BTN_SCAN=0x7f0600a5;
+        public static final int BTN_SEARCH_JUNAIO=0x7f0600a6;
+        public static final int BTN_SETTINGS=0x7f0600a7;
+        public static final int BTN_SHARE_FACEBOOK=0x7f0600a8;
+        public static final int BTN_SHARING=0x7f0600a9;
+        public static final int BTN_SHOW_PASSWORD=0x7f0600aa;
+        public static final int BTN_SIGNUP_LOGIN=0x7f0600ab;
+        public static final int BTN_SIGNUP_NEWSLETTER=0x7f0600ac;
+        public static final int BTN_SIGN_UP=0x7f0600ad;
+        public static final int BTN_SOCIAL=0x7f0600ae;
+        public static final int BTN_SUPPORT=0x7f0600af;
+        public static final int BTN_TAG_THE_WORLD=0x7f0600b0;
+        public static final int BTN_TAG_VISIBILITY=0x7f0600b1;
+        public static final int BTN_VIEW=0x7f0600b2;
+        public static final int BTN_VIEW_IMAGE=0x7f0600b3;
+        public static final int BTN_YES=0x7f0600b4;
+        public static final int CATEGORY_BANKING=0x7f0600b5;
+        public static final int CATEGORY_CULTURE=0x7f0600b6;
+        public static final int CATEGORY_FAVORITES=0x7f0600b7;
+        public static final int CATEGORY_FEATURED=0x7f0600b8;
+        public static final int CATEGORY_FOOD=0x7f0600b9;
+        public static final int CATEGORY_FRIENDS_CHANNEL=0x7f0600ba;
+        public static final int CATEGORY_GAMES=0x7f0600bb;
+        public static final int CATEGORY_HISTORY=0x7f0600bc;
+        public static final int CATEGORY_MY_CHANNELS=0x7f0600bd;
+        public static final int CATEGORY_NEARBY=0x7f0600be;
+        public static final int CATEGORY_NEWS=0x7f0600bf;
+        public static final int CATEGORY_NIGHTLIFE=0x7f0600c0;
+        public static final int CATEGORY_SEARCH=0x7f0600c1;
+        public static final int CATEGORY_SHOPPING=0x7f0600c2;
+        public static final int CATEGORY_TRAVEL=0x7f0600c3;
+        public static final int CreateAcc=0x7f060021;
+        public static final int HNT_CHANNELS_SEARCH=0x7f0600c4;
+        public static final int HNT_EMAIL_ADDRESS=0x7f0600c5;
+        public static final int HNT_PASSWORD=0x7f0600c6;
+        public static final int HNT_SEARCH_JUNAIO=0x7f0600c7;
+        public static final int HNT_SEARCH_USERS=0x7f0600c8;
+        public static final int HNT_TWITTER_PASSWORD=0x7f0600c9;
+        public static final int HNT_TWITTER_USERNAME=0x7f0600ca;
+        public static final int HNT_USERNAME=0x7f0600cb;
+        public static final int LBL_ABOUT_JUNAIO=0x7f0600cc;
+        public static final int LBL_ADD_COMMENT=0x7f0600cd;
+        public static final int LBL_ADD_FRIENDS=0x7f0600ce;
+        public static final int LBL_ADD_MODEL=0x7f0600cf;
+        public static final int LBL_APPLICATION_NAME=0x7f0600d0;
+        public static final int LBL_AUTOMATICALLY_SHARE_EVENTS=0x7f0600d1;
+        public static final int LBL_BY=0x7f0600d2;
+        public static final int LBL_CHANNELS=0x7f0600d3;
+        public static final int LBL_CHANNEL_STATE_ACTIVE=0x7f0600d4;
+        public static final int LBL_CHANNEL_STATE_INACTIVE=0x7f0600d5;
+        public static final int LBL_CHARACTERS_LEFT_FOR_INPUT=0x7f0600d6;
+        public static final int LBL_CHECK_EXT_STORAGE=0x7f0600d7;
+        public static final int LBL_CHECK_INTERNET=0x7f0600d8;
+        public static final int LBL_CHECK_INT_STORAGE=0x7f0600d9;
+        public static final int LBL_COMMENTS=0x7f0600da;
+        public static final int LBL_CURRENTLY_SCANNING_FOR=0x7f0600db;
+        public static final int LBL_DAYS_AGO=0x7f0600dc;
+        public static final int LBL_DAY_AGO=0x7f0600dd;
+        public static final int LBL_DESCRIPTION=0x7f0600de;
+        public static final int LBL_DONE=0x7f0600df;
+        public static final int LBL_EDIT_MODEL=0x7f0600e0;
+        public static final int LBL_ERROR=0x7f0600e1;
+        public static final int LBL_FEATURED_PICKS=0x7f0600e2;
+        public static final int LBL_FRIENDS=0x7f0600e3;
+        public static final int LBL_FRIENDSHIP_REQUESTS=0x7f0600e4;
+        public static final int LBL_HELPTEXT_BTN_GO_SCANVIEW=0x7f0600e5;
+        public static final int LBL_HELPTEXT_BTN_SEARCHJUNAIO_SCANVIEW=0x7f0600e6;
+        public static final int LBL_HELPTEXT_SCANWINDOW_SCANVIEW=0x7f0600e7;
+        public static final int LBL_HELPTXT_FEATUREDPICKS_HOMESCREEN=0x7f0600e8;
+        public static final int LBL_HELPTXT_NEARME_HOMESCREEN=0x7f0600e9;
+        public static final int LBL_HELPTXT_SCAN_HOMESCREEN=0x7f0600ea;
+        public static final int LBL_HELPTXT_SEARCHBAR_HOMESCREEN=0x7f0600eb;
+        public static final int LBL_HOURS_AGO=0x7f0600ec;
+        public static final int LBL_HOUR_AGO=0x7f0600ed;
+        public static final int LBL_IMAGE=0x7f0600ee;
+        public static final int LBL_KM_AWAY=0x7f0600ef;
+        public static final int LBL_LOADING=0x7f0600f0;
+        public static final int LBL_LOAD_MORE=0x7f0600f1;
+        public static final int LBL_LOGIN_JUNAIO=0x7f0600f2;
+        public static final int LBL_MINUTES_AGO=0x7f0600f3;
+        public static final int LBL_MINUTE_AGO=0x7f0600f4;
+        public static final int LBL_MODEL=0x7f0600f5;
+        public static final int LBL_MY_COMMENT=0x7f0600f6;
+        public static final int LBL_M_AWAY=0x7f0600f7;
+        public static final int LBL_NAME=0x7f0600f8;
+        public static final int LBL_NEARBY=0x7f0600f9;
+        public static final int LBL_NOTE=0x7f0600fa;
+        public static final int LBL_NOW_VIEWING=0x7f0600fb;
+        public static final int LBL_NO_COMMENTS=0x7f0600fc;
+        public static final int LBL_POSTING=0x7f0600fd;
+        public static final int LBL_POST_IMAGE=0x7f0600fe;
+        public static final int LBL_POST_MESSAGE=0x7f0600ff;
+        public static final int LBL_PRIVATE=0x7f060100;
+        public static final int LBL_PROFILE=0x7f060101;
+        public static final int LBL_PUBLIC=0x7f060102;
+        public static final int LBL_QRCODES_AND_BARCODES=0x7f060103;
+        public static final int LBL_RATE=0x7f060104;
+        public static final int LBL_RIGHT_NOW=0x7f060105;
+        public static final int LBL_SEARCHING_CHANNELS=0x7f060106;
+        public static final int LBL_SEARCHING_PRODUCTS=0x7f060107;
+        public static final int LBL_SECONDS_AGO=0x7f060108;
+        public static final int LBL_SHARE_SCREENSHOT=0x7f060109;
+        public static final int LBL_TAG_IT=0x7f06010a;
+        public static final int LBL_TWITTER=0x7f06010b;
+        public static final int LBL_UNTITLED=0x7f06010c;
+        public static final int LBL_X_AWAY=0x7f06010d;
+        public static final int MENU_OPEN_IMG_EXTERNAL=0x7f06010e;
+        public static final int MENU_OPEN_LINK_EXTERNAL=0x7f06010f;
+        public static final int MNU_CLEAR_CACHE=0x7f060110;
+        public static final int MNU_CLEAR_HISTORY=0x7f060111;
+        public static final int MNU_ZOOM_ALL=0x7f060112;
+        public static final int MNU_ZOOM_HERE=0x7f060113;
+        public static final int MSGE_ACCEPT_TERMS=0x7f060114;
+        public static final int MSGE_ADDING_PLACEDMODEL=0x7f060115;
+        public static final int MSGE_DELETE_POI=0x7f060116;
+        public static final int MSGE_ENTER_ATLEAST_CHARS=0x7f060117;
+        public static final int MSGE_FRIENDSHIP=0x7f060118;
+        public static final int MSGE_FRIENDSHIP_REQUEST=0x7f060119;
+        public static final int MSGE_FRIEND_REMOVED=0x7f06011a;
+        public static final int MSGE_HISTORY_NOT_CLEARED=0x7f06011b;
+        public static final int MSGE_IMAGE_SAVE_FAILED=0x7f06011c;
+        public static final int MSGE_INTERNAL_SERVER=0x7f06011d;
+        public static final int MSGE_INVALID_EMAIL_ENTERED=0x7f06011e;
+        public static final int MSGE_INVALID_EMAIL_OPENED=0x7f06011f;
+        public static final int MSGE_INVALID_PASSWORD=0x7f060120;
+        public static final int MSGE_INVALID_PHONE_NUMBER=0x7f060121;
+        public static final int MSGE_INVALID_URL=0x7f060122;
+        public static final int MSGE_INVALID_USERNAME=0x7f060123;
+        public static final int MSGE_LLA_MARKER_DETECTED=0x7f060124;
+        public static final int MSGE_LOAD_TWITTER=0x7f060125;
+        public static final int MSGE_LOGIN=0x7f060126;
+        public static final int MSGE_NETWORK=0x7f060127;
+        public static final int MSGE_NOT_AVAILABLE=0x7f060128;
+        public static final int MSGE_NO_EMAIL=0x7f060129;
+        public static final int MSGE_NO_EXTERNAL_MEMORY=0x7f06012a;
+        public static final int MSGE_NO_GOOGLE_MAPS_NAV=0x7f06012b;
+        public static final int MSGE_NO_INTERNAL_MEMORY=0x7f06012c;
+        public static final int MSGE_NO_INTERNET=0x7f06012d;
+        public static final int MSGE_NO_OPTICAL_TRACKING=0x7f06012e;
+        public static final int MSGE_PLAYING_AUDIO=0x7f06012f;
+        public static final int MSGE_POST_IMAGE=0x7f060130;
+        public static final int MSGE_POST_MESSAGE=0x7f060131;
+        public static final int MSGE_PUBLISH_COMMENT=0x7f060132;
+        public static final int MSGE_SERVER=0x7f060133;
+        public static final int MSGE_SIGNUP=0x7f060134;
+        public static final int MSGE_SUBSCRIBE_CHANNEL=0x7f060135;
+        public static final int MSGE_TIMEOUT=0x7f060136;
+        public static final int MSGE_TRY_AGAIN=0x7f060137;
+        public static final int MSGE_TWITTER_LOGIN=0x7f060138;
+        public static final int MSGE_UNAUTHORIZED_ACCESS=0x7f060139;
+        public static final int MSGE_UNKNOWN_NETWORK=0x7f06013a;
+        public static final int MSGE_UPDATE_CHANNEL=0x7f06013b;
+        public static final int MSGE_VERIFY_PASSWORD=0x7f06013c;
+        public static final int MSGE_VERIFY_USERNAME=0x7f06013d;
+        public static final int MSGI_AVAILABLE=0x7f06013e;
+        public static final int MSGI_CACHE_CLEARED=0x7f06013f;
+        public static final int MSGI_CHANNELS_NOT_FOUND=0x7f060140;
+        public static final int MSGI_DOWNLOADING=0x7f060141;
+        public static final int MSGI_DOWNLOADING_EXTERNAL_MODEL=0x7f060142;
+        public static final int MSGI_FRIEND_REQUEST_SENT=0x7f060143;
+        public static final int MSGI_GPS_WAITING=0x7f060144;
+        public static final int MSGI_HISTORY_CLEARED=0x7f060145;
+        public static final int MSGI_HISTORY_EMPTY=0x7f060146;
+        public static final int MSGI_HW_NOT_SUPPORTED=0x7f060147;
+        public static final int MSGI_IMAGE_SAVED=0x7f060148;
+        public static final int MSGI_LIKEAPP_MSG=0x7f060149;
+        public static final int MSGI_LLA_MARKER_DETECTED=0x7f06014a;
+        public static final int MSGI_LOADING_POIS=0x7f06014b;
+        public static final int MSGI_LOADING_TWITTER_FEED_FOR=0x7f06014c;
+        public static final int MSGI_NOT_LOGGED_IN=0x7f06014d;
+        public static final int MSGI_NO_CURRENT_TWEETS=0x7f06014e;
+        public static final int MSGI_NO_MATCHES=0x7f06014f;
+        public static final int MSGI_NO_RESULTS=0x7f060150;
+        public static final int MSGI_POIS_NOT_FOUND=0x7f060151;
+        public static final int MSGI_SEND_FRIENDREQUEST_TO=0x7f060152;
+        public static final int MSGI_STARTING_JUNAIO=0x7f060153;
+        public static final int MSGI_SYNCING_MODELS=0x7f060154;
+        public static final int MSGI_THANK_YOU=0x7f060155;
+        public static final int MSGI_USERS_NOT_FOUND=0x7f060156;
+        public static final int MSGQ_FILL_IN=0x7f060157;
+        public static final int MSGQ_LOGOUT=0x7f060158;
+        public static final int MSGQ_REMOVE_FRIEND=0x7f060159;
+        public static final int MSGQ_WANT_TO_CONTINUE=0x7f06015a;
+        public static final int MSGW_ACCELEROMETER_UNAVAILABLE=0x7f06015b;
+        public static final int MSGW_BARCODE_UNSUPPORTED=0x7f06015c;
+        public static final int MSGW_BLACK_LIST=0x7f06015d;
+        public static final int MSGW_CAMERA_UNAVAILABLE=0x7f06015e;
+        public static final int MSGW_GPS_UNAVAILABLE=0x7f06015f;
+        public static final int MSGW_IOS4_REQUIRED=0x7f060160;
+        public static final int MSGW_IPHONE_3GS_REQUIRED=0x7f060161;
+        public static final int MSGW_LIVEVIEW_ONLY_3GS=0x7f060162;
+        public static final int MSGW_LOCATIONSERVICE_NEEDED=0x7f060163;
+        public static final int MSGW_LOCATION_UNAVAILABLE=0x7f060164;
+        public static final int MSGW_NOT_WHITE_LIST=0x7f060165;
+        public static final int MSGW_OPEN_EXTERNAL_APP=0x7f060166;
+        public static final int MSGW_ORIENTATION_UNAVAILABLE=0x7f060167;
+        public static final int MSGW_SERVER_UNREACHABLE=0x7f060168;
+        public static final int MSG_TITLE_BARCODE_UNSUPPORTED=0x7f060169;
+        public static final int MSG_TITLE_DIRECTIONS=0x7f06016a;
+        public static final int MSG_TITLE_LIKE_APP=0x7f06016b;
+        public static final int MSG_TITLE_LLA_MARKER_DETECTED=0x7f06016c;
+        public static final int MSG_TITLE_LOGIN_FAILED=0x7f06016d;
+        public static final int MSG_TITLE_NO_LLA_MARKERS_DETECTED=0x7f06016e;
+        public static final int MSG_TITLE_NO_MEMORY=0x7f06016f;
+        public static final int MSG_TITLE_PLACING_MODEL_FAILED=0x7f060170;
+        public static final int MSG_TITLE_SEARCHING_CHANNELS=0x7f060171;
+        public static final int MSG_TITLE_SERVER_UNREACHABLE=0x7f060172;
+        public static final int MSG_TITLE_SIGNUP_ERROR=0x7f060173;
+        public static final int MSG_TITLE_SIGNUP_FAILED=0x7f060174;
+        public static final int MSG_TITLE_TERMS_CONDITIONS=0x7f060175;
+        public static final int MSG_TITLE_TERMS_SERVICE=0x7f060176;
+        public static final int MSG_TITLE_USERS_NOT_FOUND=0x7f060177;
+        public static final int MSG_TITLE_VALIDATION_ERROR=0x7f060178;
+        public static final int MSG_TITLE_WARNING=0x7f060179;
+        public static final int Name=0x7f060022;
+        public static final int Password=0x7f060023;
+        public static final int SignIn=0x7f060024;
+        public static final int accept=0x7f06017a;
+        public static final int accountname=0x7f060025;
+        public static final int admin_present_waiving_gps_time=0x7f060026;
+        public static final int almost_finished_loading_assets=0x7f060027;
+        public static final int app_name=0x7f060028;
+        public static final int app_version_seamensor=0x7f060029;
+        public static final int app_version_smc=0x7f06002a;
+        public static final int authlabel=0x7f06017b;
+        public static final int button_accept_vp_photo=0x7f06002b;
+        public static final int button_alpha_toggle=0x7f06002c;
+        public static final int button_ambiguous_vp_toggle=0x7f06002d;
+        public static final int button_exit=0x7f06002e;
+        public static final int button_flash_toggle=0x7f06002f;
+        public static final int button_flash_torch_vp_toggle=0x7f060030;
+        public static final int button_id_100mm_vp_toggle=0x7f060031;
+        public static final int button_id_20mm_vp_toggle=0x7f060032;
+        public static final int button_ok=0x7f060033;
+        public static final int button_reject_vp_photo=0x7f060034;
+        public static final int button_sav_desc_vp_text=0x7f060035;
+        public static final int button_show_next_vp_capture=0x7f060036;
+        public static final int button_show_previous_vp_capture=0x7f060037;
+        public static final int button_show_vp_captures=0x7f060038;
+        public static final int button_super_single_vp_toggle=0x7f060039;
+        public static final int button_text=0x7f06003a;
+        public static final int button_text_decrease_qtyvps=0x7f06003b;
+        public static final int button_text_increase_qtyvps=0x7f06003c;
+        public static final int button_text_request_photo=0x7f06003d;
+        public static final int button_text_save_tracking_vps_data=0x7f06003e;
+        public static final int camera_focusing=0x7f06003f;
+        public static final int camera_image_captured=0x7f060040;
+        public static final int common_android_wear_notification_needs_update_text=0x7f060000;
+        public static final int common_android_wear_update_text=0x7f060001;
+        public static final int common_android_wear_update_title=0x7f060002;
+        public static final int common_google_play_services_enable_button=0x7f060003;
+        public static final int common_google_play_services_enable_text=0x7f060004;
+        public static final int common_google_play_services_enable_title=0x7f060005;
+        public static final int common_google_play_services_error_notification_requested_by_msg=0x7f060006;
+        public static final int common_google_play_services_install_button=0x7f060007;
+        public static final int common_google_play_services_install_text_phone=0x7f060008;
+        public static final int common_google_play_services_install_text_tablet=0x7f060009;
+        public static final int common_google_play_services_install_title=0x7f06000a;
+        public static final int common_google_play_services_invalid_account_text=0x7f06000b;
+        public static final int common_google_play_services_invalid_account_title=0x7f06000c;
+        public static final int common_google_play_services_needs_enabling_title=0x7f06000d;
+        public static final int common_google_play_services_network_error_text=0x7f06000e;
+        public static final int common_google_play_services_network_error_title=0x7f06000f;
+        public static final int common_google_play_services_notification_needs_installation_title=0x7f060010;
+        public static final int common_google_play_services_notification_needs_update_title=0x7f060011;
+        public static final int common_google_play_services_notification_ticker=0x7f060012;
+        public static final int common_google_play_services_sign_in_failed_text=0x7f060013;
+        public static final int common_google_play_services_sign_in_failed_title=0x7f060014;
+        public static final int common_google_play_services_unknown_issue=0x7f060015;
+        public static final int common_google_play_services_unsupported_text=0x7f060016;
+        public static final int common_google_play_services_unsupported_title=0x7f060017;
+        public static final int common_google_play_services_update_button=0x7f060018;
+        public static final int common_google_play_services_update_text=0x7f060019;
+        public static final int common_google_play_services_update_title=0x7f06001a;
+        public static final int common_open_on_phone=0x7f06001b;
+        public static final int common_signin_button_text=0x7f06001c;
+        public static final int common_signin_button_text_long=0x7f06001d;
+        public static final int commono_google_play_services_api_unavailable_text=0x7f06001e;
+        public static final int create_calendar_message=0x7f06017c;
+        public static final int create_calendar_title=0x7f06017d;
+        public static final int date_vp_capture_shown=0x7f060041;
+        public static final int date_vp_touched_first_acquisition=0x7f060042;
+        public static final int date_vp_touched_free_to_be_acquired=0x7f060043;
+        public static final int date_vp_touched_last_acquired=0x7f060044;
+        public static final int date_vp_touched_not_acquired=0x7f060045;
+        public static final int decline=0x7f06017e;
+        public static final int desc_vp_empty=0x7f060046;
+        public static final int device_clock_problem=0x7f060047;
+        public static final int double_bck_exit=0x7f060048;
+        public static final int dropboxlinkerror=0x7f060049;
+        public static final int emailusr=0x7f06004a;
+        public static final int gps_time_acquired=0x7f06004b;
+        public static final int is_photo_ok=0x7f06004c;
+        public static final int load_assets_finished=0x7f06004d;
+        public static final int logging_in=0x7f06004e;
+        public static final int login_btn_txt=0x7f06004f;
+        public static final int logout_btn_txt=0x7f060050;
+        public static final int metaioSDKSignature=0x7f06017f;
+        public static final int newuser=0x7f060051;
+        public static final int no_inttime=0x7f060052;
+        public static final int no_photo_captured_in_this_vp=0x7f060053;
+        public static final int no_seamensor_account=0x7f060054;
+        public static final int no_wifi=0x7f060055;
+        public static final int not_all_vps_acquired=0x7f060056;
+        public static final int passcode_enter_passcode=0x7f060057;
+        public static final int passcode_wrong_passcode=0x7f060058;
+        public static final int start_cap=0x7f060059;
+        public static final int start_config=0x7f06005a;
+        public static final int starting_to_load_assets=0x7f06005b;
+        public static final int still_loading_assets=0x7f06005c;
+        public static final int store_picture_message=0x7f060180;
+        public static final int store_picture_title=0x7f060181;
+        public static final int user_name=0x7f06005d;
+        public static final int user_number=0x7f06005e;
+        public static final int userstate_loggedin=0x7f06005f;
+        public static final int userstate_loggedout=0x7f060060;
+        public static final int vpAcquiredStatus=0x7f060061;
+        public static final int vpNotAcquiredStatus=0x7f060062;
+        public static final int vp_00=0x7f060063;
+        public static final int vp_location_des_text_missing=0x7f060064;
+        public static final int vp_name=0x7f060065;
+        public static final int vp_out_of_bounds=0x7f060066;
+        public static final int vp_touched=0x7f060067;
+        public static final int vp_touched_info=0x7f060068;
+        public static final int waiting_for_gps_time=0x7f060069;
+        public static final int waiting_for_internet_time=0x7f06006a;
+        public static final int waiting_to_load_assets=0x7f06006b;
+        public static final int wallet_buy_button_place_holder=0x7f06001f;
     }
     public static final class style {
-        public static final int AppTheme=0x7f0d0000;
-        public static final int POIButton=0x7f0d0001;
-        public static final int POIButton_POIActionButton=0x7f0d0002;
-        public static final int Theme_FullScreen=0x7f0d0003;
-        public static final int Theme_Fullscreen=0x7f0d0004;
-        public static final int Theme_IAPTheme=0x7f0d0005;
-        public static final int Theme_POIDialog=0x7f0d0006;
-        public static final int Theme_Translucent=0x7f0d0007;
-        public static final int WalletFragmentDefaultButtonTextAppearance=0x7f0d0008;
-        public static final int WalletFragmentDefaultDetailsHeaderTextAppearance=0x7f0d0009;
-        public static final int WalletFragmentDefaultDetailsTextAppearance=0x7f0d000a;
-        public static final int WalletFragmentDefaultStyle=0x7f0d000b;
+        public static final int AppTheme=0x7f0c0000;
+        public static final int POIButton=0x7f0c0001;
+        public static final int POIButton_POIActionButton=0x7f0c0002;
+        public static final int Theme_FullScreen=0x7f0c0003;
+        public static final int Theme_Fullscreen=0x7f0c0004;
+        public static final int Theme_IAPTheme=0x7f0c0005;
+        public static final int Theme_POIDialog=0x7f0c0006;
+        public static final int Theme_Translucent=0x7f0c0007;
+        public static final int WalletFragmentDefaultButtonTextAppearance=0x7f0c0008;
+        public static final int WalletFragmentDefaultDetailsHeaderTextAppearance=0x7f0c0009;
+        public static final int WalletFragmentDefaultDetailsTextAppearance=0x7f0c000a;
+        public static final int WalletFragmentDefaultStyle=0x7f0c000b;
     }
     public static final class xml {
-        public static final int account_preferences=0x7f050000;
-        public static final int authenticator=0x7f050001;
+        public static final int account_preferences=0x7f040000;
+        public static final int authenticator=0x7f040001;
     }
     public static final class styleable {
         /** Attributes that can be used with a AdsAttrs.
@@ -1107,9 +1117,9 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #AdsAttrs_adSize com.ImageCapActivity.ImageCapActivity:adSize}</code></td><td></td></tr>
-           <tr><td><code>{@link #AdsAttrs_adSizes com.ImageCapActivity.ImageCapActivity:adSizes}</code></td><td></td></tr>
-           <tr><td><code>{@link #AdsAttrs_adUnitId com.ImageCapActivity.ImageCapActivity:adUnitId}</code></td><td></td></tr>
+           <tr><td><code>{@link #AdsAttrs_adSize com.seamensor.seamensor:adSize}</code></td><td></td></tr>
+           <tr><td><code>{@link #AdsAttrs_adSizes com.seamensor.seamensor:adSizes}</code></td><td></td></tr>
+           <tr><td><code>{@link #AdsAttrs_adUnitId com.seamensor.seamensor:adUnitId}</code></td><td></td></tr>
            </table>
            @see #AdsAttrs_adSize
            @see #AdsAttrs_adSizes
@@ -1119,7 +1129,7 @@ containing a value of this type.
             0x7f010000, 0x7f010001, 0x7f010002
         };
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#adSize}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#adSize}
           attribute's value can be found in the {@link #AdsAttrs} array.
 
 
@@ -1129,11 +1139,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:adSize
+          @attr name com.seamensor.seamensor:adSize
         */
         public static final int AdsAttrs_adSize = 0;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#adSizes}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#adSizes}
           attribute's value can be found in the {@link #AdsAttrs} array.
 
 
@@ -1143,11 +1153,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:adSizes
+          @attr name com.seamensor.seamensor:adSizes
         */
         public static final int AdsAttrs_adSizes = 1;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#adUnitId}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#adUnitId}
           attribute's value can be found in the {@link #AdsAttrs} array.
 
 
@@ -1157,7 +1167,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:adUnitId
+          @attr name com.seamensor.seamensor:adUnitId
         */
         public static final int AdsAttrs_adUnitId = 2;
         /** Attributes that can be used with a CustomWalletTheme.
@@ -1166,7 +1176,7 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #CustomWalletTheme_windowTransitionStyle com.ImageCapActivity.ImageCapActivity:windowTransitionStyle}</code></td><td></td></tr>
+           <tr><td><code>{@link #CustomWalletTheme_windowTransitionStyle com.seamensor.seamensor:windowTransitionStyle}</code></td><td></td></tr>
            </table>
            @see #CustomWalletTheme_windowTransitionStyle
          */
@@ -1174,7 +1184,7 @@ containing a value of this type.
             0x7f010003
         };
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#windowTransitionStyle}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#windowTransitionStyle}
           attribute's value can be found in the {@link #CustomWalletTheme} array.
 
 
@@ -1187,7 +1197,7 @@ containing a value of this type.
 <tr><td><code>slide</code></td><td>1</td><td></td></tr>
 <tr><td><code>none</code></td><td>2</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:windowTransitionStyle
+          @attr name com.seamensor.seamensor:windowTransitionStyle
         */
         public static final int CustomWalletTheme_windowTransitionStyle = 0;
         /** Attributes that can be used with a LoadingImageView.
@@ -1196,9 +1206,9 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #LoadingImageView_circleCrop com.ImageCapActivity.ImageCapActivity:circleCrop}</code></td><td></td></tr>
-           <tr><td><code>{@link #LoadingImageView_imageAspectRatio com.ImageCapActivity.ImageCapActivity:imageAspectRatio}</code></td><td></td></tr>
-           <tr><td><code>{@link #LoadingImageView_imageAspectRatioAdjust com.ImageCapActivity.ImageCapActivity:imageAspectRatioAdjust}</code></td><td></td></tr>
+           <tr><td><code>{@link #LoadingImageView_circleCrop com.seamensor.seamensor:circleCrop}</code></td><td></td></tr>
+           <tr><td><code>{@link #LoadingImageView_imageAspectRatio com.seamensor.seamensor:imageAspectRatio}</code></td><td></td></tr>
+           <tr><td><code>{@link #LoadingImageView_imageAspectRatioAdjust com.seamensor.seamensor:imageAspectRatioAdjust}</code></td><td></td></tr>
            </table>
            @see #LoadingImageView_circleCrop
            @see #LoadingImageView_imageAspectRatio
@@ -1208,7 +1218,7 @@ containing a value of this type.
             0x7f010004, 0x7f010005, 0x7f010006
         };
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#circleCrop}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#circleCrop}
           attribute's value can be found in the {@link #LoadingImageView} array.
 
 
@@ -1218,11 +1228,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:circleCrop
+          @attr name com.seamensor.seamensor:circleCrop
         */
         public static final int LoadingImageView_circleCrop = 2;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#imageAspectRatio}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#imageAspectRatio}
           attribute's value can be found in the {@link #LoadingImageView} array.
 
 
@@ -1232,11 +1242,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:imageAspectRatio
+          @attr name com.seamensor.seamensor:imageAspectRatio
         */
         public static final int LoadingImageView_imageAspectRatio = 1;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#imageAspectRatioAdjust}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#imageAspectRatioAdjust}
           attribute's value can be found in the {@link #LoadingImageView} array.
 
 
@@ -1250,7 +1260,7 @@ containing a value of this type.
 <tr><td><code>adjust_width</code></td><td>1</td><td></td></tr>
 <tr><td><code>adjust_height</code></td><td>2</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:imageAspectRatioAdjust
+          @attr name com.seamensor.seamensor:imageAspectRatioAdjust
         */
         public static final int LoadingImageView_imageAspectRatioAdjust = 0;
         /** Attributes that can be used with a MapAttrs.
@@ -1259,22 +1269,22 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #MapAttrs_cameraBearing com.ImageCapActivity.ImageCapActivity:cameraBearing}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLat com.ImageCapActivity.ImageCapActivity:cameraTargetLat}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTargetLng com.ImageCapActivity.ImageCapActivity:cameraTargetLng}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraTilt com.ImageCapActivity.ImageCapActivity:cameraTilt}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_cameraZoom com.ImageCapActivity.ImageCapActivity:cameraZoom}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_liteMode com.ImageCapActivity.ImageCapActivity:liteMode}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_mapType com.ImageCapActivity.ImageCapActivity:mapType}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiCompass com.ImageCapActivity.ImageCapActivity:uiCompass}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiMapToolbar com.ImageCapActivity.ImageCapActivity:uiMapToolbar}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiRotateGestures com.ImageCapActivity.ImageCapActivity:uiRotateGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiScrollGestures com.ImageCapActivity.ImageCapActivity:uiScrollGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiTiltGestures com.ImageCapActivity.ImageCapActivity:uiTiltGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomControls com.ImageCapActivity.ImageCapActivity:uiZoomControls}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_uiZoomGestures com.ImageCapActivity.ImageCapActivity:uiZoomGestures}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_useViewLifecycle com.ImageCapActivity.ImageCapActivity:useViewLifecycle}</code></td><td></td></tr>
-           <tr><td><code>{@link #MapAttrs_zOrderOnTop com.ImageCapActivity.ImageCapActivity:zOrderOnTop}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraBearing com.seamensor.seamensor:cameraBearing}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLat com.seamensor.seamensor:cameraTargetLat}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTargetLng com.seamensor.seamensor:cameraTargetLng}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraTilt com.seamensor.seamensor:cameraTilt}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_cameraZoom com.seamensor.seamensor:cameraZoom}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_liteMode com.seamensor.seamensor:liteMode}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_mapType com.seamensor.seamensor:mapType}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiCompass com.seamensor.seamensor:uiCompass}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiMapToolbar com.seamensor.seamensor:uiMapToolbar}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiRotateGestures com.seamensor.seamensor:uiRotateGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiScrollGestures com.seamensor.seamensor:uiScrollGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiTiltGestures com.seamensor.seamensor:uiTiltGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomControls com.seamensor.seamensor:uiZoomControls}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_uiZoomGestures com.seamensor.seamensor:uiZoomGestures}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_useViewLifecycle com.seamensor.seamensor:useViewLifecycle}</code></td><td></td></tr>
+           <tr><td><code>{@link #MapAttrs_zOrderOnTop com.seamensor.seamensor:zOrderOnTop}</code></td><td></td></tr>
            </table>
            @see #MapAttrs_cameraBearing
            @see #MapAttrs_cameraTargetLat
@@ -1300,7 +1310,7 @@ containing a value of this type.
             0x7f010013, 0x7f010014, 0x7f010015, 0x7f010016
         };
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#cameraBearing}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#cameraBearing}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1310,11 +1320,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:cameraBearing
+          @attr name com.seamensor.seamensor:cameraBearing
         */
         public static final int MapAttrs_cameraBearing = 1;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#cameraTargetLat}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#cameraTargetLat}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1324,11 +1334,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:cameraTargetLat
+          @attr name com.seamensor.seamensor:cameraTargetLat
         */
         public static final int MapAttrs_cameraTargetLat = 2;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#cameraTargetLng}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#cameraTargetLng}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1338,11 +1348,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:cameraTargetLng
+          @attr name com.seamensor.seamensor:cameraTargetLng
         */
         public static final int MapAttrs_cameraTargetLng = 3;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#cameraTilt}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#cameraTilt}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1352,11 +1362,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:cameraTilt
+          @attr name com.seamensor.seamensor:cameraTilt
         */
         public static final int MapAttrs_cameraTilt = 4;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#cameraZoom}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#cameraZoom}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1366,11 +1376,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:cameraZoom
+          @attr name com.seamensor.seamensor:cameraZoom
         */
         public static final int MapAttrs_cameraZoom = 5;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#liteMode}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#liteMode}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1380,11 +1390,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:liteMode
+          @attr name com.seamensor.seamensor:liteMode
         */
         public static final int MapAttrs_liteMode = 6;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#mapType}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#mapType}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1400,11 +1410,11 @@ containing a value of this type.
 <tr><td><code>terrain</code></td><td>3</td><td></td></tr>
 <tr><td><code>hybrid</code></td><td>4</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:mapType
+          @attr name com.seamensor.seamensor:mapType
         */
         public static final int MapAttrs_mapType = 0;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#uiCompass}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#uiCompass}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1414,11 +1424,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:uiCompass
+          @attr name com.seamensor.seamensor:uiCompass
         */
         public static final int MapAttrs_uiCompass = 7;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#uiMapToolbar}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#uiMapToolbar}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1428,11 +1438,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:uiMapToolbar
+          @attr name com.seamensor.seamensor:uiMapToolbar
         */
         public static final int MapAttrs_uiMapToolbar = 15;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#uiRotateGestures}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#uiRotateGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1442,11 +1452,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:uiRotateGestures
+          @attr name com.seamensor.seamensor:uiRotateGestures
         */
         public static final int MapAttrs_uiRotateGestures = 8;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#uiScrollGestures}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#uiScrollGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1456,11 +1466,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:uiScrollGestures
+          @attr name com.seamensor.seamensor:uiScrollGestures
         */
         public static final int MapAttrs_uiScrollGestures = 9;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#uiTiltGestures}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#uiTiltGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1470,11 +1480,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:uiTiltGestures
+          @attr name com.seamensor.seamensor:uiTiltGestures
         */
         public static final int MapAttrs_uiTiltGestures = 10;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#uiZoomControls}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#uiZoomControls}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1484,11 +1494,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:uiZoomControls
+          @attr name com.seamensor.seamensor:uiZoomControls
         */
         public static final int MapAttrs_uiZoomControls = 11;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#uiZoomGestures}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#uiZoomGestures}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1498,11 +1508,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:uiZoomGestures
+          @attr name com.seamensor.seamensor:uiZoomGestures
         */
         public static final int MapAttrs_uiZoomGestures = 12;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#useViewLifecycle}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#useViewLifecycle}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1512,11 +1522,11 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:useViewLifecycle
+          @attr name com.seamensor.seamensor:useViewLifecycle
         */
         public static final int MapAttrs_useViewLifecycle = 13;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#zOrderOnTop}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#zOrderOnTop}
           attribute's value can be found in the {@link #MapAttrs} array.
 
 
@@ -1526,7 +1536,7 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:zOrderOnTop
+          @attr name com.seamensor.seamensor:zOrderOnTop
         */
         public static final int MapAttrs_zOrderOnTop = 14;
         /** Attributes that can be used with a WalletFragmentOptions.
@@ -1535,10 +1545,10 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #WalletFragmentOptions_appTheme com.ImageCapActivity.ImageCapActivity:appTheme}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentOptions_environment com.ImageCapActivity.ImageCapActivity:environment}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentOptions_fragmentMode com.ImageCapActivity.ImageCapActivity:fragmentMode}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentOptions_fragmentStyle com.ImageCapActivity.ImageCapActivity:fragmentStyle}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentOptions_appTheme com.seamensor.seamensor:appTheme}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentOptions_environment com.seamensor.seamensor:environment}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentOptions_fragmentMode com.seamensor.seamensor:fragmentMode}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentOptions_fragmentStyle com.seamensor.seamensor:fragmentStyle}</code></td><td></td></tr>
            </table>
            @see #WalletFragmentOptions_appTheme
            @see #WalletFragmentOptions_environment
@@ -1549,7 +1559,7 @@ containing a value of this type.
             0x7f010017, 0x7f010018, 0x7f010019, 0x7f01001a
         };
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#appTheme}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#appTheme}
           attribute's value can be found in the {@link #WalletFragmentOptions} array.
 
 
@@ -1562,11 +1572,11 @@ containing a value of this type.
 <tr><td><code>holo_dark</code></td><td>0</td><td></td></tr>
 <tr><td><code>holo_light</code></td><td>1</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:appTheme
+          @attr name com.seamensor.seamensor:appTheme
         */
         public static final int WalletFragmentOptions_appTheme = 0;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#environment}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#environment}
           attribute's value can be found in the {@link #WalletFragmentOptions} array.
 
 
@@ -1580,11 +1590,11 @@ containing a value of this type.
 <tr><td><code>sandbox</code></td><td>0</td><td></td></tr>
 <tr><td><code>strict_sandbox</code></td><td>2</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:environment
+          @attr name com.seamensor.seamensor:environment
         */
         public static final int WalletFragmentOptions_environment = 1;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#fragmentMode}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#fragmentMode}
           attribute's value can be found in the {@link #WalletFragmentOptions} array.
 
 
@@ -1597,17 +1607,17 @@ containing a value of this type.
 <tr><td><code>buyButton</code></td><td>1</td><td></td></tr>
 <tr><td><code>selectionDetails</code></td><td>2</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:fragmentMode
+          @attr name com.seamensor.seamensor:fragmentMode
         */
         public static final int WalletFragmentOptions_fragmentMode = 3;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#fragmentStyle}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#fragmentStyle}
           attribute's value can be found in the {@link #WalletFragmentOptions} array.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name com.ImageCapActivity.ImageCapActivity:fragmentStyle
+          @attr name com.seamensor.seamensor:fragmentStyle
         */
         public static final int WalletFragmentOptions_fragmentStyle = 2;
         /** Attributes that can be used with a WalletFragmentStyle.
@@ -1616,17 +1626,17 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_buyButtonAppearance com.ImageCapActivity.ImageCapActivity:buyButtonAppearance}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_buyButtonHeight com.ImageCapActivity.ImageCapActivity:buyButtonHeight}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_buyButtonText com.ImageCapActivity.ImageCapActivity:buyButtonText}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_buyButtonWidth com.ImageCapActivity.ImageCapActivity:buyButtonWidth}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsBackground com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsBackground}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsButtonBackground com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsButtonBackground}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsButtonTextAppearance com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsButtonTextAppearance}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsHeaderTextAppearance com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsHeaderTextAppearance}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsLogoImageType com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsLogoImageType}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsLogoTextColor com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsLogoTextColor}</code></td><td></td></tr>
-           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsTextAppearance com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsTextAppearance}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_buyButtonAppearance com.seamensor.seamensor:buyButtonAppearance}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_buyButtonHeight com.seamensor.seamensor:buyButtonHeight}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_buyButtonText com.seamensor.seamensor:buyButtonText}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_buyButtonWidth com.seamensor.seamensor:buyButtonWidth}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsBackground com.seamensor.seamensor:maskedWalletDetailsBackground}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsButtonBackground com.seamensor.seamensor:maskedWalletDetailsButtonBackground}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsButtonTextAppearance com.seamensor.seamensor:maskedWalletDetailsButtonTextAppearance}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsHeaderTextAppearance com.seamensor.seamensor:maskedWalletDetailsHeaderTextAppearance}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsLogoImageType com.seamensor.seamensor:maskedWalletDetailsLogoImageType}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsLogoTextColor com.seamensor.seamensor:maskedWalletDetailsLogoTextColor}</code></td><td></td></tr>
+           <tr><td><code>{@link #WalletFragmentStyle_maskedWalletDetailsTextAppearance com.seamensor.seamensor:maskedWalletDetailsTextAppearance}</code></td><td></td></tr>
            </table>
            @see #WalletFragmentStyle_buyButtonAppearance
            @see #WalletFragmentStyle_buyButtonHeight
@@ -1646,7 +1656,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
             0x7f010023, 0x7f010024, 0x7f010025
         };
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#buyButtonAppearance}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#buyButtonAppearance}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1660,11 +1670,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>grayscale</code></td><td>2</td><td></td></tr>
 <tr><td><code>monochrome</code></td><td>3</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:buyButtonAppearance
+          @attr name com.seamensor.seamensor:buyButtonAppearance
         */
         public static final int WalletFragmentStyle_buyButtonAppearance = 3;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#buyButtonHeight}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#buyButtonHeight}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1685,11 +1695,11 @@ containing a value of this type.
 <tr><td><code>match_parent</code></td><td>-1</td><td></td></tr>
 <tr><td><code>wrap_content</code></td><td>-2</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:buyButtonHeight
+          @attr name com.seamensor.seamensor:buyButtonHeight
         */
         public static final int WalletFragmentStyle_buyButtonHeight = 0;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#buyButtonText}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#buyButtonText}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1704,11 +1714,11 @@ containing a value of this type.
 <tr><td><code>book_now</code></td><td>3</td><td></td></tr>
 <tr><td><code>donate_with_google</code></td><td>4</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:buyButtonText
+          @attr name com.seamensor.seamensor:buyButtonText
         */
         public static final int WalletFragmentStyle_buyButtonText = 2;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#buyButtonWidth}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#buyButtonWidth}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1729,11 +1739,11 @@ containing a value of this type.
 <tr><td><code>match_parent</code></td><td>-1</td><td></td></tr>
 <tr><td><code>wrap_content</code></td><td>-2</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:buyButtonWidth
+          @attr name com.seamensor.seamensor:buyButtonWidth
         */
         public static final int WalletFragmentStyle_buyButtonWidth = 1;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#maskedWalletDetailsBackground}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#maskedWalletDetailsBackground}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1741,11 +1751,11 @@ containing a value of this type.
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-          @attr name com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsBackground
+          @attr name com.seamensor.seamensor:maskedWalletDetailsBackground
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsBackground = 6;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#maskedWalletDetailsButtonBackground}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#maskedWalletDetailsButtonBackground}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1753,31 +1763,31 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
 <p>May be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
-          @attr name com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsButtonBackground
+          @attr name com.seamensor.seamensor:maskedWalletDetailsButtonBackground
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsButtonBackground = 8;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#maskedWalletDetailsButtonTextAppearance}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#maskedWalletDetailsButtonTextAppearance}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsButtonTextAppearance
+          @attr name com.seamensor.seamensor:maskedWalletDetailsButtonTextAppearance
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsButtonTextAppearance = 7;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#maskedWalletDetailsHeaderTextAppearance}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#maskedWalletDetailsHeaderTextAppearance}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsHeaderTextAppearance
+          @attr name com.seamensor.seamensor:maskedWalletDetailsHeaderTextAppearance
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsHeaderTextAppearance = 5;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#maskedWalletDetailsLogoImageType}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#maskedWalletDetailsLogoImageType}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1790,11 +1800,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 <tr><td><code>classic</code></td><td>1</td><td></td></tr>
 <tr><td><code>monochrome</code></td><td>2</td><td></td></tr>
 </table>
-          @attr name com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsLogoImageType
+          @attr name com.seamensor.seamensor:maskedWalletDetailsLogoImageType
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsLogoImageType = 10;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#maskedWalletDetailsLogoTextColor}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#maskedWalletDetailsLogoTextColor}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
@@ -1805,17 +1815,17 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsLogoTextColor
+          @attr name com.seamensor.seamensor:maskedWalletDetailsLogoTextColor
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsLogoTextColor = 9;
         /**
-          <p>This symbol is the offset where the {@link com.ImageCapActivity.ImageCapActivity.R.attr#maskedWalletDetailsTextAppearance}
+          <p>This symbol is the offset where the {@link com.seamensor.seamensor.R.attr#maskedWalletDetailsTextAppearance}
           attribute's value can be found in the {@link #WalletFragmentStyle} array.
 
 
           <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name com.ImageCapActivity.ImageCapActivity:maskedWalletDetailsTextAppearance
+          @attr name com.seamensor.seamensor:maskedWalletDetailsTextAppearance
         */
         public static final int WalletFragmentStyle_maskedWalletDetailsTextAppearance = 4;
     };

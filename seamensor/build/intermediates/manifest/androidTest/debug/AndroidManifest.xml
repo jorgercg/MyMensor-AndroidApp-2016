@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ImageCapActivity.ImageCapActivity.test">
+    package="com.seamensor.seamensor.test">
 
     <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="19" />
 
@@ -9,8 +9,8 @@
     </application>
 
     <instrumentation android:name="android.test.InstrumentationTestRunner"
-                     android:targetPackage="com.ImageCapActivity.ImageCapActivity"
+                     android:targetPackage="com.seamensor.seamensor"
                      android:handleProfiling="false"
                      android:functionalTest="false"
-                     android:label="Tests for com.ImageCapActivity.ImageCapActivity"/>
+                     android:label="Tests for com.seamensor.seamensor"/>
 </manifest>

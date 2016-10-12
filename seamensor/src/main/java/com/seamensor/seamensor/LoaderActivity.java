@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -13,17 +14,20 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
@@ -32,6 +36,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -60,6 +65,8 @@ import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 
 public class LoaderActivity extends Activity implements LocationListener
 {
+    private static final String TAG = "LoaderActvty";
+
 	public static final String appKey = "0yrlhapf89ytpwi";
 	public static final String appSecret = "neg16q87i8rpym3";
 	public static final int REQUEST_LINK_TO_DBX = 0;
@@ -127,18 +134,21 @@ public class LoaderActivity extends Activity implements LocationListener
     ImageView seamensorLogo;
     LinearLayout logoLinearLayout;
 
+    SharedPreferences sharedPref;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
         activityToBeCalled = getIntent().getExtras().get("activitytobecalled").toString();
-        MetaioDebug.log("onCreate(): CALLED");
+        Log.d(TAG,"onCreate(): CALLED");
         // Enable metaio SDK debug log messages based on build configuration
         MetaioDebug.enableLogging(BuildConfig.DEBUG);
 
+        sharedPref = this.getSharedPreferences("MYM",Context.MODE_PRIVATE);
+
         // Location Manager
-        MetaioDebug.log("onCreate: Calling LocationManager");
+        Log.d(TAG,"onCreate: Calling LocationManager");
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PERMISSION_GRANTED)
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
@@ -166,54 +176,24 @@ public class LoaderActivity extends Activity implements LocationListener
         seamensorLogoAnimation.start();
 
         // Retrieving SeaMensor Account information, if account does not exist then app is closed
-		try
-		{
-            MetaioDebug.log("OnCreate: READING ACCOUNTS INFORMATION");
-            AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
-			Account[] list = manager.getAccounts();
-			for(Account account: list)
-			{
-				MetaioDebug.log("OnCreate: Account: Name="+account.name+"Type="+account.type);
-				if (account.type.equalsIgnoreCase("com.google"))
-				{
-					if (account.name.endsWith(seamensorDomain))	seamensorAccount = account.name;
-                    if (account.name.startsWith(adminOne)) seamensorAdminPresent = true;
-                    if (account.name.startsWith(adminTwo)) seamensorAdminPresent = true;
-                    if (account.name.startsWith(adminThree)) seamensorAdminPresent = true;
-                    if (account.name.startsWith(adminFour)) seamensorAdminPresent = true;
-                    if (account.name.startsWith(adminFive)) seamensorAdminPresent = true;
-                }
-			}
-			if (seamensorAccount!=null)
-            {
-                seamensorAccount = seamensorAccount.replace(seamensorDomain, "");
-                MetaioDebug.log("OnCreate: Seamensor Account: "+seamensorAccount);
-            }
-            else
-            {
-                notSeamensorAccount = true;
-            }
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			notSeamensorAccount = true;
-			MetaioDebug.log(Log.ERROR, "OnCreate: Seamensor user not present in this device");
-		}
+		seamensorAdminPresent = true;
+        notSeamensorAccount = false;
+        seamensorAccount = "magellan.victoria";
+        Log.d(TAG,"OnCreate: Seamensor Account: "+seamensorAccount);
 
 		// Enable Dropbox
         try
         {
-            MetaioDebug.log("OnCreate: STARTING DROPBOX");
+            Log.d(TAG,"OnCreate: STARTING DROPBOX");
             mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
             if (!mDbxAcctMgr.hasLinkedAccount())
             {
-                MetaioDebug.log("OnCreate: If not already Linked to DROPBOX, request the connection");
+                Log.d(TAG,"OnCreate: If not already Linked to DROPBOX, request the connection");
                 mDbxAcctMgr.startLink((Activity) this, REQUEST_LINK_TO_DBX);
             }
             else
             {
-                MetaioDebug.log("OnCreate: Already Linked to DROPBOX: seamensorAdminPresent:"+seamensorAdminPresent);
+                Log.d(TAG,"OnCreate: Already Linked to DROPBOX: seamensorAdminPresent:"+seamensorAdminPresent);
                 try
                 {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
@@ -222,25 +202,12 @@ public class LoaderActivity extends Activity implements LocationListener
                 {
                     unauthorized.printStackTrace();
                 }
-                /*
-                if (!seamensorAdminPresent)
-                {
-                    MetaioDebug.log("OnCreate: Already Linked to DROPBOX - calling loadConfiguration()");
-                    loadConfiguration();
-                    MetaioDebug.log("OnCreate: Already Linked to DROPBOX - calling loadDefinitionsFromDropboxBeforeCallingSeamensor()");
-                    loadDefinitionsFromDropboxBeforeCallingSeamensor();
-                }
-                else
-                {
-                    loadConfiguration();
-                }
-                */
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            MetaioDebug.log(Log.ERROR, "OnCreate: Error requesting connecton to Dropbox - not linked");
+            Log.e(TAG, "OnCreate: Error requesting connecton to Dropbox - not linked");
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.dropboxlinkerror), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
             toast.show();
@@ -252,7 +219,6 @@ public class LoaderActivity extends Activity implements LocationListener
         loadDefinitionsBeforeCallingActivity.execute();
 
     } // End onCreate
-
 
     @Override
     public void onLocationChanged(Location location) {
@@ -293,7 +259,7 @@ public class LoaderActivity extends Activity implements LocationListener
                     }
                     else
                     {
-                        MetaioDebug.log("onActivityResult: Link to DROPBOX FAILED");
+                        Log.d(TAG,"onActivityResult: Link to DROPBOX FAILED");
                         Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.dropboxlinkerror), Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 30);
                         toast.show();
@@ -309,7 +275,7 @@ public class LoaderActivity extends Activity implements LocationListener
 	public void onStart()
 	{
 		super.onStart();
-        MetaioDebug.log("onStart(): CALLED");
+        Log.d(TAG,"onStart(): CALLED");
         if (notSeamensorAccount)
 		{
 			showNotSeamensorAccountError();
@@ -329,8 +295,7 @@ public class LoaderActivity extends Activity implements LocationListener
     {
         super.onResume();
 
-        AccountManager accountManager = AccountManager.get(this);
-        accountManager.addAccount(Constants.ACCOUNT_TYPE, null, null, null, this, null, null);
+
     }
 
 
@@ -338,7 +303,7 @@ public class LoaderActivity extends Activity implements LocationListener
     public void onPause()
     {
         super.onPause();
-        MetaioDebug.log("onPause(): CALLED");
+        Log.d(TAG,"onPause(): CALLED");
         finish();
     }
 
@@ -347,14 +312,14 @@ public class LoaderActivity extends Activity implements LocationListener
     public void onResume()
     {
         super.onResume();
-        MetaioDebug.log("onResume(): CALLED");
+        Log.d(TAG,"onResume(): CALLED");
         if (loadDefinitionsBeforeCallingActivity.getStatus() != AsyncTask.Status.RUNNING)
         {
-            MetaioDebug.log("onResume(): will call loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
+            Log.d(TAG,"onResume(): will call loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
             new LoadDefinitionsBeforeCallingActivity().execute();
-            MetaioDebug.log("onResume(): called loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
+            Log.d(TAG,"onResume(): called loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
         }
-        else MetaioDebug.log("onResume(): loadDefinitionsBeforeCallingActivity STILL RUNNING= " + loadDefinitionsBeforeCallingActivity.getStatus());
+        else Log.d(TAG,"onResume(): loadDefinitionsBeforeCallingActivity STILL RUNNING= " + loadDefinitionsBeforeCallingActivity.getStatus());
     }
 */
 
@@ -362,11 +327,11 @@ public class LoaderActivity extends Activity implements LocationListener
     protected void onDestroy()
     {
         super.onDestroy();
-        MetaioDebug.log("onDestroy(): CALLED");
+        Log.d(TAG,"onDestroy(): CALLED");
         loadDefinitionsBeforeCallingActivity.cancel(true);
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PERMISSION_GRANTED)
             lm.removeUpdates(this);
-        MetaioDebug.log("onDestroy(): cancelled loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
+        Log.d(TAG,"onDestroy(): cancelled loadDefinitionsBeforeCallingActivity = " + loadDefinitionsBeforeCallingActivity.getStatus());
     }
 
     @Override
@@ -405,7 +370,7 @@ public class LoaderActivity extends Activity implements LocationListener
         String vpsConfiguredConfigNewFileContents = null;
         try
         {
-            MetaioDebug.log("defineVpsConfiguredFileInUse: Reading New File:"+newFileInUse);
+            Log.d(TAG,"defineVpsConfiguredFileInUse: Reading New File:"+newFileInUse);
             //dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
             DbxPath vpsConfiguredConfigNewFilePath = new DbxPath(DbxPath.ROOT,newFileInUse);
             DbxFile vpsConfiguredConfigNewFile = dbxFs.open(vpsConfiguredConfigNewFilePath);
@@ -414,12 +379,12 @@ public class LoaderActivity extends Activity implements LocationListener
         }
         catch (Exception e)
         {
-            MetaioDebug.log("defineVpsConfiguredFileInUse: Error reading New File:"+newFileInUse);
+            Log.d(TAG,"defineVpsConfiguredFileInUse: Error reading New File:"+newFileInUse);
         }
         if (!(vpsConfiguredConfigNewFileContents==null))
             try
             {
-                MetaioDebug.log("defineVpsConfiguredFileInUse: Overwriting Old File:"+oldFileInUse);
+                Log.d(TAG,"defineVpsConfiguredFileInUse: Overwriting Old File:"+oldFileInUse);
                 //dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                 DbxPath vpsConfiguredConfigOldFilePath = new DbxPath(DbxPath.ROOT,oldFileInUse);
                 if (dbxFs.exists(vpsConfiguredConfigOldFilePath))
@@ -430,7 +395,7 @@ public class LoaderActivity extends Activity implements LocationListener
                 }
                 else
                 {
-                    MetaioDebug.log("defineVpsConfiguredFileInUse: Old File DOES NOT EXIST!!!!:"+oldFileInUse);
+                    Log.d(TAG,"defineVpsConfiguredFileInUse: Old File DOES NOT EXIST!!!!:"+oldFileInUse);
                     dbxFs.create(vpsConfiguredConfigOldFilePath);
                     DbxFile vpsConfiguredConfigOldFile = dbxFs.open(vpsConfiguredConfigOldFilePath);
                     vpsConfiguredConfigOldFile.writeString(vpsConfiguredConfigNewFileContents);
@@ -439,20 +404,20 @@ public class LoaderActivity extends Activity implements LocationListener
             }
             catch (Exception e)
             {
-                MetaioDebug.log("defineVpsConfiguredFileInUse: Error overwriting Old File:"+oldFileInUse);
+                Log.d(TAG,"defineVpsConfiguredFileInUse: Error overwriting Old File:"+oldFileInUse);
             }
     }
 
 
     public short loadQtyVpsConfigured(String FileDropbox)
     {
-        MetaioDebug.log("loadQtyVpsConfigured(): started");
+        Log.d(TAG,"loadQtyVpsConfigured(): started");
         short qtyVpsConfigured = 0;
         short temp = 0;
         try
         {
             DbxPath vpsConfiguredConfigFilePath = new DbxPath(DbxPath.ROOT,FileDropbox);
-            MetaioDebug.log("loadQtyVpsConfigured(): Vps Config Dropbox path = "+vpsConfiguredConfigFilePath);
+            Log.d(TAG,"loadQtyVpsConfigured(): Vps Config Dropbox path = "+vpsConfiguredConfigFilePath);
             if (dbxFs.exists(vpsConfiguredConfigFilePath))
             {
                 DbxFile vpsConfiguredConfigFile = dbxFs.open(vpsConfiguredConfigFilePath);
@@ -467,7 +432,7 @@ public class LoaderActivity extends Activity implements LocationListener
                     } else if (eventType == XmlPullParser.START_TAG) {
                         if (myparser.getName().equalsIgnoreCase("Vp")) {
                             qtyVpsConfigured++;
-                            MetaioDebug.log("loadQtyVpsConfigured() internal: qtyVpsConfigured = " + qtyVpsConfigured);
+                            Log.d(TAG,"loadQtyVpsConfigured() internal: qtyVpsConfigured = " + qtyVpsConfigured);
                         } else if (myparser.getName().equalsIgnoreCase("VpNumber")) {
                             eventType = myparser.next();
                             temp = Short.parseShort(myparser.getText());
@@ -480,14 +445,14 @@ public class LoaderActivity extends Activity implements LocationListener
                     eventType = myparser.next();
                 }
                 vpsConfiguredConfigFile.close();
-                MetaioDebug.log("loadQtyVpsConfigured():Vps Configured config DROPBOX file = " + vpsConfiguredConfigFile);
-                MetaioDebug.log("loadQtyVpsConfigured(): qtyVpsConfigured = " + qtyVpsConfigured);
+                Log.d(TAG,"loadQtyVpsConfigured():Vps Configured config DROPBOX file = " + vpsConfiguredConfigFile);
+                Log.d(TAG,"loadQtyVpsConfigured(): qtyVpsConfigured = " + qtyVpsConfigured);
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            MetaioDebug.log(Log.ERROR, "loadQtyVpsConfigured():Configured Vps data loading failed, see stack trace:"+FileDropbox);
+            Log.e(TAG, "loadQtyVpsConfigured():Configured Vps data loading failed, see stack trace:"+FileDropbox);
         }
         return qtyVpsConfigured;
     }
@@ -496,14 +461,14 @@ public class LoaderActivity extends Activity implements LocationListener
     public long[] loadVpsConfigured(String FileDropbox)
     {
         long[] vpConfiguredTime = new long[qtyVps];
-        MetaioDebug.log("loadVpsConfigured(): started");
+        Log.d(TAG,"loadVpsConfigured(): started");
         int vpListOrder = 0;
         try
         {
             // Getting a file path for vps configured config XML file
             //dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
             DbxPath vpsConfiguredConfigFilePath = new DbxPath(DbxPath.ROOT,FileDropbox);
-            MetaioDebug.log("loadVpsConfigured(): Vps Config Dropbox path = "+vpsConfiguredConfigFilePath);
+            Log.d(TAG,"loadVpsConfigured(): Vps Config Dropbox path = "+vpsConfiguredConfigFilePath);
             if (dbxFs.exists(vpsConfiguredConfigFilePath))
             {
                 DbxFile vpsConfiguredConfigFile = dbxFs.open(vpsConfiguredConfigFilePath);
@@ -514,36 +479,36 @@ public class LoaderActivity extends Activity implements LocationListener
                 int eventType = myparser.getEventType();
                 while (eventType != XmlPullParser.END_DOCUMENT) {
                     if (eventType == XmlPullParser.START_DOCUMENT) {
-                        //MetaioDebug.log("loadVpsConfigured(): Start document");
+                        //Log.d(TAG,"loadVpsConfigured(): Start document");
                     } else if (eventType == XmlPullParser.START_TAG) {
-                        //MetaioDebug.log("loadVpsConfigured(): Start tag "+myparser.getName());
+                        //Log.d(TAG,"loadVpsConfigured(): Start tag "+myparser.getName());
 
                         if (myparser.getName().equalsIgnoreCase("Vp")) {
                             vpListOrder++;
-                            //MetaioDebug.log("loadVpsConfigured(): VpListOrder: "+vpListOrder);
+                            //Log.d(TAG,"loadVpsConfigured(): VpListOrder: "+vpListOrder);
                         } else if (myparser.getName().equalsIgnoreCase("VpNumber")) {
                             eventType = myparser.next();
                             vpNumber[vpListOrder - 1] = Short.parseShort(myparser.getText());
-                            //MetaioDebug.log("loadVpsConfigured(): VpNumber"+(vpListOrder-1)+": "+vpNumber[vpListOrder-1]);
+                            //Log.d(TAG,"loadVpsConfigured(): VpNumber"+(vpListOrder-1)+": "+vpNumber[vpListOrder-1]);
                         } else if (myparser.getName().equalsIgnoreCase("Configured")) {
                             eventType = myparser.next();
                             vpConfiguredTime[vpListOrder - 1] = Long.parseLong(myparser.getText());
                         }
                     } else if (eventType == XmlPullParser.END_TAG) {
-                        //MetaioDebug.log("loadVpsConfigured(): End tag "+myparser.getName());
+                        //Log.d(TAG,"loadVpsConfigured(): End tag "+myparser.getName());
                     } else if (eventType == XmlPullParser.TEXT) {
-                        //MetaioDebug.log("loadVpsConfigured(): Text "+myparser.getText());
+                        //Log.d(TAG,"loadVpsConfigured(): Text "+myparser.getText());
                     }
                     eventType = myparser.next();
                 }
                 vpsConfiguredConfigFile.close();
-                MetaioDebug.log("Vps Configured config DROPBOX file = " + vpsConfiguredConfigFile);
+                Log.d(TAG,"Vps Configured config DROPBOX file = " + vpsConfiguredConfigFile);
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            MetaioDebug.log(Log.ERROR, "Configured Vps data loading failed, see stack trace:"+FileDropbox);
+            Log.e(TAG, "Configured Vps data loading failed, see stack trace:"+FileDropbox);
         }
         return vpConfiguredTime;
     }
@@ -551,7 +516,7 @@ public class LoaderActivity extends Activity implements LocationListener
 
     public void loadConfiguration()
     {
-        MetaioDebug.log("loadConfiguration(): Loading Definitions from Dropbox and writing to local DCI storage");
+        Log.d(TAG,"loadConfiguration(): Loading Definitions from Dropbox and writing to local DCI storage");
         // Loading DCI Number from dciFileName.xml file
         try
         {
@@ -568,7 +533,7 @@ public class LoaderActivity extends Activity implements LocationListener
                 // Getting a file path for userData configuration XML file
                 //dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                 DbxPath userDataConfigFilePath = new DbxPath(DbxPath.ROOT,""+seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"usr"+"/"+userDataConfigFileDropbox);
-                MetaioDebug.log("loadConfiguration(): userData Config Dropbox path = "+userDataConfigFilePath);
+                Log.d(TAG,"loadConfiguration(): userData Config Dropbox path = "+userDataConfigFilePath);
                 DbxFile userDataConfigFile = dbxFs.open(userDataConfigFilePath);
                 try
                 {
@@ -581,15 +546,15 @@ public class LoaderActivity extends Activity implements LocationListener
                     {
                         if(eventType == XmlPullParser.START_DOCUMENT)
                         {
-                            //MetaioDebug.log("Start document");
+                            //Log.d(TAG,"Start document");
                         }
                         else if(eventType == XmlPullParser.START_TAG)
                         {
-                            //MetaioDebug.log("Start tag "+myparser.getName());
+                            //Log.d(TAG,"Start tag "+myparser.getName());
                             if(myparser.getName().equalsIgnoreCase("User"))
                             {
                                 userCounter++;
-                                //MetaioDebug.log("User Counter: "+userCounter);
+                                //Log.d(TAG,"User Counter: "+userCounter);
                             }
                             else if(myparser.getName().equalsIgnoreCase("UserNumber"))
                             {
@@ -609,11 +574,11 @@ public class LoaderActivity extends Activity implements LocationListener
                         }
                         else if(eventType == XmlPullParser.END_TAG)
                         {
-                            //MetaioDebug.log("End tag "+myparser.getName());
+                            //Log.d(TAG,"End tag "+myparser.getName());
                         }
                         else if(eventType == XmlPullParser.TEXT)
                         {
-                            //MetaioDebug.log("Text "+myparser.getText());
+                            //Log.d(TAG,"Text "+myparser.getText());
                         }
                         eventType = myparser.next();
                     }
@@ -621,18 +586,18 @@ public class LoaderActivity extends Activity implements LocationListener
                 finally
                 {
                     userDataConfigFile.close();
-                    MetaioDebug.log("loadConfiguration(): Users: "+(userCounter+1));
-                    MetaioDebug.log("loadConfiguration(): UserNumbers: "+userNumber[0]+" "+userNumber[1]);
-                    MetaioDebug.log("loadConfiguration(): UserNames: "+userName[0]+" "+userName[1]);
-                    MetaioDebug.log("loadConfiguration(): UserActivities: "+userActivity[0]+" "+userActivity[1]);
+                    Log.d(TAG,"loadConfiguration(): Users: "+(userCounter+1));
+                    Log.d(TAG,"loadConfiguration(): UserNumbers: "+userNumber[0]+" "+userNumber[1]);
+                    Log.d(TAG,"loadConfiguration(): UserNames: "+userName[0]+" "+userName[1]);
+                    Log.d(TAG,"loadConfiguration(): UserActivities: "+userActivity[0]+" "+userActivity[1]);
                 }
 
-                MetaioDebug.log("loadConfiguration(): userData Config DROPBOX file = "+userDataConfigFile);
+                Log.d(TAG,"loadConfiguration(): userData Config DROPBOX file = "+userDataConfigFile);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                MetaioDebug.log(Log.ERROR, "loadConfiguration(): userData loading failed, see stack trace");
+                Log.e(TAG, "loadConfiguration(): userData loading failed, see stack trace");
             }
 
 
@@ -641,8 +606,8 @@ public class LoaderActivity extends Activity implements LocationListener
             {
                 //dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                 DbxPath vpsFilePath = new DbxPath(DbxPath.ROOT,vpsDropboxPath+vpsConfigFileDropbox);
-                MetaioDebug.log("loadConfiguration(): ####### LOADING: VPSFILE CONTENTS");
-                MetaioDebug.log("loadConfiguration(): vps Dropbox path = "+vpsFilePath);
+                Log.d(TAG,"loadConfiguration(): ####### LOADING: VPSFILE CONTENTS");
+                Log.d(TAG,"loadConfiguration(): vps Dropbox path = "+vpsFilePath);
                 DbxFile vpsFile = dbxFs.open(vpsFilePath);
                 DbxFileStatus vpsFileStatus = vpsFile.getSyncStatus();
                 try
@@ -657,11 +622,11 @@ public class LoaderActivity extends Activity implements LocationListener
                     {
                         if(eventType == XmlPullParser.START_DOCUMENT)
                         {
-                            //MetaioDebug.log("Start document");
+                            //Log.d(TAG,"Start document");
                         }
                         else if(eventType == XmlPullParser.START_TAG)
                         {
-                            //MetaioDebug.log("Start tag "+myparser.getName());
+                            //Log.d(TAG,"Start tag "+myparser.getName());
                             if(myparser.getName().equalsIgnoreCase("QtyVps"))
                             {
                                 eventType = myparser.next();
@@ -670,11 +635,11 @@ public class LoaderActivity extends Activity implements LocationListener
                         }
                         else if(eventType == XmlPullParser.END_TAG)
                         {
-                            //MetaioDebug.log("End tag "+myparser.getName());
+                            //Log.d(TAG,"End tag "+myparser.getName());
                         }
                         else if(eventType == XmlPullParser.TEXT)
                         {
-                            //MetaioDebug.log("Text "+myparser.getText());
+                            //Log.d(TAG,"Text "+myparser.getText());
                         }
                         eventType = myparser.next();
                     }
@@ -682,7 +647,7 @@ public class LoaderActivity extends Activity implements LocationListener
                 finally
                 {
                     vpsFile.close();
-                    MetaioDebug.log("loadConfiguration(): QtyVps: "+qtyVps);
+                    Log.d(TAG,"loadConfiguration(): QtyVps: "+qtyVps);
                     vpNumber = new short[qtyVps];
                     vpConfiguredTimeSMCMillis = new long[qtyVps];
                     vpConfiguredTimeInUseMillis = new long[qtyVps];
@@ -691,7 +656,7 @@ public class LoaderActivity extends Activity implements LocationListener
             catch (Exception e)
             {
                 e.printStackTrace();
-                MetaioDebug.log(Log.ERROR, "loadConfiguration(): vpsFile loading failed, see stack trace");
+                Log.e(TAG, "loadConfiguration(): vpsFile loading failed, see stack trace");
             }
 
 
@@ -719,7 +684,7 @@ public class LoaderActivity extends Activity implements LocationListener
         catch (Exception e)
         {
             e.printStackTrace();
-            MetaioDebug.log(Log.ERROR, "loadConfiguration(): Error loadConfiguration()");
+            Log.e(TAG, "loadConfiguration(): Error loadConfiguration()");
         }
 
     }
@@ -731,7 +696,7 @@ public class LoaderActivity extends Activity implements LocationListener
             @Override
             protected void onPreExecute()
             {
-                MetaioDebug.log("loadDefinitionsBeforeCallingActivity: onPreExecute()");
+                Log.d(TAG,"loadDefinitionsBeforeCallingActivity: onPreExecute()");
                 clockSetSuccess = false;
             }
 
@@ -750,8 +715,8 @@ public class LoaderActivity extends Activity implements LocationListener
                 //
                 //
                 */
-                MetaioDebug.log("loadDefinitionsBeforeCallingActivity: doInBackground()");
-                MetaioDebug.log("loadDefinitionsBeforeCallingActivity: checking if internet is available");
+                Log.d(TAG,"loadDefinitionsBeforeCallingActivity: doInBackground()");
+                Log.d(TAG,"loadDefinitionsBeforeCallingActivity: checking if internet is available");
                 boolean isInternetAvailable = false;
                 boolean isCurrentMillisComAvailable = false;
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -765,14 +730,14 @@ public class LoaderActivity extends Activity implements LocationListener
                         urlc.setConnectTimeout(5000);
                         urlc.connect();
                         if (urlc.getResponseCode() == 200) isInternetAvailable=true;
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: isInternetAvailable="+isInternetAvailable);
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: isInternetAvailable="+isInternetAvailable);
                     } catch (IOException e) {
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: Error checking internet connection:"+e.getLocalizedMessage());
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: Error checking internet connection:"+e.getLocalizedMessage());
                     }
                 }
                 else
                 {
-                    MetaioDebug.log("loadDefinitionsBeforeCallingActivity: No network available!");
+                    Log.d(TAG,"loadDefinitionsBeforeCallingActivity: No network available!");
                 }
                 long now = 0;
                 /*
@@ -783,21 +748,21 @@ public class LoaderActivity extends Activity implements LocationListener
                         urlc.setConnectTimeout(5000);
                         urlc.connect();
                         if (urlc.getResponseCode() == 200) isCurrentMillisComAvailable = true;
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: isCurrentMillisComAvailable=" + isCurrentMillisComAvailable);
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: isCurrentMillisComAvailable=" + isCurrentMillisComAvailable);
                     } catch (IOException e) {
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: Error checking isCurrentMillisComAvailable connection:" + e.getLocalizedMessage());
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: Error checking isCurrentMillisComAvailable connection:" + e.getLocalizedMessage());
                     }
                 }
                 else
                 {
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: No isCurrentMillisComAvailable available!");
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: No isCurrentMillisComAvailable available!");
                 }
                 */
 
                 if (isInternetAvailable)
                 {
                     Long loopStart = System.currentTimeMillis();
-                    MetaioDebug.log("loadDefinitionsBeforeCallingActivity: Calling SNTP");
+                    Log.d(TAG,"loadDefinitionsBeforeCallingActivity: Calling SNTP");
                     SntpClient sntpClient = new SntpClient();
                     do
                     {
@@ -812,15 +777,15 @@ public class LoaderActivity extends Activity implements LocationListener
                             Log.i("SNTP","SNTP Present Time ="+now);
                             Log.i("SNTP","System Present Time ="+System.currentTimeMillis());
                         }
-                        if (now!=0) MetaioDebug.log("loadDefinitionsBeforeCallingActivity: ntp:now="+now);
+                        if (now!=0) Log.d(TAG,"loadDefinitionsBeforeCallingActivity: ntp:now="+now);
 
                     } while ((now==0)&&((System.currentTimeMillis()-loopStart)<20000));
-                    MetaioDebug.log("loadDefinitionsBeforeCallingActivity: ending the loop querying pool.ntp.org for 20 seconds max:"+(System.currentTimeMillis()-loopStart)+" millis:"+now);
+                    Log.d(TAG,"loadDefinitionsBeforeCallingActivity: ending the loop querying pool.ntp.org for 20 seconds max:"+(System.currentTimeMillis()-loopStart)+" millis:"+now);
                     if (now!=0)
                     {
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: System.currentTimeMillis() before setTime="+System.currentTimeMillis());
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: System.currentTimeMillis() before setTime="+System.currentTimeMillis());
                         clockSetSuccess = true;
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: System.currentTimeMillis() AFTER setTime="+System.currentTimeMillis());
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: System.currentTimeMillis() AFTER setTime="+System.currentTimeMillis());
                     }
                 }
                 /*
@@ -830,7 +795,7 @@ public class LoaderActivity extends Activity implements LocationListener
                 */
                 if (!clockSetSuccess)
                 {
-                    MetaioDebug.log("loadDefinitionsBeforeCallingActivity: starting to retrieve time from GPS signal");
+                    Log.d(TAG,"loadDefinitionsBeforeCallingActivity: starting to retrieve time from GPS signal");
                     if (1==1)//(seamensorAdminPresent)
                     {
                         publishProgress(getString(R.string.admin_present_waiving_gps_time));
@@ -861,9 +826,9 @@ public class LoaderActivity extends Activity implements LocationListener
                                 }
                                 millisRetrievedFromGPS = date.getTime();
                                 long currentMillis = millisRetrievedFromGPS + (System.currentTimeMillis() - systemMillisWhenGPSTimereceived);
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity: new time will be set to currentMillis = " + currentMillis);
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity: new time will be set to currentMillis = " + currentMillis);
                                 clockSetSuccess = true;
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity: new time is set to currentMillis = " + currentMillis);
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity: new time is set to currentMillis = " + currentMillis);
                                 currentMillisString = Long.toString(currentMillis);
                                 wait = false;
                             }
@@ -879,10 +844,10 @@ public class LoaderActivity extends Activity implements LocationListener
                 {
                     try
                     {
-                        //MetaioDebug.log("####### LOADING: dbxFs ");
+                        //Log.d(TAG,"####### LOADING: dbxFs ");
                         //dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                         // Loading Markers from Dropbox and writing to local storage.
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity: ####### LOADING: MARKERFILES CONTENTS");
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity: ####### LOADING: MARKERFILES CONTENTS");
                         publishProgress(getString(R.string.waiting_to_load_assets));
                         for (int i = 0; i < qtyVps; i++)
                         {
@@ -896,9 +861,9 @@ public class LoaderActivity extends Activity implements LocationListener
                             {
                                 File markerFile = new File(getFilesDir(), "markervp" + (i + 1) + ".jpg");
                                 DbxPath vpMarkerImageFilePath = new DbxPath(DbxPath.ROOT, markervpDropboxPath + (i + 1) + ".jpg");
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:vpMarkerImageFilePath Dropbox: " + markervpDropboxPath + (i + 1) + ".jpg");
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:vpConfiguredTimeSMCMillis[i]: " + vpConfiguredTimeSMCMillis[i]);
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:vpConfiguredTimeInUseMillis[i]: " + vpConfiguredTimeInUseMillis[i]);
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:vpMarkerImageFilePath Dropbox: " + markervpDropboxPath + (i + 1) + ".jpg");
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:vpConfiguredTimeSMCMillis[i]: " + vpConfiguredTimeSMCMillis[i]);
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:vpConfiguredTimeInUseMillis[i]: " + vpConfiguredTimeInUseMillis[i]);
                                 DbxFile vpMarkerImageFileDropbox = dbxFs.open(vpMarkerImageFilePath);
                                 DbxFileStatus vpMarkerImageFileDropboxStatus = vpMarkerImageFileDropbox.getSyncStatus();
                                 if ((!vpMarkerImageFileDropboxStatus.isLatest) || (markerFile.length() == 0) || (vpConfiguredTimeSMCMillis[i] > vpConfiguredTimeInUseMillis[i]) || reloadConfig)
@@ -911,7 +876,7 @@ public class LoaderActivity extends Activity implements LocationListener
                             }
                             catch (Exception e)
                             {
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:EXCEPTION with vpMarkerImageFilePath: " + markervpDropboxPath + (i + 1) + ".jpg");
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:EXCEPTION with vpMarkerImageFilePath: " + markervpDropboxPath + (i + 1) + ".jpg");
                                 e.printStackTrace();
                             }
                             try
@@ -919,7 +884,7 @@ public class LoaderActivity extends Activity implements LocationListener
                                 File markerFile = new File(getFilesDir(), "markervp" + (i + 1) + ".jpg");
                                 if ((!markerFile.exists()) || (newVpMarkerImageFileInDropbox))
                                 {
-                                    MetaioDebug.log("loadDefinitionsBeforeCallingActivity:WRITING TO LOCAL STORAGE: vpMarkerImageFilePath LOCAL: Exists:" + markerFile.exists() + "Path: " + getFilesDir() + "/" + "markervp" + (i + 1) + ".jpg");
+                                    Log.d(TAG,"loadDefinitionsBeforeCallingActivity:WRITING TO LOCAL STORAGE: vpMarkerImageFilePath LOCAL: Exists:" + markerFile.exists() + "Path: " + getFilesDir() + "/" + "markervp" + (i + 1) + ".jpg");
                                     FileOutputStream fos = new FileOutputStream(markerFile);
                                     try
                                     {
@@ -927,25 +892,25 @@ public class LoaderActivity extends Activity implements LocationListener
                                     }
                                     catch (Exception Ex)
                                     {
-                                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity:Error compressing : " + Ex.getMessage());
+                                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity:Error compressing : " + Ex.getMessage());
                                     }
                                     fos.close();
-                                    MetaioDebug.log("loadDefinitionsBeforeCallingActivity:markerFile LOCAL: " + markerFile.getAbsolutePath());
+                                    Log.d(TAG,"loadDefinitionsBeforeCallingActivity:markerFile LOCAL: " + markerFile.getAbsolutePath());
                                 }
                             }
                             catch (FileNotFoundException e)
                             {
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:File not found: " + e.getMessage());
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:File not found: " + e.getMessage());
                             }
                             catch (Exception e)
                             {
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:Error accessing file: " + e.getMessage());
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:Error accessing file: " + e.getMessage());
                             }
                         }
 
                         publishProgress(getString(R.string.still_loading_assets));
                         // Loading Vp Location Description Images from Dropbox and writing to local storage.
-                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity:####### LOADING: VPDESCFILES CONTENTS");
+                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity:####### LOADING: VPDESCFILES CONTENTS");
                         for (int i = 0; i < qtyVps; i++)
                         {
                             if (isCancelled())
@@ -958,7 +923,7 @@ public class LoaderActivity extends Activity implements LocationListener
                             {
                                 File descvpFile = new File(getFilesDir(), "descvp" + (i + 1) + ".png");
                                 DbxPath vpLocationDescImageFilePath = new DbxPath(DbxPath.ROOT, descvpDropboxPath + (i + 1) + ".png");
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:vpLocationDescImageFilePath DROPBOX: " + descvpDropboxPath + (i + 1) + ".png");
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:vpLocationDescImageFilePath DROPBOX: " + descvpDropboxPath + (i + 1) + ".png");
                                 DbxFile vpLocationDescImageFileDropbox = dbxFs.open(vpLocationDescImageFilePath);
                                 DbxFileStatus vpLocationDescImageFileDropboxStatus = vpLocationDescImageFileDropbox.getSyncStatus();
                                 if ((!vpLocationDescImageFileDropboxStatus.isLatest) || (descvpFile.length() == 0) || (vpConfiguredTimeSMCMillis[i] > vpConfiguredTimeInUseMillis[i]) || reloadConfig)
@@ -971,19 +936,19 @@ public class LoaderActivity extends Activity implements LocationListener
                             }
                             catch (Exception e)
                             {
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:EXCEPTION with vpLocationDescImageFilePath: " + descvpDropboxPath + (i + 1) + ".png");
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:EXCEPTION with vpLocationDescImageFilePath: " + descvpDropboxPath + (i + 1) + ".png");
                                 e.printStackTrace();
                             }
                             try
                             {
                                 File descvpFile = new File(getFilesDir(), "descvp" + (i + 1) + ".png");
-                                //MetaioDebug.log("descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.exists());
-                                //MetaioDebug.log("descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.getPath());
-                                //MetaioDebug.log("descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.getAbsolutePath());
-                                //MetaioDebug.log("descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.getCanonicalPath());
+                                //Log.d(TAG,"descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.exists());
+                                //Log.d(TAG,"descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.getPath());
+                                //Log.d(TAG,"descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.getAbsolutePath());
+                                //Log.d(TAG,"descvpFile: "+"descvp" + (i + 1) + ".png ="+ descvpFile.getCanonicalPath());
                                 if ((!descvpFile.exists()) || (newVpLocationDescImageFileInDropbox))
                                 {
-                                    MetaioDebug.log("loadDefinitionsBeforeCallingActivity:WRITING TO LOCAL STORAGE: vpLocationDescImageFilePath local: " + getFilesDir() + "/" + "descvp" + (i + 1) + ".png");
+                                    Log.d(TAG,"loadDefinitionsBeforeCallingActivity:WRITING TO LOCAL STORAGE: vpLocationDescImageFilePath local: " + getFilesDir() + "/" + "descvp" + (i + 1) + ".png");
                                     FileOutputStream fos = new FileOutputStream(descvpFile);
                                     try
                                     {
@@ -991,18 +956,18 @@ public class LoaderActivity extends Activity implements LocationListener
                                     }
                                     catch (Exception Ex)
                                     {
-                                        MetaioDebug.log("loadDefinitionsBeforeCallingActivity:loadDefinitionsBeforeCallingActivity:Error compressing : " + Ex.getMessage());
+                                        Log.d(TAG,"loadDefinitionsBeforeCallingActivity:loadDefinitionsBeforeCallingActivity:Error compressing : " + Ex.getMessage());
                                     }
                                     fos.close();
                                 }
                             }
                             catch (FileNotFoundException e)
                             {
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:File not found: " + e.getMessage());
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:File not found: " + e.getMessage());
                             }
                             catch (IOException e)
                             {
-                                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:Error accessing file: " + e.getMessage());
+                                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:Error accessing file: " + e.getMessage());
                             }
                         }
 
@@ -1011,13 +976,13 @@ public class LoaderActivity extends Activity implements LocationListener
                         // Loading Metaio Assets
                         try
                         {
-                            MetaioDebug.log("loadDefinitionsBeforeCallingActivity:####### LOADING: METAIO ASSETS");
+                            Log.d(TAG,"loadDefinitionsBeforeCallingActivity:####### LOADING: METAIO ASSETS");
                             AssetsManager.extractAllAssets(getApplicationContext(), true);
                         }
                         catch (IOException e)
                         {
                             e.printStackTrace();
-                            MetaioDebug.log(Log.ERROR, "loadDefinitionsBeforeCallingActivity:AssetsManager.extractAllAssets failed, see stack trace");
+                            Log.e(TAG, "loadDefinitionsBeforeCallingActivity:AssetsManager.extractAllAssets failed, see stack trace");
                         }
 
                         dataLoadSuccess = true;
@@ -1025,7 +990,7 @@ public class LoaderActivity extends Activity implements LocationListener
                     catch (Exception e)
                     {
                         e.printStackTrace();
-                        MetaioDebug.log(Log.ERROR, "loadDefinitionsBeforeCallingActivity:Error loadDefinitionsFromDropboxBeforeCallingSeamensor() in BACKGROUND");
+                        Log.e(TAG, "loadDefinitionsBeforeCallingActivity:Error loadDefinitionsFromDropboxBeforeCallingSeamensor() in BACKGROUND");
                     }
                     publishProgress(getString(R.string.load_assets_finished));
                 }
@@ -1036,10 +1001,10 @@ public class LoaderActivity extends Activity implements LocationListener
             protected void onPostExecute(Void result)
             {
                 super.onPostExecute(result);
-                MetaioDebug.log("loadDefinitionsBeforeCallingActivity: onPostExecute()");
-                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:####### LOADING: onPostExecute: callingARVewactivity: clockSetSuccess=" + clockSetSuccess);
-                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:####### LOADING: onPostExecute: callingARVewactivity: dataLoadSuccess=" + dataLoadSuccess);
-                MetaioDebug.log("loadDefinitionsBeforeCallingActivity:####### LOADING: onPostExecute: callingARVewactivity: activityToBeCalled="+activityToBeCalled);
+                Log.d(TAG,"loadDefinitionsBeforeCallingActivity: onPostExecute()");
+                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:####### LOADING: onPostExecute: callingARVewactivity: clockSetSuccess=" + clockSetSuccess);
+                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:####### LOADING: onPostExecute: callingARVewactivity: dataLoadSuccess=" + dataLoadSuccess);
+                Log.d(TAG,"loadDefinitionsBeforeCallingActivity:####### LOADING: onPostExecute: callingARVewactivity: activityToBeCalled="+activityToBeCalled);
                 if ((dataLoadSuccess)&&(clockSetSuccess))
                 {
                     TextView message = (TextView) findViewById(R.id.bottom_message);

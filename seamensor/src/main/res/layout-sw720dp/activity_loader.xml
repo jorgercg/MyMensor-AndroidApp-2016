@@ -23,7 +23,7 @@
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
             android:visibility="visible"
-            android:src="@anim/animalogoseamensor" />
+            android:src="@drawable/animalogoseamensor" />
 
         <TextView
             android:id="@+id/top_message"

@@ -64,7 +64,15 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/res/drawable-xxhdpi-v4/web_forward.png"
     },
     {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/animalogoseamensor.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/res/drawable-xxhdpi/animalogoseamensor.xml"
+    },
+    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/yesbutton.xml",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/res/drawable-xxhdpi/yesbutton.xml"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/clockwise_rotation.xml",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/src/main/res/drawable-xxhdpi/clockwise_rotation.xml"
     }
 ]

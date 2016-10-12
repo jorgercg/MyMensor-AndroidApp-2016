@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="AlreadyMember">Já se inscreveu?</string>
+    <string name="CreateAcc">Criar Conta</string>
+    <string name="Name">Nome</string>
+    <string name="Password">Senha</string>
+    <string name="SignIn">Entrar</string>
+    <string name="accountname">Usuário</string>
     <string name="admin_present_waiving_gps_time">Admin presente... pulando a espera por sinal GPS...</string>
     <string name="almost_finished_loading_assets">Quase lá.....</string>
     <string name="app_name">SeaMensor</string>
@@ -67,12 +73,14 @@
     <string name="device_clock_problem">Por favor ajustar corretamente o relógio do dispositivo</string>
     <string name="double_bck_exit">Pressione Voltar rápido duas vezes para sair!</string>
     <string name="dropboxlinkerror">Não conectado ao Dropbox - saindo da app</string>
+    <string name="emailusr">Email</string>
     <string name="gps_time_acquired">Sinal GPS adquirido... Data e hora GPS UTC adquiridos</string>
     <string name="is_photo_ok">A Foto foi bem capturada? (Você pode usar o zoom!!!)</string>
     <string name="load_assets_finished">A espera acabou!!!</string>
     <string name="logging_in">Conectando ao servidor...</string>
     <string name="login_btn_txt">LOGIN</string>
     <string name="logout_btn_txt">LOGOUT</string>
+    <string name="newuser">Usuário novo?</string>
     <string name="no_inttime">Não é possível recuperar o horário certificado</string>
     <string name="no_photo_captured_in_this_vp">Nenhuma foto capturada neste vp!!!</string>
     <string name="no_seamensor_account">Não há conta SeaMensor neste dispositivo.</string>
@@ -86,8 +94,8 @@
     <string name="still_loading_assets">Ainda carregando.....</string>
     <string name="user_name">Nome de usuário:</string>
     <string name="user_number">Número de usuário:</string>
-    <string name="userstate_loggedin">Autorizado, usando credencias de</string>
-    <string name="userstate_loggedout">Por favor fornecer credenciais.</string>
+    <string name="userstate_loggedin">Autorizado, usando credenciais de</string>
+    <string name="userstate_loggedout">Por favor faça o log in.</string>
     <string name="vpAcquiredStatus">S</string>
     <string name="vpNotAcquiredStatus">N</string>
     <string name="vp_00">VP#00</string>

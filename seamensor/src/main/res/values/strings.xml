@@ -63,11 +63,19 @@
     <string name="no_photo_captured_in_this_vp">No photo captured in this vp!!!</string>
     <string name="metaioSDKSignature" translatable="false">lI4cQkC2WE/14GLNKqkGpg3NMCQAxa0wEeAhbnDbhJ8=</string>
     <string name="logging_in">Logging in to server...</string>
-    <string name="authlabel" translatable="false">MyMensor</string>
-    <string name="userstate_loggedout">Please enter your credentials.</string>
+    <string name="authlabel" translatable="false">SeaMensor</string>
+    <string name="userstate_loggedout">Please log in.</string>
     <string name="userstate_loggedin">Authorized, using credentials from</string>
     <string name="start_config">Configuration</string>
     <string name="start_cap">Image Capture</string>
     <string name="login_btn_txt">LOGIN</string>
     <string name="logout_btn_txt">LOGOUT</string>
+    <string name="accountname">Username</string>
+    <string name="Password">Password</string>
+    <string name="SignIn">Sign In</string>
+    <string name="newuser">New User?</string>
+    <string name="Name">Name</string>
+    <string name="CreateAcc">Create Account</string>
+    <string name="AlreadyMember">Already a member?</string>
+    <string name="emailusr">Email</string>
 </resources>

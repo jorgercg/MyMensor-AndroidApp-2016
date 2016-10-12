@@ -4,23 +4,35 @@ import android.content.Context;
 import android.util.Log;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
 public class AwsUtil {
 
     private static AmazonS3Client sS3Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
+    protected static CognitoCachingCredentialsProvider credentialsProvider = null;
+    private static DeveloperAuthenticationProvider developerAuthenticationProvider;
     private static TransferUtility sTransferUtility;
 
+    private static DeveloperAuthenticationProvider getDeveloperAuthenticationProvider(Context context) {
+        if (developerAuthenticationProvider == null){
+            developerAuthenticationProvider = new DeveloperAuthenticationProvider(
+                    null,
+                    Constants.COGNITO_POOL_ID,
+                    context.getApplicationContext(),
+                    Constants.COGNITO_POOL_ID_REGION);
+        }
+        return developerAuthenticationProvider;
+    }
 
     private static CognitoCachingCredentialsProvider getCredProvider(Context context) {
         if (sCredProvider == null) {
             sCredProvider = new CognitoCachingCredentialsProvider(
                     context.getApplicationContext(),
-                    Constants.COGNITO_POOL_ID,
-                    Regions.EU_WEST_1);
+                    getDeveloperAuthenticationProvider(context.getApplicationContext()),
+                    Constants.COGNITO_POOL_ID_REGION);
         }
         Log.d("CogCach",sCredProvider.getCachedIdentityId()+" - "+sCredProvider.getIdentityId());
         return sCredProvider;
@@ -40,6 +52,12 @@ public class AwsUtil {
         }
 
         return sTransferUtility;
+    }
+
+    public static CognitoCredentialsProvider getCredentialsProvider(Context context) {
+        if (credentialsProvider == null) {
+            credentialsProvider = getCredProvider(context.getApplicationContext());}
+        return credentialsProvider;
     }
 
 

@@ -36,8 +36,8 @@
         android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/Theme.FullScreen" >
-
+        android:theme="@style/Theme.FullScreen"
+        android:name="com.seamensor.seamensor.VolleyHelper">
         <activity
             android:name="com.seamensor.seamensor.MainActivity"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
@@ -55,6 +55,10 @@
             android:theme="@style/Theme.FullScreen"
             android:screenOrientation="landscape"
             >
+            <intent-filter>
+                <action android:name="com.seamensor.seamensor.LoaderActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.seamensor.seamensor.ImageCapActivity"
@@ -62,6 +66,10 @@
             android:theme="@style/Theme.FullScreen"
             android:screenOrientation="landscape"
             >
+            <intent-filter>
+                <action android:name="com.seamensor.seamensor.ImageCapActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.seamensor.seamensor.ConfigActivity"
@@ -69,18 +77,15 @@
             android:theme="@style/Theme.FullScreen"
             android:screenOrientation="landscape"
             >
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.seamensor.seamensor.MymAccAuthenticatorActivity"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
             android:theme="@style/Theme.FullScreen"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="com.mymensor.app" android:host="mymensor"/>
-            </intent-filter>
         </activity>
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
 		<activity
@@ -112,5 +117,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
     </application>
+
+
 
 </manifest>

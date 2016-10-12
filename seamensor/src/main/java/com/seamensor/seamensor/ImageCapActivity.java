@@ -13,12 +13,17 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -47,9 +52,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileStatus;
@@ -84,6 +95,8 @@ public class ImageCapActivity extends ARViewActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener
 {
+	private static final String TAG = "ImageCapActvty";
+
 	private IGeometry mSeaMensorCube;
 	private IGeometry mVpChecked;
 	private MetaioSDKCallbackHandler mSDKCallback;
@@ -319,6 +332,8 @@ public class ImageCapActivity extends ARViewActivity implements
 
 	private TransferUtility transferUtility;
 
+	SharedPreferences sharedPref;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -331,13 +346,15 @@ public class ImageCapActivity extends ARViewActivity implements
 		MetaioDebug.log("SeaMensor onCreate:SeaMensor Account: "+seamensorAccount);
 		MetaioDebug.log("SeaMensor onCreate:Qty Vps: "+qtyVps);
 
+		sharedPref = this.getSharedPreferences("MYM",Context.MODE_PRIVATE);
+
         // Fused Location Provider
         MetaioDebug.log("SeaMensor onCreate: Setting up Fused Location Provider");
 
         if (!isGooglePlayServicesAvailable())
         {
             MetaioDebug.log("SeaMensor onCreate: isGooglePlayServicesAvailable()=false");
-            //finish();
+            finish();
         }
         else MetaioDebug.log("SeaMensor onCreate: isGooglePlayServicesAvailable()=true");
 
@@ -347,6 +364,10 @@ public class ImageCapActivity extends ARViewActivity implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+		String code = sharedPref.getString("code", " ");
+
+		Log.d(TAG, "Code:"+ code);
 
 		// Enable Dropbox
 		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
@@ -577,11 +598,11 @@ public class ImageCapActivity extends ARViewActivity implements
         trkQualityView = (TextView) mGUIView.findViewById(R.id.trkQualityView);
 		isVpPhotoOkTextView = (TextView) mGUIView.findViewById(R.id.textViewIsPhotoOK);
 
-        rotationRadarScan = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotation);
+        rotationRadarScan = AnimationUtils.loadAnimation(this, R.drawable.clockwise_rotation);
 		radarScanImageView.setVisibility(View.VISIBLE);
 		radarScanImageView.startAnimation(rotationRadarScan);
 
-        rotationMProgress = AnimationUtils.loadAnimation(this, R.anim.clockwise_rotation);
+        rotationMProgress = AnimationUtils.loadAnimation(this, R.drawable.clockwise_rotation);
         mProgress.setVisibility(View.GONE);
         mProgress.startAnimation(rotationMProgress);
 	}
@@ -3769,6 +3790,7 @@ public class ImageCapActivity extends ARViewActivity implements
 								fileToUpload,				/* The file where the data to upload exists */
 								myObjectMetadata			/* The ObjectMetadata associated with the object*/
 						);
+
 						Log.d("Cognito",observer.getState().toString());
 						Log.d("Cognito",observer.getAbsoluteFilePath());
 						Log.d("Cognito",observer.getBucket());

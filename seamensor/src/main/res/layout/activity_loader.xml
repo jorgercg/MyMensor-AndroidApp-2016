@@ -24,7 +24,7 @@
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             android:visibility="visible"
-            android:src="@anim/animalogoseamensor" />
+            android:src="@drawable/animalogoseamensor" />
 
         <TextView
             android:id="@+id/bottom_message"
