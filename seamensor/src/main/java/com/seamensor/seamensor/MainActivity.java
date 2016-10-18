@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,22 +21,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.seamensor.seamensor.cognitoclient.AwsUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.seamensor.seamensor.Constants.AUTHTOKEN_TYPE_FULL_ACCESS;
-
+import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -59,9 +50,13 @@ public class MainActivity extends Activity {
     private AlertDialog mAlertDialog;
     private boolean mInvalidate;
 
-    SharedPreferences sharedPref;
+    private AmazonS3Client s3Client;
+    private TransferUtility transferUtility;
 
-    public GetCredentialProviderLogged getCredentialProviderLogged;
+    // A List of all transfers
+    private List<TransferObserver> observers;
+
+    SharedPreferences sharedPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -72,7 +67,12 @@ public class MainActivity extends Activity {
 
         final Account availableAccounts[] = mAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE);
 
-        sharedPref = getApplicationContext().getSharedPreferences("MYM", Context.MODE_PRIVATE);
+        sharedPref = getApplicationContext().getSharedPreferences("com.mymensor.app", Context.MODE_PRIVATE);
+
+        /**
+         * Initializes the sync client. This must be call before you can use it.
+         */
+        CognitoSyncClientManager.init(this);
 
         setContentView(R.layout.activity_main);
         mainLinearLayout = (LinearLayout)findViewById(R.id.MainActivityLinearLayout);
@@ -83,7 +83,11 @@ public class MainActivity extends Activity {
         startConfig = (Button) findViewById(R.id.buttonconfig);
         startCap = (Button) findViewById(R.id.buttoncap);
 
-        getCredentialProviderLogged = new GetCredentialProviderLogged();
+        s3Client = CognitoSyncClientManager.getInstance();
+
+        transferUtility = AwsUtil.getTransferUtility(s3Client, getApplicationContext());
+
+        initData();
 
         if (availableAccounts.length == 0){
             Log.d(TAG, "availableAccounts[] = " + "nada!!!!" + " Qty= 0");
@@ -102,7 +106,7 @@ public class MainActivity extends Activity {
             startCap.setVisibility(View.VISIBLE);
             if (availableAccounts.length == 1){
                 userLogged.setText(getText(R.string.userstate_loggedin)+" "+availableAccounts[0].name);
-                getExistingAccountAuthToken(availableAccounts[0], AUTHTOKEN_TYPE_FULL_ACCESS);
+                getExistingAccountAuthToken(availableAccounts[0], Constants.AUTHTOKEN_TYPE_FULL_ACCESS);
             }
         }
 
@@ -114,7 +118,7 @@ public class MainActivity extends Activity {
             showDialog = savedInstanceState.getBoolean(STATE_DIALOG);
             invalidate = savedInstanceState.getBoolean(STATE_INVALIDATE);
             if (showDialog) {
-                showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, invalidate);
+                showAccountPicker(Constants.AUTHTOKEN_TYPE_FULL_ACCESS, invalidate);
             }
 
         }
@@ -122,7 +126,25 @@ public class MainActivity extends Activity {
         Log.d(TAG, "showDialog = " + showDialog + " invalidate="+invalidate);
 
         if (availableAccounts.length > 1){
-            showAccountPicker(AUTHTOKEN_TYPE_FULL_ACCESS, invalidate);
+            showAccountPicker(Constants.AUTHTOKEN_TYPE_FULL_ACCESS, invalidate);
+        }
+
+    }
+
+    /**
+     * Gets all relevant transfers from the Transfer Service
+     */
+    private void initData() {
+        // Use TransferUtility to get all upload transfers.
+        observers = transferUtility.getTransfersWithType(TransferType.UPLOAD);
+        for (TransferObserver observer : observers) {
+
+            // Sets listeners to in progress transfers
+            if (TransferState.WAITING.equals(observer.getState())
+                    || TransferState.WAITING_FOR_NETWORK.equals(observer.getState())
+                    || TransferState.IN_PROGRESS.equals(observer.getState())) {
+                transferUtility.resume(observer.getId());
+            }
         }
 
     }
@@ -192,7 +214,7 @@ public class MainActivity extends Activity {
                     final String authtoken = bnd.getString(AccountManager.KEY_AUTHTOKEN);
                     final String userName = bnd.getString(AccountManager.KEY_ACCOUNT_NAME);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("mym_authToken",authtoken);
+                    editor.putString(Constants.MYM_KEY,authtoken);
                     editor.commit();
                     Log.d(TAG, "GetToken Bundle is " + bnd);
                     logInOut.setVisibility(View.GONE);
@@ -207,69 +229,16 @@ public class MainActivity extends Activity {
         }).start();
     }
 
-    private void getCognitoIdAndToken(final String authToken){
-        // Formulate the request and handle the response.
-        final Bundle cog_response = new Bundle();
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.AUTH_COGDEV_SERVER,new JSONObject(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            VolleyLog.v("Response:%n %s", response.toString(4));
-                            Log.d(TAG, "Respose:"+ response.toString());
-                            String userCogIdentityId = response.getString("IdentityId");
-                            String userCogToken = response.getString("Token");
-                            cog_response.putString("cog_identityId", userCogIdentityId);
-                            cog_response.putString("cog_openIdToken", userCogToken);
-                            cog_response.putString("mym_authToken", authToken);
-                            Log.d("cog_identityId", userCogIdentityId);
-                            Log.d("cog_openIdToken", userCogToken);
-                            Log.d("mym_authToken", authToken);
-                            getCredentialProviderLogged.execute(cog_response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Respose:"+ error.toString());
-                VolleyLog.e("Main Activity: Error COG AUTH TOKEN: ", error.getMessage());
-            }
-
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", "Token "+authToken);
-                return headers;
-            }
-        };
-        // Add the request to the RequestQueue.
-        VolleyHelper.getInstance().addToRequestQueue(jsonObjectRequest);
+    private void getCognitoIdAndToken(String authToken){
+        // Clear the existing credentials
+        CognitoSyncClientManager.credentialsProvider
+                .clearCredentials();
+        // Initiate user authentication against the
+        // developer backend in this case the sample Cognito
+        // developer authentication application.
+        ((DeveloperAuthenticationProvider) CognitoSyncClientManager.credentialsProvider
+                .getIdentityProvider()).login(authToken, MainActivity.this);
     }
-
-    public class GetCredentialProviderLogged extends AsyncTask<Bundle, Void, Void> {
-        @Override
-        protected Void doInBackground(cognito_data... params) {
-            if ((("cog_identityId") != null) && (cognito_data.get("cog_openIdToken") != null)) {
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("cog_identityId", cognito_data.get("cog_identityId"));
-                editor.putString("cog_openIdToken", cognito_data.get("cog_openIdToken"));
-                editor.putString("mym_authToken", cognito_data.get("mym_authToken"));
-                editor.commit();
-                DeveloperAuthenticationProvider developerProvider = new DeveloperAuthenticationProvider(null, Constants.COGNITO_POOL_ID, getApplicationContext(), Constants.COGNITO_POOL_ID_REGION);
-                CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(getApplicationContext(), developerProvider, Constants.COGNITO_POOL_ID_REGION);
-                HashMap<String, String> logins = new HashMap<String, String>();
-                logins.put(developerProvider.getProviderName(), "jrcgonc@gmail.com");
-                credentialsProvider.setLogins(logins);
-                credentialsProvider.refresh();
-            } else {
-                Log.d(TAG, "getCredentialProviderLogged FAILED");
-            }
-        }
-    }
-
 
     private void addNewAccount(String accountType, String authTokenType) {
         final AccountManagerFuture<Bundle> future = mAccountManager.addAccount(accountType, authTokenType, null, null, this, new AccountManagerCallback<Bundle>() {
@@ -277,11 +246,14 @@ public class MainActivity extends Activity {
             public void run(AccountManagerFuture<Bundle> future) {
                 try {
                     Bundle bnd = future.getResult();
-                    Log.d(TAG, "AddNewAccount Bundle is " + bnd);
+                    Log.d(TAG, "AddNewAccount Bundle is " + bnd.toString());
                     logInOut.setVisibility(View.GONE);
                     startConfig.setVisibility(View.VISIBLE);
                     startCap.setVisibility(View.VISIBLE);
                     userLogged.setText(getText(R.string.userstate_loggedin)+" "+ bnd.getString("authAccount"));
+                    String mymtoken = sharedPref.getString(Constants.MYM_KEY," ");
+                    Log.d(TAG, "AddNewAccount Token is " + mymtoken);
+                    getCognitoIdAndToken(mymtoken);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

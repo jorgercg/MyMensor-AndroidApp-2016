@@ -30,6 +30,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-cognitoidentityprovider/2.3.3/12d27c2a6087362cc8752a683c9a116e83c8900e/aws-android-sdk-cognitoidentityprovider-2.3.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="12d27c2a6087362cc8752a683c9a116e83c8900e">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-cognitoidentityprovider-2.3.3_e437bee85b02155f1999291a94cc4818bdfd3e4d/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client/1.21.0/61ec42bbfc51aafde5eb8b4923c602c5b5965bc2/google-oauth-client-1.21.0.jar"
         jumboMode="true"
         optimize="true"
@@ -63,6 +72,15 @@
         revision="24.0.2"
         sha1="4cd0b093824b3228fffc21ea369b98d0b1db6566">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-7.0.0_a3459275540b418f019024ade078f6df7a3b9c61/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-cognito/2.3.3/62d18ff54e5bdb047ff4df01084370cb15e55c3a/aws-android-sdk-cognito-2.3.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="62d18ff54e5bdb047ff4df01084370cb15e55c3a">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-cognito-2.3.3_54dcb15a74756168219119946e303e7f1e9ec84b/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -138,24 +156,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-cognito/2.3.2/8b152ca88d10cd3711d1cb18e96e8ae763253b3a/aws-android-sdk-cognito-2.3.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="8b152ca88d10cd3711d1cb18e96e8ae763253b3a">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-cognito-2.3.2_2dc4dc228f1a90331d1459cf77611cfb79c2e15f/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-core/2.3.2/e1ab374265a269314babb1e8e9e96452cf68b481/aws-android-sdk-core-2.3.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="e1ab374265a269314babb1e8e9e96452cf68b481">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-core-2.3.2_5294847a173dc53dfcd82ef255f4fcf92fc82675/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.0.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -180,15 +180,6 @@
         revision="24.0.2"
         sha1="935a969265b2a166b2d20415423f5f6e90fe16e0">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_e704f1c005b2c919b5f7a6f36af16a0695f6c033/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-cognitoidentityprovider/2.3.2/a0f7bb46189be243f3e7a34634bbd9c26baec10/aws-android-sdk-cognitoidentityprovider-2.3.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="0a0f7bb46189be243f3e7a34634bbd9c26baec10">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-cognitoidentityprovider-2.3.2_06504743ac7e23cf2d855ee29f84e66fb3f31ab8/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -237,15 +228,6 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/prowser-0.2.0.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="0a3aaefdecda5a8d8425505a1426f4395875d366">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/prowser-0.2.0_c6fdefd53f1b31d22d7cf1d81147dddf361563e0/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.0.0/jars/classes.jar"
         jumboMode="true"
         optimize="true"
@@ -277,7 +259,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="efad4fe81c4304a8530a7ffb32c3b5f6c73e5541">
+        sha1="cefa0d0387d539df036d4c5d29992a97b018e4b2">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_451a72833b94a889e6af1ab6e7ee3b9d36392055/classes.dex" />
     </item>
     <item
@@ -309,6 +291,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-s3/2.3.3/c573e3c8b9fe81aa502441338155144a6217715f/aws-android-sdk-s3-2.3.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="c573e3c8b9fe81aa502441338155144a6217715f">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-s3-2.3.3_299b914d576824da622fd12aed578f563f64969e/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/seamensor_sdk_6_dj/metaioSDK/unspecified/jars/libs/metaiosdk.jar"
         jumboMode="true"
         optimize="true"
@@ -327,21 +318,21 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/cloudinary-core-1.4.5.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="814d2cc56fdb539e36cf95fb627f2b6d923c09e2">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/cloudinary-core-1.4.5_19b9d33d265d7c8201efc15287a564bed2cfaf68/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/exploded-aar/com.android.support/support-compat/24.2.1/jars/libs/internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
         sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-24.2.1_2e91ef41b8bde2c20c848dcd7e4be5336a018706/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-s3/2.3.2/452110449cc49b36cc53f76b84605d4c6e6b3f23/aws-android-sdk-s3-2.3.2.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="452110449cc49b36cc53f76b84605d4c6e6b3f23">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-s3-2.3.2_bb7e913720ab608f79e15a058bed492f364de9b9/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -390,11 +381,20 @@
     </item>
     <item
         is-multidex="true"
+        jar="/Users/jorgercg/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-android-sdk-core/2.3.3/45991c46f31e5fb14777759e0300abc156c6efa8/aws-android-sdk-core-2.3.3.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="45991c46f31e5fb14777759e0300abc156c6efa8">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/aws-android-sdk-core-2.3.3_284cbf7dbfa47df31bbeedb7ef98b0fd8262543b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="0e1686f521bf32a0b1e75ea852a9415eb6b690f8">
+        sha1="76d157bdbf4a9691f091a0944b4d70381c964324">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_45de722bb9cab215a15af80addd370948735e1bb/classes.dex" />
     </item>
     <item
@@ -405,6 +405,15 @@
         revision="24.0.2"
         sha1="f6c3aed1cdfa21b5c1737c915186ea93a95a58bd">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-core-2.1.3_fc0a31612b4569575b20385459f077a3ef67f2dd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/cloudinary-android-1.4.5.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.2"
+        sha1="b2e47877509c81bb774f43743ec954d5ebcfe82c">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/cloudinary-android-1.4.5_7d11e03d8ce9f7d966abad8e0515ba9fa44cf5aa/classes.dex" />
     </item>
     <item
         is-multidex="true"

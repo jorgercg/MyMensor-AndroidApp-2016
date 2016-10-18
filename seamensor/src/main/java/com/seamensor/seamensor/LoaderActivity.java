@@ -145,7 +145,7 @@ public class LoaderActivity extends Activity implements LocationListener
         // Enable metaio SDK debug log messages based on build configuration
         MetaioDebug.enableLogging(BuildConfig.DEBUG);
 
-        sharedPref = this.getSharedPreferences("MYM",Context.MODE_PRIVATE);
+        sharedPref = this.getSharedPreferences("com.mymensor.app",Context.MODE_PRIVATE);
 
         // Location Manager
         Log.d(TAG,"onCreate: Calling LocationManager");

@@ -34,5 +34,6 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-cognito:2.3.+'
     compile 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.3.+'
     compile 'com.android.support:customtabs:23.3.0'
-    compile files('libs/prowser-0.2.0.jar')
+    compile files('libs/cloudinary-core-1.4.5.jar')
+    compile files('libs/cloudinary-android-1.4.5.jar')
 }

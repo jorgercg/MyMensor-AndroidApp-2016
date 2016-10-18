@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.seamensor.seamensor.cognitoclient.AwsUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,9 +43,6 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
     public final static String PARAM_USER_PASS = "USER_PASS";
-    public final static String PARAM_USER_COGID = "USER_COGID";
-    public final static String PARAM_USER_COGTOK = "USER_COGTOK";
-
 
     private AccountManager mAccountManager;
     private String mAuthTokenType;
@@ -61,7 +58,7 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mymaccauthenticator);
 
-        sharedPref = this.getSharedPreferences("MYM",Context.MODE_PRIVATE);
+        sharedPref = this.getSharedPreferences("com.mymensor.app",Context.MODE_PRIVATE);
 
         mAccountManager = AccountManager.get(getBaseContext());
 
@@ -132,7 +129,7 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
                             data.putString(AccountManager.KEY_PASSWORD, userPassInner);
                             final Intent res = new Intent();
                             res.putExtras(data);
-                            getCognitoAuth(res);
+                            finishLogin(res);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             data.putString(KEY_ERROR_MESSAGE, e.getMessage());
@@ -150,65 +147,11 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
         VolleyHelper.getInstance().addToRequestQueue(jsonObjectRequest);
     }
 
-    private void getCognitoAuth(Intent intent){
-
-        final String userName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        final String accountType = intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE);
-        final String authToken = intent.getStringExtra(AccountManager.KEY_AUTHTOKEN);
-        final String userPass = intent.getStringExtra(AccountManager.KEY_PASSWORD);
-        final Bundle data = new Bundle();
-        HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Content-Type", "application/json");
-        headers.put("Authorization", "Token "+authToken+"");
-        // Formulate the request and handle the response.
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.AUTH_COGDEV_SERVER, new JSONObject(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            VolleyLog.v("Response:%n %s", response.toString(4));
-                            Log.d(TAG, "Respose:"+ response.toString());
-                            String userCogIdentityId = response.getString("IdentityId");
-                            String userCogToken = response.getString("Token");
-                            data.putString(AccountManager.KEY_ACCOUNT_NAME, userName);
-                            data.putString(AccountManager.KEY_ACCOUNT_TYPE, accountType);
-                            data.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-                            data.putString(AccountManager.KEY_PASSWORD, userPass);
-                            data.putString(AccountManager.KEY_USERDATA, userCogIdentityId);
-                            data.putString(PARAM_USER_COGTOK, userCogToken);
-                            final Intent res = new Intent();
-                            res.putExtras(data);
-                            finishLogin(res);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            data.putString(KEY_ERROR_MESSAGE, e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error COG AUTH TOKEN: ", error.getMessage());
-                data.putString(KEY_ERROR_MESSAGE, error.getMessage());
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", "Token "+authToken);
-                return headers;
-            }
-        };
-
-        // Add the request to the RequestQueue.
-        VolleyHelper.getInstance().addToRequestQueue(jsonObjectRequest);
-    }
-
     private void finishLogin(Intent intent) {
         Log.d(TAG,"finishLogin started");
 
         String accountName = intent.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
         String accountPassword = intent.getStringExtra(PARAM_USER_PASS);
-        String accountCognitoIdentityId = intent.getStringExtra(AccountManager.KEY_USERDATA);
         final Account account = new Account(accountName, intent.getStringExtra(AccountManager.KEY_ACCOUNT_TYPE));
 
         if (getIntent().getBooleanExtra(ARG_IS_ADDING_NEW_ACCOUNT, false)) {
@@ -221,16 +164,14 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
             // (Not setting the auth token will cause another call to the server to authenticate the user)
             mAccountManager.addAccountExplicitly(account, accountPassword, null);
             mAccountManager.setAuthToken(account, authtokenType, authtoken);
-            mAccountManager.setUserData(account, AccountManager.KEY_USERDATA, accountCognitoIdentityId);
+            //mAccountManager.setUserData(account, AccountManager.KEY_USERDATA, accountCognitoIdentityId);
         } else {
             Log.d(TAG, "finishLogin > setPassword");
             mAccountManager.setPassword(account, accountPassword);
         }
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("cog_identityId", intent.getStringExtra(AccountManager.KEY_USERDATA));
-        editor.putString("cog_openIdToken", intent.getStringExtra(PARAM_USER_COGTOK));
-        editor.putString("mym_authToken", intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
+        editor.putString(Constants.MYM_KEY, intent.getStringExtra(AccountManager.KEY_AUTHTOKEN));
         editor.commit();
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);

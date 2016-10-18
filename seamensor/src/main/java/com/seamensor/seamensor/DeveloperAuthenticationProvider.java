@@ -1,136 +1,162 @@
 package com.seamensor.seamensor;
 
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.amazonaws.auth.AWSAbstractCognitoDeveloperIdentityProvider;
+import com.seamensor.seamensor.cognitoclient.AmazonCognitoSampleDeveloperAuthenticationClient;
+import com.seamensor.seamensor.cognitoclient.GetTokenResponse;
 import com.amazonaws.regions.Regions;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.content.ContentValues.TAG;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * A class used for communicating with developer backend. This implementation
  * is meant to communicate with the Cognito Developer Authentication sample
  * service: https://github.com/awslabs/amazon-cognito-developer-authentication-sample
  */
-public class DeveloperAuthenticationProvider extends AWSAbstractCognitoDeveloperIdentityProvider {
+public class DeveloperAuthenticationProvider extends
+        AWSAbstractCognitoDeveloperIdentityProvider {
+
+    private static AmazonCognitoSampleDeveloperAuthenticationClient devAuthClient;
 
     private static final String developerProvider = Constants.AUTH_COGDEV_PROV_NAME;
-
-    private SharedPreferences sharedPref;
+    private static final String cognitoSampleDeveloperAuthenticationAppEndpoint = Constants.AUTH_COGDEV_SERVER;
 
     public DeveloperAuthenticationProvider(String accountId,
                                            String identityPoolId, Context context, Regions region) {
         super(accountId, identityPoolId, region);
 
-        sharedPref = context.getSharedPreferences("MYM",Context.MODE_PRIVATE);
+        if (developerProvider == null || developerProvider.isEmpty()) {
+            Log.e("DeveloperAuthentication", "Error: developerProvider name not set!");
+            throw new RuntimeException("DeveloperAuthenticatedApp not configured.");
+        }
+
+        URL endpoint;
+        try {
+            if (cognitoSampleDeveloperAuthenticationAppEndpoint.contains("://")) {
+                endpoint = new URL(cognitoSampleDeveloperAuthenticationAppEndpoint);
+            } else {
+                endpoint = new URL("http://"+cognitoSampleDeveloperAuthenticationAppEndpoint);
+            }
+        } catch (MalformedURLException e) {
+            Log.e("DeveloperAuthentication", "Developer Authentication Endpoint is not a valid URL!", e);
+            throw new RuntimeException(e);
+        }
+
+        /*
+         * Initialize the client using which you will communicate with your
+         * backend for user authentication. Here we initialize a client which
+         * communicates with sample Cognito developer authentication
+         * application.
+         */
+        devAuthClient = new AmazonCognitoSampleDeveloperAuthenticationClient(
+                PreferenceManager.getDefaultSharedPreferences(context),
+                endpoint);
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see com.amazonaws.auth.AWSCognitoIdentityProvider#refresh() In refresh
+     * method, you will have two flows:
+     */
+    /*
+     * 1. When the app user uses developer authentication . In this case, make
+     * the call to your developer backend, from where call the
+     * GetOpenIdTokenForDeveloperIdentity API of Amazon Cognito service. For
+     * this sample the GetToken request to the sample Cognito developer
+     * authentication application is made. Be sure to call update(), so as to
+     * set the identity id and the token received.
+     */
+    /*
+     * 2.When the app user is not using the developer authentication, just call
+     * the refresh method of the AWSAbstractCognitoDeveloperIdentityProvider
+     * class which actually calls GetId and GetOpenIDToken API of Amazon
+     * Cognito.
+     */
+    @Override
+    public String refresh() {
+        setToken(null);
+        // If there is a key with developer provider name in the logins map, it
+        // means the app user has used developer credentials
+        if (getProviderName() != null && !this.loginsMap.isEmpty()
+                && this.loginsMap.containsKey(getProviderName())) {
+            GetTokenResponse getTokenResponse = (GetTokenResponse) devAuthClient.getToken(
+                    this.loginsMap,
+                    identityId);
+            update(getTokenResponse.getIdentityId(),
+                    getTokenResponse.getToken());
+            return getTokenResponse.getToken();
+        } else {
+            this.getIdentityId();
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.amazonaws.auth.AWSBasicCognitoIdentityProvider#getIdentityId()
+     */
+    /*
+     * This method again has two flows as mentioned above depending on whether
+     * the app user is using developer authentication or not. When using
+     * developer authentication system, the identityId should be retrieved from
+     * the developer backend. In the other case the identityId will be retrieved
+     * using the getIdentityId() method which in turn calls Cognito GetId and
+     * GetOpenIdToken APIs.
+     */
+    @Override
+    public String getIdentityId() {
+        identityId = CognitoSyncClientManager.credentialsProvider.getCachedIdentityId();
+        if (identityId == null) {
+            if (getProviderName() != null && !this.loginsMap.isEmpty()
+                    && this.loginsMap.containsKey(getProviderName())) {
+                GetTokenResponse getTokenResponse = (GetTokenResponse) devAuthClient.getToken(
+                        this.loginsMap, identityId);
+                update(getTokenResponse.getIdentityId(),
+                        getTokenResponse.getToken());
+                return getTokenResponse.getIdentityId();
+            } else {
+                return super.getIdentityId();
+            }
+        } else {
+            return identityId;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * com.amazonaws.auth.AWSAbstractCognitoIdentityProvider#getProviderName()
+     * Return the developer provider name which you choose while setting up the
+     * identity pool in the Amazon Cognito Console
+     */
     @Override
     public String getProviderName() {
         return developerProvider;
     }
 
-
-    @Override
-    public String refresh() {
-        // Override the existing token
-        setToken(null);
-        HashMap<String, String> cognito_data = new HashMap<String, String>();
-        // Get the identityId and token by making a call to your backend
-        final String authToken = sharedPref.getString("mym_authToken","07cda8a18180252862884d7c748faf8bb5c0cb89"); //////////////////////////////////////////////////////////////
-        Log.d("VLPauthProv:authTkn=",authToken);
-
-        // Formulate the request and handle the response.
-        final HashMap<String, String> cog_response = new HashMap<String, String>();
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, Constants.AUTH_COGDEV_SERVER,new JSONObject(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            VolleyLog.v("Response:%n %s", response.toString(4));
-                            Log.d(TAG, "Respose:"+ response.toString());
-                            String userCogIdentityId = response.getString("IdentityId");
-                            String userCogToken = response.getString("Token");
-                            cog_response.put("cog_identityId", userCogIdentityId);
-                            cog_response.put("cog_openIdToken", userCogToken);
-                            cog_response.put("mym_authToken", authToken);
-                            Log.d("cog_identityId", userCogIdentityId);
-                            Log.d("cog_openIdToken", userCogToken);
-                            Log.d("mym_authToken", authToken);
-                            // Call the update method with updated identityId and token to make sure
-                            // these are ready to be used from Credentials Provider.
-                            if ((cog_response.get("cog_identityId")!=null)&&(cog_response.get("cog_openIdToken")!=null)){
-                                Log.d("VLP auth Prov: refresh",cog_response.get("cog_identityId"));
-                                Log.d("VLP auth Prov: refresh",cog_response.get("cog_openIdToken"));
-                                update(cog_response.get("cog_identityId"), cog_response.get("cog_openIdToken"));
-                            } else {
-                                Log.d("VLP auth Prov: refresh","Refresh failed, token stil the same");
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Respose:"+ error.toString());
-                VolleyLog.e("Main Activity: Error COG AUTH TOKEN: ", error.getMessage());
-            }
-
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", "Token "+authToken);
-                return headers;
-            }
-        };
-        // Add the request to the RequestQueue.
-        VolleyHelper.getInstance().addToRequestQueue(jsonObjectRequest);
-        return null;
+    /**
+     * This function validates the user credentials against the myMensor
+     * developer authentication application. After that it stores the
+     * token received from myMensor developer authentication application
+     * for all further communication with the application.
+     *
+     * @param mymToken
+     */
+    public void login(String mymToken, Context context) {
+        new DeveloperAuthenticationTask(context).execute(new LoginCredentials(
+                mymToken));
     }
 
-    // If the app has a valid identityId return it, otherwise get a valid
-    // identityId from your backend.
-    @Override
-    public String getIdentityId() {
-        // Load the identityId from the cache
-        HashMap<String, String> cognito_data = new HashMap<String, String>();
-        identityId = null;
-        if (identityId == null) {
-            int retries = 10;
-            do {
-                cognito_data = GetCogOpenIDTokenFromMymServer.getCognitoIdAndToken(sharedPref.getString("mym_authToken"," "));
-            } while ((retries-- > 0)||(cognito_data.get("cog_identityId")!=null));
-            if (cognito_data.get("cog_identityId")!=null){
-                identityId = cognito_data.get("cog_identityId");
-                Log.d("VLPauthProv:retrievedID",identityId);
-            }else {
-                Log.d("VLP auth Prov: getID","getIdentityId failed, toidentityIdken stil null");
-            }
-        } else {
-            return identityId;
+    public static AmazonCognitoSampleDeveloperAuthenticationClient getDevAuthClientInstance() {
+        if (devAuthClient == null) {
+            throw new IllegalStateException(
+                    "Dev Auth Client not initialized yet");
         }
-        return identityId;
+        return devAuthClient;
     }
-
-
 }

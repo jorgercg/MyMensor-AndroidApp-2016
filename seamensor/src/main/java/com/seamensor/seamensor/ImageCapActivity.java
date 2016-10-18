@@ -13,13 +13,10 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -52,15 +49,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileStatus;
@@ -88,6 +81,7 @@ import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.dropbox.sync.android.DbxAccountManager;
+import com.seamensor.seamensor.cognitoclient.AwsUtil;
 
 public class ImageCapActivity extends ARViewActivity implements
         OnItemClickListener,
@@ -330,6 +324,7 @@ public class ImageCapActivity extends ARViewActivity implements
 	public Drawable drawableRoll14;
 	public Drawable drawableRoll15;
 
+	private AmazonS3Client s3Client;
 	private TransferUtility transferUtility;
 
 	SharedPreferences sharedPref;
@@ -346,9 +341,11 @@ public class ImageCapActivity extends ARViewActivity implements
 		MetaioDebug.log("SeaMensor onCreate:SeaMensor Account: "+seamensorAccount);
 		MetaioDebug.log("SeaMensor onCreate:Qty Vps: "+qtyVps);
 
-		sharedPref = this.getSharedPreferences("MYM",Context.MODE_PRIVATE);
+		sharedPref = this.getSharedPreferences("com.mymensor.app",Context.MODE_PRIVATE);
 
-        // Fused Location Provider
+		s3Client = CognitoSyncClientManager.getInstance();
+
+		// Fused Location Provider
         MetaioDebug.log("SeaMensor onCreate: Setting up Fused Location Provider");
 
         if (!isGooglePlayServicesAvailable())
@@ -364,10 +361,6 @@ public class ImageCapActivity extends ARViewActivity implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
-		String code = sharedPref.getString("code", " ");
-
-		Log.d(TAG, "Code:"+ code);
 
 		// Enable Dropbox
 		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
@@ -3632,7 +3625,7 @@ public class ImageCapActivity extends ARViewActivity implements
 				doubleCheckingProcedureStarted = false;
 				doubleCheckingProcedureFinalized = false;
 			}
-			;
+
 			if (cameraFrame != null) {
 				bitmapImage = cameraFrame.getBitmap();
 				final int width = bitmapImage.getWidth();
@@ -3782,7 +3775,7 @@ public class ImageCapActivity extends ARViewActivity implements
 						//call setUserMetadata on our ObjectMetadata object, passing it our map
 						myObjectMetadata.setUserMetadata(userMetadata);
 						//uploading the objects
-						transferUtility = AwsUtil.getTransferUtility(getApplicationContext());
+						transferUtility = AwsUtil.getTransferUtility(s3Client, getApplicationContext());
 						File fileToUpload = pictureFile;
 						TransferObserver observer = transferUtility.upload(
 								Constants.BUCKET_NAME,		/* The bucket to upload to */
@@ -3790,17 +3783,15 @@ public class ImageCapActivity extends ARViewActivity implements
 								fileToUpload,				/* The file where the data to upload exists */
 								myObjectMetadata			/* The ObjectMetadata associated with the object*/
 						);
-
-						Log.d("Cognito",observer.getState().toString());
-						Log.d("Cognito",observer.getAbsoluteFilePath());
-						Log.d("Cognito",observer.getBucket());
-						Log.d("Cognito",observer.getKey());
+						Log.d(TAG, "AWS s3 Observer: "+observer.getState().toString());
+						Log.d(TAG, "AWS s3 Observer: "+observer.getAbsoluteFilePath());
+						Log.d(TAG, "AWS s3 Observer: "+observer.getBucket());
+						Log.d(TAG, "AWS s3 Observer: "+observer.getKey());
 					}
 					catch (Exception e)
 					{
 
 					}
-
 					vpPhotoAccepted = false;
 					vpPhotoRequestInProgress = false;
 					MetaioDebug.log("onNewCameraFrame: vpPhotoAccepted: vpPhotoRequestInProgress = "+vpPhotoRequestInProgress);
