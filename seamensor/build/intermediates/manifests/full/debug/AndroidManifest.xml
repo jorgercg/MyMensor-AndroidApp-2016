@@ -5,7 +5,7 @@
     android:versionName="1.0.0.4" >
 
     <uses-sdk
-        android:minSdkVersion="17"
+        android:minSdkVersion="19"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -29,7 +29,6 @@
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
-        android:name="com.seamensor.seamensor.VolleyHelper"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
@@ -85,25 +84,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.FullScreen" >
         </activity>
-        <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
-        <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:launchMode="singleTask" >
-            <intent-filter>
-                <data android:scheme="db-0yrlhapf89ytpwi" />
 
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <service
-            android:name="com.dropbox.sync.android.DbxSyncService"
-            android:enabled="true"
-            android:exported="false"
-            android:label="Dropbox Sync" />
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />

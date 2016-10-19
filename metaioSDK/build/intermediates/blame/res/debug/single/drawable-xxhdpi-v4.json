@@ -32,11 +32,11 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xxhdpi/star_act.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/web_stop.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xxhdpi/web_stop.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/web_reload.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xxhdpi/web_reload.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/debug/drawable-xxhdpi-v4/web_stop.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/res/drawable-xxhdpi/web_stop.png"
     }
 ]

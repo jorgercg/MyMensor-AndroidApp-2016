@@ -14,10 +14,12 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.seamensor.seamensor.cognitoclient.AwsUtil;
 
 import org.json.JSONException;
@@ -47,6 +49,8 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
     private AccountManager mAccountManager;
     private String mAuthTokenType;
 
+    public RequestQueue mRequestQueue;
+
     SharedPreferences sharedPref;
 
     /*
@@ -61,6 +65,8 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
         sharedPref = this.getSharedPreferences("com.mymensor.app",Context.MODE_PRIVATE);
 
         mAccountManager = AccountManager.get(getBaseContext());
+
+        mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 
         String accountName = getIntent().getStringExtra(ARG_ACCOUNT_NAME);
 
@@ -89,17 +95,7 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
             }
         });
     }
-/*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        // The sign up activity returned that the user has successfully created an account
-        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-            finishLogin(data);
-        } else
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-*/
     public void submit() {
 
         String userName = ((TextView) findViewById(R.id.accountName)).getText().toString();
@@ -144,7 +140,7 @@ public class MymAccAuthenticatorActivity extends AccountAuthenticatorActivity {
         });
 
         // Add the request to the RequestQueue.
-        VolleyHelper.getInstance().addToRequestQueue(jsonObjectRequest);
+        mRequestQueue.add(jsonObjectRequest);
     }
 
     private void finishLogin(Intent intent) {

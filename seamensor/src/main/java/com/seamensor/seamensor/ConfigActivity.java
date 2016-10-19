@@ -1,7 +1,7 @@
 package com.seamensor.seamensor;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -29,10 +29,12 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxFile;
-import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxPath;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.metaio.sdk.ARViewActivity;
 import com.metaio.sdk.MetaioDebug;
 import com.metaio.sdk.jni.CameraVector;
@@ -47,21 +49,32 @@ import com.metaio.sdk.jni.TrackingValuesVector;
 import com.metaio.sdk.jni.Vector2di;
 import com.metaio.sdk.jni.Vector3d;
 import com.metaio.tools.io.AssetsManager;
+import com.seamensor.seamensor.cognitoclient.AwsUtil;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ConfigActivity extends ARViewActivity implements OnItemClickListener
 {
+    private static final String TAG = "ConfigActivity";
+
     private IGeometry mSeaMensorCube;
     private IGeometry mVpChecked;
     private MetaioSDKCallbackHandler mSDKCallback;
@@ -71,10 +84,6 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
     private Vector3d cameraEulerAngle;
     private float trackingQuality;
 
-    public static final String appKey = "0yrlhapf89ytpwi";
-    public static final String appSecret = "neg16q87i8rpym3";
-    public static final int REQUEST_LINK_TO_DBX = 0;
-    public DbxAccountManager mDbxAcctMgr;
     public final int idMarkerStdSize = 20;
     public final String trackingConfigFileName = "TrackingDataMarkerless.xml";
     public final String idMarkersTrackingConfigFileName = "TrckMarkers.xml";
@@ -93,7 +102,6 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
     public String geometrySecondary3dConfigFile = "vpchecked.obj";
     public String cameraCalibrationFileName = "cameracalibration.xml";
     public final String vpsConfigFileDropbox = "vps.xml";
-    public final String vpsConfiguredConfigFileDropbox = "vpsconfiguredSMC.xml";
 
     public boolean[] vpChecked;
     public boolean[] vpAcquired;
@@ -144,17 +152,16 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
     public static Bitmap vpLocationDescImageFileContents;
     public static Bitmap vpMarkerImageFileContents;
     public float[] focus;
-    public String[] locPhotoToExif;
 
     public String seamensorAccount;
     public String userNumber;
     public String userName;
     public String camCalDropboxPath;
-    public String descvpDropboxPath;
-    public String markervpDropboxPath;
-    public String trackingDropboxPath;
-    public String vpsDropboxPath;
-    public String vpsConfiguredDropboxPath;
+    public String descvpRemotePath;
+    public String markervpRemotePath;
+    public String trackingRemotePath;
+    public String vpsRemotePath;
+    public String vpsConfiguredRemotePath;
     public int dciNumber;
 
     private static long back_pressed;
@@ -183,47 +190,52 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
     TextView zRotView;
     TextView trkQualityView;
 
+    private AmazonS3Client s3Client;
+    private TransferUtility transferUtility;
+
+    SharedPreferences sharedPref;
+
+    public long sntpTime;
+    public long sntpTimeReference;
+    public boolean clockSetSuccess;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        // Retrieve SeaMensor account info
-        seamensorAccount = getIntent().getExtras().get("seamensoraccount").toString();
-        // Retrieve passLock info
-        userNumber = getIntent().getExtras().get("usernumber").toString();
-        userName = getIntent().getExtras().get("username").toString();
-        dciNumber = getIntent().getIntExtra("dcinumber", 1);
-        qtyVps = getIntent().getShortExtra("QtyVps", (short)1);
-        MetaioDebug.log("Package: "+this.getPackageName());
-        MetaioDebug.log("SeaMensor Account: "+seamensorAccount);
-        MetaioDebug.log("User Number: "+userNumber);
-        MetaioDebug.log("User Name: "+userName);
 
-        // Enable Dropbox
-        mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
-        if (!mDbxAcctMgr.hasLinkedAccount())
-        {
-            MetaioDebug.log("Requesting link to DROPBOX");
-            mDbxAcctMgr.startLink((Activity)this, REQUEST_LINK_TO_DBX);
-        }
-        else
-        {
-            MetaioDebug.log("Already linked to DROPBOX - starting file system");
-        }
+        sharedPref = this.getSharedPreferences("com.mymensor.app", Context.MODE_PRIVATE);
+
+        s3Client = CognitoSyncClientManager.getInstance();
+
+        transferUtility = AwsUtil.getTransferUtility(s3Client, getApplicationContext());
+
+
+
+        seamensorAccount = getIntent().getExtras().get("seamensoraccount").toString();
+        dciNumber = Integer.parseInt(getIntent().getExtras().get("dcinumber").toString());
+        qtyVps = Short.parseShort(getIntent().getExtras().get("QtyVps").toString());
+        sntpTime = Long.parseLong(getIntent().getExtras().get("sntpTime").toString());
+        sntpTimeReference = Long.parseLong(getIntent().getExtras().get("sntpReference").toString());
+        clockSetSuccess = Boolean.parseBoolean(getIntent().getExtras().get("clockSetSuccess").toString());
+        MetaioDebug.log("SeaMensor Account: "+seamensorAccount);
 
         mSDKCallback = new MetaioSDKCallbackHandler();
         // Load VPs data
         vpIndex = 1;
-        camCalDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"cam"+"/";
-        descvpDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"dsc"+"/"+"descvp";
-        markervpDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"mrk"+"/"+"markervp";
-        trackingDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"trk"+"/";
-        vpsDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/";
-        vpsConfiguredDropboxPath = seamensorAccount+"/"+"chk"+"/"+dciNumber+"/";
-        //loadDescVps();
-        loadConfigurationFile();
-        //saveSuperIdMarkersTrackingConfig();
+        descvpRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"dsc"+"/";
+        markervpRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"mrk"+"/";
+        trackingRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"trk"+"/";
+        vpsRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/";
+        vpsConfiguredRemotePath = seamensorAccount+"/"+"chk"+"/"+dciNumber+"/";
 
+        File trackingConfigFile = new File(getApplicationContext().getFilesDir(),superIdMarkersTrackingConfigFileName);
+
+        if (!trackingConfigFile.exists()){
+            saveSuperIdMarkersTrackingConfig();
+        }
+
+        loadConfigurationFile();
     }
 
 
@@ -318,46 +330,6 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
     }
 
 
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == REQUEST_LINK_TO_DBX)
-        {
-            if (resultCode == Activity.RESULT_OK)
-            {
-                MetaioDebug.log("Link to DROPBOX OK");
-            }
-            else
-            {
-                MetaioDebug.log("Link to DROPBOX FAILED");
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        Toast.makeText(getBaseContext(), getString(R.string.dropboxlinkerror), Toast.LENGTH_LONG).show();
-                    }
-                });
-                finish();
-            }
-        }
-        else
-        {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    /**
-     @Override
-     protected void onPause()
-     {
-     super.onPause();
-     MetaioDebug.log("ARViewActivity.onPause SMC");
-
-     } */
-
     @Override
     protected void onResume()
     {
@@ -366,110 +338,11 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
         setVpsChecked();
     }
 
+
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
-
-        // Saving vpConfigured state when leaving the app.
-        try
-        {
-            // Getting a file path for vps checked config XML file
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,vpsConfiguredDropboxPath+vpsConfiguredConfigFileDropbox)))
-            {
-                DbxFile vpsCheckedConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,vpsConfiguredDropboxPath+vpsConfiguredConfigFileDropbox));
-                try
-                {
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","VpsConfigured");
-                    xmlSerializer.text("\n");
-                    for (int i=0; i<qtyVps; i++)
-                    {
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Vp");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpNumber");
-                        xmlSerializer.text(Short.toString(vpNumber[i]));
-                        xmlSerializer.endTag("","VpNumber");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Configured");
-                        if (vpAcquiredTimeSMCMillis[i]==0) vpAcquiredTimeSMCMillis[i]=System.currentTimeMillis();
-                        xmlSerializer.text(Long.toString(vpAcquiredTimeSMCMillis[i]));
-                        xmlSerializer.endTag("","Configured");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Vp");
-                        xmlSerializer.text("\n");
-                    }
-                    xmlSerializer.endTag("","VpsConfigured");
-                    xmlSerializer.endDocument();
-                    vpsCheckedConfigFile.writeString(writer.toString());
-                }
-                finally
-                {
-                    vpsCheckedConfigFile.close();
-                }
-            }
-            else
-            {
-                dbxFs.delete(new DbxPath(DbxPath.ROOT,vpsConfiguredDropboxPath+vpsConfiguredConfigFileDropbox));
-                DbxFile vpsCheckedConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,vpsConfiguredDropboxPath+vpsConfiguredConfigFileDropbox));
-                try
-                {
-                    MetaioDebug.log("Deleting and saving a new vpsCheckedConfigFile to Dropbox");
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","VpsConfigured");
-                    xmlSerializer.text("\n");
-                    for (int i=0; i<qtyVps; i++)
-                    {
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Vp");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpNumber");
-                        xmlSerializer.text(Short.toString(vpNumber[i]));
-                        xmlSerializer.endTag("","VpNumber");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Configured");
-                        if (vpAcquiredTimeSMCMillis[i]==0) vpAcquiredTimeSMCMillis[i]=System.currentTimeMillis();
-                        xmlSerializer.text(Long.toString(vpAcquiredTimeSMCMillis[i]));
-                        xmlSerializer.endTag("","Configured");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Vp");
-                        xmlSerializer.text("\n");
-                    }
-                    xmlSerializer.endTag("","VpsConfigured");
-                    xmlSerializer.endDocument();
-                    vpsCheckedConfigFile.writeString(writer.toString());
-                }
-                finally
-                {
-                    vpsCheckedConfigFile.close();
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            MetaioDebug.log(Log.ERROR, "Vps configured state data saving to Dropbox failed, see stack trace");
-        }
         mSDKCallback.delete();
         mSDKCallback = null;
     }
@@ -1043,995 +916,518 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
         try
         {
             // Getting a file path for tracking configuration XML file
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,trackingDropboxPath+trackingConfigFileName)))
+
+
+            XmlSerializer xmlSerializer = Xml.newSerializer();
+            StringWriter writer = new StringWriter();
+            xmlSerializer.setOutput(writer);
+            xmlSerializer.startDocument("UTF-8", true);
+            xmlSerializer.text("\n");
+            xmlSerializer.startTag("","TrackingData");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Sensors");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Sensor");
+            xmlSerializer.attribute("", "Type", "FeatureBasedSensorSource");
+            xmlSerializer.attribute("", "Subtype", "Fast");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","SensorID");
+            xmlSerializer.text("FeatureTracking1");
+            xmlSerializer.endTag("","SensorID");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Parameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","FeatureDescriptorAlignment");
+            xmlSerializer.text("regular");
+            xmlSerializer.endTag("","FeatureDescriptorAlignment");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","MaxObjectsToDetectPerFrame");
+            xmlSerializer.text("5");
+            xmlSerializer.endTag("","MaxObjectsToDetectPerFrame");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","MaxObjectsToTrackInParallel");
+            xmlSerializer.text("1");
+            xmlSerializer.endTag("","MaxObjectsToTrackInParallel");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","SimilarityThreshold");
+            xmlSerializer.text("0.7");
+            xmlSerializer.endTag("","SimilarityThreshold");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Parameters");
+            for (int i=1; i<(qtyVps+1); i++)
             {
-                DbxFile trackingConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,trackingDropboxPath+trackingConfigFileName));
-                try
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCOS");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCosID");
+                xmlSerializer.text("Patch"+i);
+                xmlSerializer.endTag("","SensorCosID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","ReferenceImage");
+                xmlSerializer.attribute("", "WidthMM", Short.toString(vpMarkerlessMarkerWidth[i-1]));
+                xmlSerializer.attribute("", "HeigthMM", Short.toString(vpMarkerlessMarkerHeigth[i-1]));
+                if (vpIsSuperSingle[i-1])
                 {
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","TrackingData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensor");
-                    xmlSerializer.attribute("", "Type", "FeatureBasedSensorSource");
-                    xmlSerializer.attribute("", "Subtype", "Fast");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SensorID");
-                    xmlSerializer.text("FeatureTracking1");
-                    xmlSerializer.endTag("","SensorID");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","FeatureDescriptorAlignment");
-                    xmlSerializer.text("regular");
-                    xmlSerializer.endTag("","FeatureDescriptorAlignment");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MaxObjectsToDetectPerFrame");
-                    xmlSerializer.text("5");
-                    xmlSerializer.endTag("","MaxObjectsToDetectPerFrame");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MaxObjectsToTrackInParallel");
-                    xmlSerializer.text("1");
-                    xmlSerializer.endTag("","MaxObjectsToTrackInParallel");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SimilarityThreshold");
-                    xmlSerializer.text("0.7");
-                    xmlSerializer.endTag("","SimilarityThreshold");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCOS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Patch"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","ReferenceImage");
-                        xmlSerializer.attribute("", "WidthMM", Short.toString(vpMarkerlessMarkerWidth[i-1]));
-                        xmlSerializer.attribute("", "HeigthMM", Short.toString(vpMarkerlessMarkerHeigth[i-1]));
-                        if (vpIsSuperSingle[i-1])
-                        {
-                            xmlSerializer.text(seaMensorMarker);
-                        }
-                        else
-                        {
-                            xmlSerializer.text("markervp"+i+".jpg");
-                        }
-                        xmlSerializer.endTag("","ReferenceImage");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SimilarityThreshold");
-                        xmlSerializer.text("0.7");
-                        xmlSerializer.endTag("","SimilarityThreshold");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorCOS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensor");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Connections");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Name");
-                        xmlSerializer.text("MarkerlessCOS"+i);
-                        xmlSerializer.endTag("","Name");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Fuser");
-                        xmlSerializer.attribute("", "Type", "SmoothingFuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("10");
-                        xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaTranslation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","AlphaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaTranslation");
-                        xmlSerializer.text("0.5");
-                        xmlSerializer.endTag("","GammaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaRotation");
-                        xmlSerializer.text("0.5");
-                        xmlSerializer.endTag("","AlphaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaRotation");
-                        xmlSerializer.text("0.5");
-                        xmlSerializer.endTag("","GammaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","ContinueLostTrackingWithOrientationSensor");
-                        xmlSerializer.text("false");
-                        xmlSerializer.endTag("","ContinueLostTrackingWithOrientationSensor");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Fuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorID");
-                        xmlSerializer.text("FeatureTracking1");
-                        xmlSerializer.endTag("","SensorID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Patch"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Connections");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","TrackingData");
-                    xmlSerializer.endDocument();
-                    trackingConfigFile.writeString(writer.toString());
+                    xmlSerializer.text(seaMensorMarker);
                 }
-                finally
+                else
                 {
-                    trackingConfigFile.close();
+                    xmlSerializer.text("markervp"+i+".jpg");
                 }
+                xmlSerializer.endTag("","ReferenceImage");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SimilarityThreshold");
+                xmlSerializer.text("0.7");
+                xmlSerializer.endTag("","SimilarityThreshold");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","SensorCOS");
             }
-            else
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Sensor");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Sensors");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Connections");
+            for (int i=1; i<(qtyVps+1); i++)
             {
-                dbxFs.delete(new DbxPath(DbxPath.ROOT,trackingDropboxPath+trackingConfigFileName));
-                DbxFile trackingConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,trackingDropboxPath+trackingConfigFileName));
-                try
-                {
-                    MetaioDebug.log("Deleting and saving a new TrackingDataMarkless file to Dropbox");
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","TrackingData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensor");
-                    xmlSerializer.attribute("", "Type", "FeatureBasedSensorSource");
-                    xmlSerializer.attribute("", "Subtype", "Fast");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SensorID");
-                    xmlSerializer.text("FeatureTracking1");
-                    xmlSerializer.endTag("","SensorID");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","FeatureDescriptorAlignment");
-                    xmlSerializer.text("regular");
-                    xmlSerializer.endTag("","FeatureDescriptorAlignment");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MaxObjectsToDetectPerFrame");
-                    xmlSerializer.text("5");
-                    xmlSerializer.endTag("","MaxObjectsToDetectPerFrame");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MaxObjectsToTrackInParallel");
-                    xmlSerializer.text("1");
-                    xmlSerializer.endTag("","MaxObjectsToTrackInParallel");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SimilarityThreshold");
-                    xmlSerializer.text("0.7");
-                    xmlSerializer.endTag("","SimilarityThreshold");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCOS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Patch"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","ReferenceImage");
-                        xmlSerializer.attribute("", "WidthMM", Short.toString(vpMarkerlessMarkerWidth[i-1]));
-                        xmlSerializer.attribute("", "HeigthMM", Short.toString(vpMarkerlessMarkerHeigth[i-1]));
-                        if (vpIsSuperSingle[i-1])
-                        {
-                            xmlSerializer.text(seaMensorMarker);
-                        }
-                        else
-                        {
-                            xmlSerializer.text("markervp"+i+".jpg");
-                        }
-                        xmlSerializer.endTag("","ReferenceImage");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SimilarityThreshold");
-                        xmlSerializer.text("0.7");
-                        xmlSerializer.endTag("","SimilarityThreshold");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorCOS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensor");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Connections");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Name");
-                        xmlSerializer.text("MarkerlessCOS"+i);
-                        xmlSerializer.endTag("","Name");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Fuser");
-                        xmlSerializer.attribute("", "Type", "SmoothingFuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("10");
-                        xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaTranslation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","AlphaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaTranslation");
-                        xmlSerializer.text("0.5");
-                        xmlSerializer.endTag("","GammaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaRotation");
-                        xmlSerializer.text("0.5");
-                        xmlSerializer.endTag("","AlphaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaRotation");
-                        xmlSerializer.text("0.5");
-                        xmlSerializer.endTag("","GammaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","ContinueLostTrackingWithOrientationSensor");
-                        xmlSerializer.text("false");
-                        xmlSerializer.endTag("","ContinueLostTrackingWithOrientationSensor");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Fuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorID");
-                        xmlSerializer.text("FeatureTracking1");
-                        xmlSerializer.endTag("","SensorID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Patch"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Connections");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","TrackingData");
-                    xmlSerializer.endDocument();
-                    trackingConfigFile.writeString(writer.toString());
-                }
-                finally
-                {
-                    trackingConfigFile.close();
-                }
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","COS");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Name");
+                xmlSerializer.text("MarkerlessCOS"+i);
+                xmlSerializer.endTag("","Name");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Fuser");
+                xmlSerializer.attribute("", "Type", "SmoothingFuser");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
+                xmlSerializer.text("10");
+                xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","AlphaTranslation");
+                xmlSerializer.text("0.8");
+                xmlSerializer.endTag("","AlphaTranslation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","GammaTranslation");
+                xmlSerializer.text("0.5");
+                xmlSerializer.endTag("","GammaTranslation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","AlphaRotation");
+                xmlSerializer.text("0.5");
+                xmlSerializer.endTag("","AlphaRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","GammaRotation");
+                xmlSerializer.text("0.5");
+                xmlSerializer.endTag("","GammaRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","ContinueLostTrackingWithOrientationSensor");
+                xmlSerializer.text("false");
+                xmlSerializer.endTag("","ContinueLostTrackingWithOrientationSensor");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Fuser");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorSource");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorID");
+                xmlSerializer.text("FeatureTracking1");
+                xmlSerializer.endTag("","SensorID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCosID");
+                xmlSerializer.text("Patch"+i);
+                xmlSerializer.endTag("","SensorCosID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","HandEyeCalibration");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","W");
+                xmlSerializer.text("1");
+                xmlSerializer.endTag("","W");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","HandEyeCalibration");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","COSOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","W");
+                xmlSerializer.text("1");
+                xmlSerializer.endTag("","W");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","COSOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","SensorSource");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","COS");
             }
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Connections");
+            xmlSerializer.text("\n");
+            xmlSerializer.endTag("","TrackingData");
+            xmlSerializer.endDocument();
+            String trackingFileContents = writer.toString();
+            File trackingConfigFile = new File(getApplicationContext().getFilesDir(),trackingConfigFileName);
+            FileUtils.writeStringToFile(trackingConfigFile,trackingFileContents, UTF_8);
+            ObjectMetadata myObjectMetadata = new ObjectMetadata();
+            //create a map to store user metadata
+            Map<String, String> userMetadata = new HashMap<String,String>();
+            userMetadata.put("TimeStamp", Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference).toString());
+            myObjectMetadata.setUserMetadata(userMetadata);
+            TransferObserver observer = Utils.storeRemoteFile(transferUtility, (trackingRemotePath + trackingConfigFileName), Constants.BUCKET_NAME, trackingConfigFile, myObjectMetadata);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (state.equals(TransferState.COMPLETED)) {
+                        Log.d(TAG,"TransferListener="+state.toString());
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    if (bytesTotal>0){
+                        int percentage = (int) (bytesCurrent / bytesTotal * 100);
+                    }
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    Log.e(TAG, "saveTrackingConfig(): trackingConfigFile saving failed, see stack trace"+ ex.toString());
+                }
+            });
         }
         catch (Exception e)
         {
@@ -2045,397 +1441,220 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
         // Saving Vps Data configuration.
         try
         {
-            // Getting a file path for Vps Data XML file
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,vpsDropboxPath+vpsConfigFileDropbox)))
+            XmlSerializer xmlSerializer = Xml.newSerializer();
+            StringWriter writer = new StringWriter();
+            xmlSerializer.setOutput(writer);
+            xmlSerializer.startDocument("UTF-8", true);
+            xmlSerializer.text("\n");
+            xmlSerializer.startTag("","VpsData");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Parameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","ShipId");
+            xmlSerializer.text(Short.toString(shipId));
+            xmlSerializer.endTag("","ShipId");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","FrequencyUnit");
+            xmlSerializer.text(frequencyUnit);
+            xmlSerializer.endTag("","FrequencyUnit");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","FrequencyValue");
+            xmlSerializer.text(Integer.toString(frequencyValue));
+            xmlSerializer.endTag("","FrequencyValue");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","QtyVps");
+            xmlSerializer.text(Short.toString(qtyVps));
+            xmlSerializer.endTag("","QtyVps");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","TolerancePosition");
+            xmlSerializer.text(Float.toString(tolerancePosition));
+            xmlSerializer.endTag("","TolerancePosition");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","ToleranceRotation");
+            xmlSerializer.text(Float.toString(toleranceRotation));
+            xmlSerializer.endTag("","ToleranceRotation");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Parameters");
+            for (int i=1; i<(qtyVps+1); i++)
             {
-                DbxFile vpsConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,vpsDropboxPath+vpsConfigFileDropbox));
-                try
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Vp");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpNumber");
+                xmlSerializer.text(Integer.toString(i));
+                xmlSerializer.endTag("","VpNumber");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpXCameraDistance");
+                xmlSerializer.text(Integer.toString(vpXCameraDistance[i-1]));
+                xmlSerializer.endTag("","VpXCameraDistance");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpYCameraDistance");
+                xmlSerializer.text(Integer.toString(vpYCameraDistance[i-1]));
+                xmlSerializer.endTag("","VpYCameraDistance");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpZCameraDistance");
+                xmlSerializer.text(Integer.toString(vpZCameraDistance[i-1]));
+                xmlSerializer.endTag("","VpZCameraDistance");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpXCameraRotation");
+                xmlSerializer.text(Integer.toString(vpXCameraRotation[i-1]));
+                xmlSerializer.endTag("","VpXCameraRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpYCameraRotation");
+                xmlSerializer.text(Integer.toString(vpYCameraRotation[i-1]));
+                xmlSerializer.endTag("","VpYCameraRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpZCameraRotation");
+                xmlSerializer.text(Integer.toString(vpZCameraRotation[i-1]));
+                xmlSerializer.endTag("","VpZCameraRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpLocDescription");
+                xmlSerializer.text(vpLocationDesText[i-1]);
+                xmlSerializer.endTag("","VpLocDescription");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpMarkerlessMarkerWidth");
+                xmlSerializer.text(Short.toString(vpMarkerlessMarkerWidth[i-1]));
+                xmlSerializer.endTag("","VpMarkerlessMarkerWidth");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpMarkerlessMarkerHeigth");
+                xmlSerializer.text(Short.toString(vpMarkerlessMarkerHeigth[i-1]));
+                xmlSerializer.endTag("","VpMarkerlessMarkerHeigth");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpIsAmbiguous");
+                xmlSerializer.text(Boolean.toString(vpIsAmbiguous[i-1]));
+                xmlSerializer.endTag("","VpIsAmbiguous");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpFlashTorchIsOn");
+                xmlSerializer.text(Boolean.toString(vpFlashTorchIsOn[i-1]));
+                xmlSerializer.endTag("","VpFlashTorchIsOn");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpIsSuperSingle");
+                xmlSerializer.text(Boolean.toString(vpIsSuperSingle[i-1]));
+                xmlSerializer.endTag("","VpIsSuperSingle");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpSuperIdIs20mm");
+                xmlSerializer.text(Boolean.toString(vpSuperIdIs20mm[i-1]));
+                xmlSerializer.endTag("","VpSuperIdIs20mm");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","vpSuperIdIs100mm");
+                xmlSerializer.text(Boolean.toString(vpSuperIdIs100mm[i-1]));
+                xmlSerializer.endTag("","vpSuperIdIs100mm");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","VpSuperMarkerId");
+                if (vpIsSuperSingle[i-1])
                 {
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","VpsData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ShipId");
-                    xmlSerializer.text(Short.toString(shipId));
-                    xmlSerializer.endTag("","ShipId");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","FrequencyUnit");
-                    xmlSerializer.text(frequencyUnit);
-                    xmlSerializer.endTag("","FrequencyUnit");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","FrequencyValue");
-                    xmlSerializer.text(Integer.toString(frequencyValue));
-                    xmlSerializer.endTag("","FrequencyValue");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","QtyVps");
-                    xmlSerializer.text(Short.toString(qtyVps));
-                    xmlSerializer.endTag("","QtyVps");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","TolerancePosition");
-                    xmlSerializer.text(Float.toString(tolerancePosition));
-                    xmlSerializer.endTag("","TolerancePosition");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ToleranceRotation");
-                    xmlSerializer.text(Float.toString(toleranceRotation));
-                    xmlSerializer.endTag("","ToleranceRotation");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Vp");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpNumber");
-                        xmlSerializer.text(Integer.toString(i));
-                        xmlSerializer.endTag("","VpNumber");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpXCameraDistance");
-                        xmlSerializer.text(Integer.toString(vpXCameraDistance[i-1]));
-                        xmlSerializer.endTag("","VpXCameraDistance");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpYCameraDistance");
-                        xmlSerializer.text(Integer.toString(vpYCameraDistance[i-1]));
-                        xmlSerializer.endTag("","VpYCameraDistance");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpZCameraDistance");
-                        xmlSerializer.text(Integer.toString(vpZCameraDistance[i-1]));
-                        xmlSerializer.endTag("","VpZCameraDistance");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpXCameraRotation");
-                        xmlSerializer.text(Integer.toString(vpXCameraRotation[i-1]));
-                        xmlSerializer.endTag("","VpXCameraRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpYCameraRotation");
-                        xmlSerializer.text(Integer.toString(vpYCameraRotation[i-1]));
-                        xmlSerializer.endTag("","VpYCameraRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpZCameraRotation");
-                        xmlSerializer.text(Integer.toString(vpZCameraRotation[i-1]));
-                        xmlSerializer.endTag("","VpZCameraRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpLocDescription");
-                        xmlSerializer.text(vpLocationDesText[i-1]);
-                        xmlSerializer.endTag("","VpLocDescription");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpMarkerlessMarkerWidth");
-                        xmlSerializer.text(Short.toString(vpMarkerlessMarkerWidth[i-1]));
-                        xmlSerializer.endTag("","VpMarkerlessMarkerWidth");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpMarkerlessMarkerHeigth");
-                        xmlSerializer.text(Short.toString(vpMarkerlessMarkerHeigth[i-1]));
-                        xmlSerializer.endTag("","VpMarkerlessMarkerHeigth");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpIsAmbiguous");
-                        xmlSerializer.text(Boolean.toString(vpIsAmbiguous[i-1]));
-                        xmlSerializer.endTag("","VpIsAmbiguous");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpFlashTorchIsOn");
-                        xmlSerializer.text(Boolean.toString(vpFlashTorchIsOn[i-1]));
-                        xmlSerializer.endTag("","VpFlashTorchIsOn");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpIsSuperSingle");
-                        xmlSerializer.text(Boolean.toString(vpIsSuperSingle[i-1]));
-                        xmlSerializer.endTag("","VpIsSuperSingle");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpSuperIdIs20mm");
-                        xmlSerializer.text(Boolean.toString(vpSuperIdIs20mm[i-1]));
-                        xmlSerializer.endTag("","VpSuperIdIs20mm");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","vpSuperIdIs100mm");
-                        xmlSerializer.text(Boolean.toString(vpSuperIdIs100mm[i-1]));
-                        xmlSerializer.endTag("","vpSuperIdIs100mm");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpSuperMarkerId");
-                        if (vpIsSuperSingle[i-1])
-                        {
-                            xmlSerializer.text(Integer.toString(vpSuperMarkerId[i-1]));
-                        }
-                        else
-                        {
-                            xmlSerializer.text(Integer.toString(0));
-                        }
-                        xmlSerializer.endTag("","VpSuperMarkerId");
-                        if (vpFrequencyUnit[i-1]!=frequencyUnit)
-                        {
-                            xmlSerializer.text("\n");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.startTag("","VpFrequencyUnit");
-                            xmlSerializer.text(vpFrequencyUnit[i-1]);
-                            xmlSerializer.endTag("","VpFrequencyUnit");
-                        }
-                        if (vpFrequencyValue[i-1]!=frequencyValue)
-                        {
-                            xmlSerializer.text("\n");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.startTag("","VpFrequencyValue");
-                            xmlSerializer.text(Long.toString(vpFrequencyValue[i-1]));
-                            xmlSerializer.endTag("","VpFrequencyValue");
-                        }
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Vp");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","VpsData");
-                    xmlSerializer.endDocument();
-                    vpsConfigFile.writeString(writer.toString());
+                    xmlSerializer.text(Integer.toString(vpSuperMarkerId[i-1]));
                 }
-                finally
+                else
                 {
-                    vpsConfigFile.close();
+                    xmlSerializer.text(Integer.toString(0));
                 }
+                xmlSerializer.endTag("","VpSuperMarkerId");
+                if (vpFrequencyUnit[i-1]!=frequencyUnit)
+                {
+                    xmlSerializer.text("\n");
+                    xmlSerializer.text("\t");
+                    xmlSerializer.text("\t");
+                    xmlSerializer.startTag("","VpFrequencyUnit");
+                    xmlSerializer.text(vpFrequencyUnit[i-1]);
+                    xmlSerializer.endTag("","VpFrequencyUnit");
+                }
+                if (vpFrequencyValue[i-1]!=frequencyValue)
+                {
+                    xmlSerializer.text("\n");
+                    xmlSerializer.text("\t");
+                    xmlSerializer.text("\t");
+                    xmlSerializer.startTag("","VpFrequencyValue");
+                    xmlSerializer.text(Long.toString(vpFrequencyValue[i-1]));
+                    xmlSerializer.endTag("","VpFrequencyValue");
+                }
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Vp");
             }
-            else
-            {
-                dbxFs.delete(new DbxPath(DbxPath.ROOT,vpsDropboxPath+vpsConfigFileDropbox));
-                DbxFile vpsConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,vpsDropboxPath+vpsConfigFileDropbox));
-                try
-                {
-                    MetaioDebug.log("Deleting and saving a new Vps Data file to Dropbox");
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","VpsData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ShipId");
-                    xmlSerializer.text(Short.toString(shipId));
-                    xmlSerializer.endTag("","ShipId");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","FrequencyUnit");
-                    xmlSerializer.text(frequencyUnit);
-                    xmlSerializer.endTag("","FrequencyUnit");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","FrequencyValue");
-                    xmlSerializer.text(Integer.toString(frequencyValue));
-                    xmlSerializer.endTag("","FrequencyValue");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","QtyVps");
-                    xmlSerializer.text(Short.toString(qtyVps));
-                    xmlSerializer.endTag("","QtyVps");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","TolerancePosition");
-                    xmlSerializer.text(Float.toString(tolerancePosition));
-                    xmlSerializer.endTag("","TolerancePosition");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ToleranceRotation");
-                    xmlSerializer.text(Float.toString(toleranceRotation));
-                    xmlSerializer.endTag("","ToleranceRotation");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "Vp");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpNumber");
-                        xmlSerializer.text(Integer.toString(i));
-                        xmlSerializer.endTag("", "VpNumber");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpXCameraDistance");
-                        xmlSerializer.text(Integer.toString(vpXCameraDistance[i-1]));
-                        xmlSerializer.endTag("", "VpXCameraDistance");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpYCameraDistance");
-                        xmlSerializer.text(Integer.toString(vpYCameraDistance[i-1]));
-                        xmlSerializer.endTag("", "VpYCameraDistance");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpZCameraDistance");
-                        xmlSerializer.text(Integer.toString(vpZCameraDistance[i-1]));
-                        xmlSerializer.endTag("", "VpZCameraDistance");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpXCameraRotation");
-                        xmlSerializer.text(Integer.toString(vpXCameraRotation[i-1]));
-                        xmlSerializer.endTag("", "VpXCameraRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpYCameraRotation");
-                        xmlSerializer.text(Integer.toString(vpYCameraRotation[i-1]));
-                        xmlSerializer.endTag("", "VpYCameraRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpZCameraRotation");
-                        xmlSerializer.text(Integer.toString(vpZCameraRotation[i-1]));
-                        xmlSerializer.endTag("", "VpZCameraRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("", "VpLocDescription");
-                        xmlSerializer.text(vpLocationDesText[i-1]);
-                        xmlSerializer.endTag("", "VpLocDescription");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpMarkerlessMarkerWidth");
-                        xmlSerializer.text(Short.toString(vpMarkerlessMarkerWidth[i-1]));
-                        xmlSerializer.endTag("","VpMarkerlessMarkerWidth");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpMarkerlessMarkerHeigth");
-                        xmlSerializer.text(Short.toString(vpMarkerlessMarkerHeigth[i-1]));
-                        xmlSerializer.endTag("","VpMarkerlessMarkerHeigth");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpIsAmbiguous");
-                        xmlSerializer.text(Boolean.toString(vpIsAmbiguous[i-1]));
-                        xmlSerializer.endTag("","VpIsAmbiguous");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpFlashTorchIsOn");
-                        xmlSerializer.text(Boolean.toString(vpFlashTorchIsOn[i-1]));
-                        xmlSerializer.endTag("","VpFlashTorchIsOn");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpIsSuperSingle");
-                        xmlSerializer.text(Boolean.toString(vpIsSuperSingle[i-1]));
-                        xmlSerializer.endTag("","VpIsSuperSingle");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpSuperIdIs20mm");
-                        xmlSerializer.text(Boolean.toString(vpSuperIdIs20mm[i-1]));
-                        xmlSerializer.endTag("","VpSuperIdIs20mm");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","vpSuperIdIs100mm");
-                        xmlSerializer.text(Boolean.toString(vpSuperIdIs100mm[i-1]));
-                        xmlSerializer.endTag("","vpSuperIdIs100mm");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","VpSuperMarkerId");
-                        if (vpIsSuperSingle[i-1])
-                        {
-                            xmlSerializer.text(Integer.toString(vpSuperMarkerId[i-1]));
-                        }
-                        else
-                        {
-                            xmlSerializer.text(Integer.toString(0));
-                        }
+            xmlSerializer.text("\n");
+            xmlSerializer.endTag("","VpsData");
+            xmlSerializer.endDocument();
+            String vpsConfigFileContents = writer.toString();
+            File vpsConfigFile = new File(getApplicationContext().getFilesDir(),vpsConfigFileDropbox);
+            FileUtils.writeStringToFile(vpsConfigFile,vpsConfigFileContents, UTF_8);
+            ObjectMetadata myObjectMetadata = new ObjectMetadata();
+            //create a map to store user metadata
+            Map<String, String> userMetadata = new HashMap<String,String>();
+            userMetadata.put("TimeStamp", Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference).toString());
+            myObjectMetadata.setUserMetadata(userMetadata);
+            TransferObserver observer = Utils.storeRemoteFile(transferUtility, (vpsRemotePath + vpsConfigFileDropbox), Constants.BUCKET_NAME, vpsConfigFile, myObjectMetadata);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (state.equals(TransferState.COMPLETED)) {
+                        Log.d(TAG,"TransferListener="+state.toString());
+                    }
+                }
 
-                        xmlSerializer.endTag("","VpSuperMarkerId");
-                        if (vpFrequencyUnit[i-1]!=frequencyUnit)
-                        {
-                            xmlSerializer.text("\n");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.startTag("","VpFrequencyUnit");
-                            xmlSerializer.text(vpFrequencyUnit[i-1]);
-                            xmlSerializer.endTag("","VpFrequencyUnit");
-                        }
-                        if (vpFrequencyValue[i-1]!=frequencyValue)
-                        {
-                            xmlSerializer.text("\n");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.text("\t");
-                            xmlSerializer.startTag("","VpFrequencyValue");
-                            xmlSerializer.text(Long.toString(vpFrequencyValue[i-1]));
-                            xmlSerializer.endTag("","VpFrequencyValue");
-                        }
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Vp");
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    if (bytesTotal>0){
+                        int percentage = (int) (bytesCurrent / bytesTotal * 100);
                     }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","VpsData");
-                    xmlSerializer.endDocument();
-                    vpsConfigFile.writeString(writer.toString());
+
+                    //Display percentage transfered to user
                 }
-                finally
-                {
-                    vpsConfigFile.close();
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    Log.e(TAG, "saveVpsData(): vpsConfigFile saving failed, see stack trace"+ ex.toString());
                 }
-            }
+
+            });
+
         }
         catch (Exception e)
         {
@@ -2452,1055 +1671,548 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
 
         try
         {
-            // Getting a file path for ID Markers tracking configuration XML file
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,trackingDropboxPath+idMarkersTrackingConfigFileName)))
+            XmlSerializer xmlSerializer = Xml.newSerializer();
+            StringWriter writer = new StringWriter();
+            xmlSerializer.setOutput(writer);
+            xmlSerializer.startDocument("UTF-8", true);
+            xmlSerializer.text("\n");
+            xmlSerializer.startTag("","TrackingData");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Sensors");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Sensor");
+            xmlSerializer.attribute("", "Type", "MarkerBasedSensorSource");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","SensorID");
+            xmlSerializer.text("MarkerTracking1");
+            xmlSerializer.endTag("","SensorID");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Parameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","MarkerTrackingParameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","TrackingQuality");
+            xmlSerializer.text("robust");
+            xmlSerializer.endTag("","TrackingQuality");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","ThresholdOffset");
+            xmlSerializer.text("120");
+            xmlSerializer.endTag("","ThresholdOffset");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","NumberOfSearchIterations");
+            xmlSerializer.text("5");
+            xmlSerializer.endTag("","NumberOfSearchIterations");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","MarkerTrackingParameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Parameters");
+            for (int i=1; i<(qtyVps+1); i++)
             {
-                DbxFile trackingConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,trackingDropboxPath+idMarkersTrackingConfigFileName));
-                try
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCOS");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCosID");
+                xmlSerializer.text("Marker"+i);
+                xmlSerializer.endTag("","SensorCosID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","MarkerParameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Size");
+                if ((!vpSuperIdIs20mm[i-1])&&(!vpSuperIdIs100mm[i-1]))
                 {
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","TrackingData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensor");
-                    xmlSerializer.attribute("", "Type", "MarkerBasedSensorSource");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SensorID");
-                    xmlSerializer.text("MarkerTracking1");
-                    xmlSerializer.endTag("","SensorID");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","TrackingQuality");
-                    xmlSerializer.text("robust");
-                    xmlSerializer.endTag("","TrackingQuality");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ThresholdOffset");
-                    xmlSerializer.text("120");
-                    xmlSerializer.endTag("","ThresholdOffset");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("5");
-                    xmlSerializer.endTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCOS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Size");
-                        if ((!vpSuperIdIs20mm[i-1])&&(!vpSuperIdIs100mm[i-1]))
-                        {
-                            xmlSerializer.text(Integer.toString(idMarkerStdSize));
-                        }
-                        else
-                        {
-                            if (vpSuperIdIs20mm[i-1])
-                            {
-                                xmlSerializer.text("20");
-                            }
-                            else
-                            {
-                                if (vpSuperIdIs100mm[i-1]) xmlSerializer.text("100");
-                            }
-                        }
-                        xmlSerializer.endTag("","Size");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MatrixID");
-                        if (vpIsSuperSingle[i-1])
-                        {
-                            xmlSerializer.text(Integer.toString(vpSuperMarkerId[i-1]));
-                        }
-                        else
-                        {
-                            xmlSerializer.text(Integer.toString(i));
-                        }
-                        xmlSerializer.endTag("","MatrixID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorCOS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensor");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Connections");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Name");
-                        xmlSerializer.text("COS"+i);
-                        xmlSerializer.endTag("","Name");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Fuser");
-                        xmlSerializer.attribute("", "Type", "SmoothingFuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","AlphaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","AlphaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","GammaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","GammaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("3");
-                        xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Fuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorSource");
-                        //xmlSerializer.attribute("", "trigger", "1");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorID");
-                        xmlSerializer.text("Markertracking1");
-                        xmlSerializer.endTag("","SensorID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Connections");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","TrackingData");
-                    xmlSerializer.endDocument();
-                    trackingConfigFile.writeString(writer.toString());
+                    xmlSerializer.text(Integer.toString(idMarkerStdSize));
                 }
-                finally
+                else
                 {
-                    trackingConfigFile.close();
+                    if (vpSuperIdIs20mm[i-1])
+                    {
+                        xmlSerializer.text("20");
+                    }
+                    else
+                    {
+                        if (vpSuperIdIs100mm[i-1]) xmlSerializer.text("100");
+                    }
                 }
+                xmlSerializer.endTag("","Size");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","MatrixID");
+                if (vpIsSuperSingle[i-1])
+                {
+                    xmlSerializer.text(Integer.toString(vpSuperMarkerId[i-1]));
+                }
+                else
+                {
+                    xmlSerializer.text(Integer.toString(i));
+                }
+                xmlSerializer.endTag("","MatrixID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","MarkerParameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","SensorCOS");
             }
-            else
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Sensor");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Sensors");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Connections");
+            for (int i=1; i<(qtyVps+1); i++)
             {
-                dbxFs.delete(new DbxPath(DbxPath.ROOT,trackingDropboxPath+idMarkersTrackingConfigFileName));
-                DbxFile trackingConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,trackingDropboxPath+idMarkersTrackingConfigFileName));
-                try
-                {
-                    MetaioDebug.log("Deleting and saving a new ID Tracking Data file to Dropbox");
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","TrackingData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensor");
-                    xmlSerializer.attribute("", "Type", "MarkerBasedSensorSource");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SensorID");
-                    xmlSerializer.text("MarkerTracking1");
-                    xmlSerializer.endTag("","SensorID");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","TrackingQuality");
-                    xmlSerializer.text("robust");
-                    xmlSerializer.endTag("","TrackingQuality");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ThresholdOffset");
-                    xmlSerializer.text("120");
-                    xmlSerializer.endTag("","ThresholdOffset");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("5");
-                    xmlSerializer.endTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCOS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Size");
-                        if ((!vpSuperIdIs20mm[i-1])&&(!vpSuperIdIs100mm[i-1]))
-                        {
-                            xmlSerializer.text(Integer.toString(idMarkerStdSize));
-                        }
-                        else
-                        {
-                            if (vpSuperIdIs20mm[i-1])
-                            {
-                                xmlSerializer.text("20");
-                            }
-                            else
-                            {
-                                if (vpSuperIdIs100mm[i-1]) xmlSerializer.text("100");
-                            }
-                        }
-                        xmlSerializer.endTag("","Size");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MatrixID");
-                        if (vpIsSuperSingle[i-1])
-                        {
-                            xmlSerializer.text(Integer.toString(vpSuperMarkerId[i-1]));
-                        }
-                        else
-                        {
-                            xmlSerializer.text(Integer.toString(i));
-                        }
-                        xmlSerializer.endTag("","MatrixID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorCOS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensor");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Connections");
-                    for (int i=1; i<(qtyVps+1); i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Name");
-                        xmlSerializer.text("COS"+i);
-                        xmlSerializer.endTag("","Name");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Fuser");
-                        xmlSerializer.attribute("", "Type", "SmoothingFuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","AlphaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","AlphaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","GammaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","GammaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("3");
-                        xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Fuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorSource");
-                        //xmlSerializer.attribute("", "trigger", "1");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorID");
-                        xmlSerializer.text("Markertracking1");
-                        xmlSerializer.endTag("","SensorID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Connections");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","TrackingData");
-                    xmlSerializer.endDocument();
-                    trackingConfigFile.writeString(writer.toString());
-                }
-                finally
-                {
-                    trackingConfigFile.close();
-                }
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","COS");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Name");
+                xmlSerializer.text("COS"+i);
+                xmlSerializer.endTag("","Name");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Fuser");
+                xmlSerializer.attribute("", "Type", "SmoothingFuser");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","AlphaRotation");
+                xmlSerializer.text("0.8");
+                xmlSerializer.endTag("","AlphaRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","AlphaTranslation");
+                xmlSerializer.text("1.0");
+                xmlSerializer.endTag("","AlphaTranslation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","GammaRotation");
+                xmlSerializer.text("0.8");
+                xmlSerializer.endTag("","GammaRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","GammaTranslation");
+                xmlSerializer.text("1.0");
+                xmlSerializer.endTag("","GammaTranslation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
+                xmlSerializer.text("3");
+                xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Fuser");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorSource");
+                //xmlSerializer.attribute("", "trigger", "1");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorID");
+                xmlSerializer.text("Markertracking1");
+                xmlSerializer.endTag("","SensorID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCosID");
+                xmlSerializer.text("Marker"+i);
+                xmlSerializer.endTag("","SensorCosID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","HandEyeCalibration");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","W");
+                xmlSerializer.text("1");
+                xmlSerializer.endTag("","W");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","HandEyeCalibration");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","COSOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","W");
+                xmlSerializer.text("1");
+                xmlSerializer.endTag("","W");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","COSOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","SensorSource");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","COS");
             }
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Connections");
+            xmlSerializer.text("\n");
+            xmlSerializer.endTag("","TrackingData");
+            xmlSerializer.endDocument();
+            String trackingFileContents = writer.toString();
+            File trackingConfigFile = new File(getApplicationContext().getFilesDir(),idMarkersTrackingConfigFileName);
+            FileUtils.writeStringToFile(trackingConfigFile,trackingFileContents, UTF_8);
+            ObjectMetadata myObjectMetadata = new ObjectMetadata();
+            //create a map to store user metadata
+            Map<String, String> userMetadata = new HashMap<String,String>();
+            userMetadata.put("TimeStamp", Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference).toString());
+            myObjectMetadata.setUserMetadata(userMetadata);
+            TransferObserver observer = Utils.storeRemoteFile(transferUtility, (trackingRemotePath + idMarkersTrackingConfigFileName), Constants.BUCKET_NAME, trackingConfigFile, myObjectMetadata);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (state.equals(TransferState.COMPLETED)) {
+                        Log.d(TAG,"TransferListener="+state.toString());
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    if (bytesTotal>0){
+                        int percentage = (int) (bytesCurrent / bytesTotal * 100);
+                    }
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    Log.e(TAG, "saveIdMarkersTrackingConfig(): trackingConfigFile saving failed, see stack trace"+ ex.toString());
+                }
+            });
         }
         catch (Exception e)
         {
             e.printStackTrace();
             MetaioDebug.log(Log.ERROR, "ID Tracking Markers Data file saving to Dropbox failed, see stack trace");
         }
-
     }
 
 
@@ -3510,1020 +2222,531 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
 
         try
         {
-            // Getting a file path for ID Markers tracking configuration XML file
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,trackingDropboxPath+superIdMarkersTrackingConfigFileName)))
+            XmlSerializer xmlSerializer = Xml.newSerializer();
+            StringWriter writer = new StringWriter();
+            xmlSerializer.setOutput(writer);
+            xmlSerializer.startDocument("UTF-8", true);
+            xmlSerializer.text("\n");
+            xmlSerializer.startTag("","TrackingData");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Sensors");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Sensor");
+            xmlSerializer.attribute("", "Type", "MarkerBasedSensorSource");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","SensorID");
+            xmlSerializer.text("MarkerTracking1");
+            xmlSerializer.endTag("","SensorID");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Parameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","MarkerTrackingParameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","TrackingQuality");
+            xmlSerializer.text("robust");
+            xmlSerializer.endTag("","TrackingQuality");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","ThresholdOffset");
+            xmlSerializer.text("120");
+            xmlSerializer.endTag("","ThresholdOffset");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","NumberOfSearchIterations");
+            xmlSerializer.text("5");
+            xmlSerializer.endTag("","NumberOfSearchIterations");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","MarkerTrackingParameters");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Parameters");
+            for (int i=301; i<501; i++)
             {
-                DbxFile trackingConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,trackingDropboxPath+superIdMarkersTrackingConfigFileName));
-                try
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCOS");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCosID");
+                xmlSerializer.text("Marker"+i);
+                xmlSerializer.endTag("","SensorCosID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","MarkerParameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Size");
+                if (i<401)
                 {
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","TrackingData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensor");
-                    xmlSerializer.attribute("", "Type", "MarkerBasedSensorSource");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SensorID");
-                    xmlSerializer.text("MarkerTracking1");
-                    xmlSerializer.endTag("","SensorID");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","TrackingQuality");
-                    xmlSerializer.text("robust");
-                    xmlSerializer.endTag("","TrackingQuality");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ThresholdOffset");
-                    xmlSerializer.text("120");
-                    xmlSerializer.endTag("","ThresholdOffset");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("5");
-                    xmlSerializer.endTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=301; i<501; i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCOS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Size");
-                        if (i<401)
-                        {
-                            xmlSerializer.text("20");
-                        }
-                        else
-                        {
-                            xmlSerializer.text("100");
-                        }
-                        xmlSerializer.endTag("","Size");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MatrixID");
-                        xmlSerializer.text(Integer.toString(i));
-                        xmlSerializer.endTag("","MatrixID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorCOS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensor");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Connections");
-                    for (int i=301; i<501; i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Name");
-                        xmlSerializer.text("COS"+i);
-                        xmlSerializer.endTag("","Name");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Fuser");
-                        xmlSerializer.attribute("", "Type", "SmoothingFuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","AlphaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","AlphaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","GammaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","GammaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("3");
-                        xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Fuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorSource");
-                        //xmlSerializer.attribute("", "trigger", "1");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorID");
-                        xmlSerializer.text("Markertracking1");
-                        xmlSerializer.endTag("","SensorID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Connections");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","TrackingData");
-                    xmlSerializer.endDocument();
-                    trackingConfigFile.writeString(writer.toString());
+                    xmlSerializer.text("20");
                 }
-                finally
+                else
                 {
-                    trackingConfigFile.close();
+                    xmlSerializer.text("100");
                 }
+                xmlSerializer.endTag("","Size");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","MatrixID");
+                xmlSerializer.text(Integer.toString(i));
+                xmlSerializer.endTag("","MatrixID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","MarkerParameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","SensorCOS");
             }
-            else
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Sensor");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Sensors");
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.startTag("","Connections");
+            for (int i=301; i<501; i++)
             {
-                dbxFs.delete(new DbxPath(DbxPath.ROOT,trackingDropboxPath+superIdMarkersTrackingConfigFileName));
-                DbxFile trackingConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT,trackingDropboxPath+superIdMarkersTrackingConfigFileName));
-                try
-                {
-                    MetaioDebug.log("Deleting and saving a new ID Tracking Data file to Dropbox");
-                    XmlSerializer xmlSerializer = Xml.newSerializer();
-                    StringWriter writer = new StringWriter();
-                    xmlSerializer.setOutput(writer);
-                    xmlSerializer.startDocument("UTF-8", true);
-                    xmlSerializer.text("\n");
-                    xmlSerializer.startTag("","TrackingData");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Sensor");
-                    xmlSerializer.attribute("", "Type", "MarkerBasedSensorSource");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","SensorID");
-                    xmlSerializer.text("MarkerTracking1");
-                    xmlSerializer.endTag("","SensorID");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Parameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","TrackingQuality");
-                    xmlSerializer.text("robust");
-                    xmlSerializer.endTag("","TrackingQuality");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","ThresholdOffset");
-                    xmlSerializer.text("120");
-                    xmlSerializer.endTag("","ThresholdOffset");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("5");
-                    xmlSerializer.endTag("","NumberOfSearchIterations");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","MarkerTrackingParameters");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Parameters");
-                    for (int i=301; i<501; i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCOS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Size");
-                        if (i<401)
-                        {
-                            xmlSerializer.text("20");
-                        }
-                        else
-                        {
-                            xmlSerializer.text("100");
-                        }
-                        xmlSerializer.endTag("","Size");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","MatrixID");
-                        xmlSerializer.text(Integer.toString(i));
-                        xmlSerializer.endTag("","MatrixID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","MarkerParameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorCOS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensor");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Sensors");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.startTag("","Connections");
-                    for (int i=301; i<501; i++)
-                    {
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COS");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Name");
-                        xmlSerializer.text("COS"+i);
-                        xmlSerializer.endTag("","Name");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Fuser");
-                        xmlSerializer.attribute("", "Type", "SmoothingFuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","AlphaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","AlphaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","AlphaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaRotation");
-                        xmlSerializer.text("0.8");
-                        xmlSerializer.endTag("","GammaRotation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","GammaTranslation");
-                        xmlSerializer.text("1.0");
-                        xmlSerializer.endTag("","GammaTranslation");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("3");
-                        xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Parameters");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","Fuser");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorSource");
-                        //xmlSerializer.attribute("", "trigger", "1");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorID");
-                        xmlSerializer.text("Markertracking1");
-                        xmlSerializer.endTag("","SensorID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","SensorCosID");
-                        xmlSerializer.text("Marker"+i);
-                        xmlSerializer.endTag("","SensorCosID");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","HandEyeCalibration");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","TranslationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","X");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","X");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Y");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Y");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","Z");
-                        xmlSerializer.text("0");
-                        xmlSerializer.endTag("","Z");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.startTag("","W");
-                        xmlSerializer.text("1");
-                        xmlSerializer.endTag("","W");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","RotationOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COSOffset");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","SensorSource");
-                        xmlSerializer.text("\n");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.text("\t");
-                        xmlSerializer.endTag("","COS");
-                    }
-                    xmlSerializer.text("\n");
-                    xmlSerializer.text("\t");
-                    xmlSerializer.endTag("","Connections");
-                    xmlSerializer.text("\n");
-                    xmlSerializer.endTag("","TrackingData");
-                    xmlSerializer.endDocument();
-                    trackingConfigFile.writeString(writer.toString());
-                }
-                finally
-                {
-                    trackingConfigFile.close();
-                }
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","COS");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Name");
+                xmlSerializer.text("COS"+i);
+                xmlSerializer.endTag("","Name");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Fuser");
+                xmlSerializer.attribute("", "Type", "SmoothingFuser");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","AlphaRotation");
+                xmlSerializer.text("0.8");
+                xmlSerializer.endTag("","AlphaRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","AlphaTranslation");
+                xmlSerializer.text("1.0");
+                xmlSerializer.endTag("","AlphaTranslation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","GammaRotation");
+                xmlSerializer.text("0.8");
+                xmlSerializer.endTag("","GammaRotation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","GammaTranslation");
+                xmlSerializer.text("1.0");
+                xmlSerializer.endTag("","GammaTranslation");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","KeepPoseForNumberOfFrames");
+                xmlSerializer.text("3");
+                xmlSerializer.endTag("","KeepPoseForNumberOfFrames");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Parameters");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","Fuser");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorSource");
+                //xmlSerializer.attribute("", "trigger", "1");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorID");
+                xmlSerializer.text("Markertracking1");
+                xmlSerializer.endTag("","SensorID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","SensorCosID");
+                xmlSerializer.text("Marker"+i);
+                xmlSerializer.endTag("","SensorCosID");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","HandEyeCalibration");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","W");
+                xmlSerializer.text("1");
+                xmlSerializer.endTag("","W");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","HandEyeCalibration");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","COSOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","TranslationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","X");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","X");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Y");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Y");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","Z");
+                xmlSerializer.text("0");
+                xmlSerializer.endTag("","Z");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.startTag("","W");
+                xmlSerializer.text("1");
+                xmlSerializer.endTag("","W");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","RotationOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","COSOffset");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","SensorSource");
+                xmlSerializer.text("\n");
+                xmlSerializer.text("\t");
+                xmlSerializer.text("\t");
+                xmlSerializer.endTag("","COS");
             }
+            xmlSerializer.text("\n");
+            xmlSerializer.text("\t");
+            xmlSerializer.endTag("","Connections");
+            xmlSerializer.text("\n");
+            xmlSerializer.endTag("","TrackingData");
+            xmlSerializer.endDocument();
+            String trackingFileContents = writer.toString();
+            File trackingConfigFile = new File(getApplicationContext().getFilesDir(),superIdMarkersTrackingConfigFileName);
+            FileUtils.writeStringToFile(trackingConfigFile,trackingFileContents, UTF_8);
+            ObjectMetadata myObjectMetadata = new ObjectMetadata();
+            //create a map to store user metadata
+            Map<String, String> userMetadata = new HashMap<String,String>();
+            userMetadata.put("TimeStamp", Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference).toString());
+            myObjectMetadata.setUserMetadata(userMetadata);
+            TransferObserver observer = Utils.storeRemoteFile(transferUtility, (trackingRemotePath + superIdMarkersTrackingConfigFileName), Constants.BUCKET_NAME, trackingConfigFile, myObjectMetadata);
+            observer.setTransferListener(new TransferListener() {
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (state.equals(TransferState.COMPLETED)) {
+                        Log.d(TAG,"TransferListener="+state.toString());
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    if (bytesTotal>0){
+                        int percentage = (int) (bytesCurrent / bytesTotal * 100);
+                    }
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    Log.e(TAG, "saveSuperIdMarkersTrackingConfig(): trackingConfigFile saving failed, see stack trace"+ ex.toString());
+                }
+            });
+
+
+
         }
         catch (Exception e)
         {
@@ -4626,12 +2849,11 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
         // Dropbox file path of VP Location Picture Image
         try
         {
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            DbxPath vpLocationDescImageFilePath = new DbxPath(DbxPath.ROOT,descvpDropboxPath+(position+1)+".png");
-            MetaioDebug.log("vpLocationDescImageFilePath: "+"descvp"+(position+1)+".png");
-            DbxFile vpLocationDescImageFileDropbox = dbxFs.open(vpLocationDescImageFilePath);
-            vpLocationDescImageFileContents = BitmapFactory.decodeStream(vpLocationDescImageFileDropbox.getReadStream());
-            vpLocationDescImageFileDropbox.close();
+            InputStream fis = Utils.getLocalFile("descvp"+(position+1)+".png",getApplicationContext());
+            if (!(fis==null)){
+                vpLocationDescImageFileContents = BitmapFactory.decodeStream(fis);
+                fis.close();
+            }
         }
         catch (Exception e)
         {
@@ -4977,60 +3199,6 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
 
     }
 
-    /*
-    public void loadDescVps()
-    {
-        new AsyncTask<Void, Void, Void>()
-        {
-            @Override
-            protected Void doInBackground(Void... params)
-            {
-                DbxPath vpLocationDescImageFilePath = null;
-                // Loading Vp Location Description Images from Dropbox and writing to local storage.
-                for (int i = 0; i < qtyVps; i++) {
-                    try
-                    {
-                        DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                        vpLocationDescImageFilePath = new DbxPath(DbxPath.ROOT, descvpDropboxPath + (i + 1) + ".png");
-                        MetaioDebug.log("vpLocationDescImageFilePath DROPBOX: " + descvpDropboxPath + (i + 1) + ".png");
-                        if (dbxFs.exists(vpLocationDescImageFilePath))
-                        {
-                            DbxFile vpLocationDescImageFileDropbox = dbxFs.open(vpLocationDescImageFilePath);
-                            vpLocationDescImageFileContents = BitmapFactory.decodeStream(vpLocationDescImageFileDropbox.getReadStream());
-                            vpLocationDescImageFileDropbox.close();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        MetaioDebug.log("EXCEPTION with vpLocationDescImageFilePath: " + descvpDropboxPath + (i + 1) + ".png");
-                        e.printStackTrace();
-                    }
-                    try
-                    {
-                        DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                        if (dbxFs.exists(vpLocationDescImageFilePath))
-                        {
-                            File descvpFile = new File(getFilesDir(), "descvp" + (i + 1) + ".png");
-                            MetaioDebug.log("vpLocationDescImageFilePath local: " + getFilesDir() + "/" + "descvp" + (i + 1) + ".png");
-                            FileOutputStream fos = new FileOutputStream(descvpFile);
-                            vpLocationDescImageFileContents.compress(Bitmap.CompressFormat.PNG, 95, fos);
-                            fos.close();
-                        }
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        MetaioDebug.log("File not found: " + e.getMessage());
-                    }
-                    catch (IOException e)
-                    {
-                        MetaioDebug.log("Error accessing file: " + e.getMessage());
-                    }
-                }
-                return null;
-            }
-        }.execute();
-    }
-    */
 
     public void loadConfigurationFile()
     {
@@ -5078,13 +3246,11 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
         try
         {
             // Getting a file path for vps configuration XML file
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            DbxPath vpsConfigFilePath = new DbxPath(DbxPath.ROOT,""+seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+vpsConfigFileDropbox);
-            MetaioDebug.log("Vps Config Dropbox path = "+vpsConfigFilePath);
-            DbxFile vpsConfigFile = dbxFs.open(vpsConfigFilePath);
+            Log.d(TAG,"Vps Config Dropbox path = "+vpsConfigFileDropbox);
+            File vpsFile = new File(getApplicationContext().getFilesDir(),vpsConfigFileDropbox);
+            InputStream fis = Utils.getLocalFile(vpsConfigFileDropbox, getApplicationContext());
             try
             {
-                FileInputStream fis = vpsConfigFile.getReadStream();
                 XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
                 XmlPullParser myparser = xmlFactoryObject.newPullParser();
                 myparser.setInput(fis, null);
@@ -5245,12 +3411,12 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
                     }
                     eventType = myparser.next();
                 }
+                fis.close();
             }
             finally
             {
-                vpsConfigFile.close();
+                MetaioDebug.log("Vps Config DROPBOX file = "+vpsFile);
             }
-            MetaioDebug.log("Vps Config DROPBOX file = "+vpsConfigFile);
         }
         catch (Exception e)
         {
@@ -5267,14 +3433,10 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
             });
         }
 
-        loadVpsConfigured(vpsConfiguredDropboxPath+vpsConfiguredConfigFileDropbox);
-
         for (int i=0; i<qtyVps; i++)
         {
             vpChecked[i] = false;
             vpAcquired[i] = true;
-            vpAcquiredTimeSMCMillis[i]=vpConfiguredTimeSMCMillis[i];
-            MetaioDebug.log("vpAcquiredTimeSMCMillis["+i+"]="+vpAcquiredTimeSMCMillis[i]);
             if (vpFrequencyUnit[i]=="")
             {
                 vpFrequencyUnit[i]=frequencyUnit;
@@ -5289,75 +3451,6 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
 
         }
 
-    }
-
-    public void loadVpsConfigured(String FileDropbox)
-    {
-        MetaioDebug.log("loadVpsConfigured() started");
-        int vpListOrder = 0;
-        try
-        {
-            // Getting a file path for vps configured config XML file
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            DbxPath vpsConfiguredConfigFilePath = new DbxPath(DbxPath.ROOT,FileDropbox);
-            MetaioDebug.log("Vps Config Dropbox path = "+vpsConfiguredConfigFilePath);
-            DbxFile vpsConfiguredConfigFile = dbxFs.open(vpsConfiguredConfigFilePath);
-            try
-            {
-                FileInputStream fis = vpsConfiguredConfigFile.getReadStream();
-                XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
-                XmlPullParser myparser = xmlFactoryObject.newPullParser();
-                myparser.setInput(fis, null);
-                int eventType = myparser.getEventType();
-                while (eventType != XmlPullParser.END_DOCUMENT)
-                {
-                    if(eventType == XmlPullParser.START_DOCUMENT)
-                    {
-                        MetaioDebug.log("Start document");
-                    }
-                    else if(eventType == XmlPullParser.START_TAG)
-                    {
-                        MetaioDebug.log("Start tag "+myparser.getName());
-
-                        if(myparser.getName().equalsIgnoreCase("Vp"))
-                        {
-                            vpListOrder++;
-                            MetaioDebug.log("VpListOrder: "+vpListOrder);
-                        }
-                        else if(myparser.getName().equalsIgnoreCase("VpNumber"))
-                        {
-                            eventType = myparser.next();
-                            vpNumber[vpListOrder-1] = Short.parseShort(myparser.getText());
-                            MetaioDebug.log("VpNumber"+(vpListOrder-1)+": "+vpNumber[vpListOrder-1]);
-                        }
-                        else if(myparser.getName().equalsIgnoreCase("Configured"))
-                        {
-                            eventType = myparser.next();
-                            vpConfiguredTimeSMCMillis[vpListOrder-1]= Long.parseLong(myparser.getText());
-                        }
-                    }
-                    else if(eventType == XmlPullParser.END_TAG)
-                    {
-                        MetaioDebug.log("End tag "+myparser.getName());
-                    }
-                    else if(eventType == XmlPullParser.TEXT)
-                    {
-                        MetaioDebug.log("Text "+myparser.getText());
-                    }
-                    eventType = myparser.next();
-                }
-            }
-            finally
-            {
-                vpsConfiguredConfigFile.close();
-            }
-            MetaioDebug.log("Vps Configured config DROPBOX file = "+vpsConfiguredConfigFile);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            MetaioDebug.log(Log.ERROR, "Configured Vps data loading failed, see stack trace");
-        }
     }
 
 
@@ -5470,51 +3563,43 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
                 else
                     MetaioDebug.log(Log.ERROR, "Error loading geometry: "+mVpChecked);
             }
-            // Getting a file path for tracking configuration XML file
-            DbxPath trackingConfigFilePathDropbox = new DbxPath(DbxPath.ROOT,""+seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"trk"+"/"+trackingConfigFileName);
             // defining the localFilePath to be used for all assets downloaded from DROPBOX
             String localFilePath = AssetsManager.getAbsolutePath()+"/";
             globalLocalFilePath = localFilePath;
-            // using the localFilePath to define the path to the trackingConfigFile
-            MetaioDebug.log("Tracking Config Dropbox path = "+trackingConfigFilePathDropbox);
-            String trackingConfigFileContents;
-            // Loading the tracking configuration from DROPBOX
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            DbxFile trackingConfigFile = dbxFs.open(trackingConfigFilePathDropbox);
+            String trackingConfigFileContents = "";
             try
             {
-                trackingConfigFileContents = trackingConfigFile.readString();
+                InputStream fis = Utils.getLocalFile(trackingConfigFileName,getApplicationContext());
+                trackingConfigFileContents = IOUtils.toString(fis, UTF_8);
+                fis.close();
             }
-            finally
+            catch (Exception e)
             {
-                trackingConfigFile.close();
+                Log.e(TAG,"Error when loading markerlesstrackingConfigFileContents:"+e.toString());
             }
-            MetaioDebug.log("Tracking Config DROPBOX file = "+trackingConfigFile);
             trackingConfigFileContents = trackingConfigFileContents.replace("markervp",localFilePath+"markervp");
             trackingConfigFileContents = trackingConfigFileContents.replace(seaMensorMarker,localFilePath+seaMensorMarker);
 
-            // Getting a file path for super id tracking configuration XML file
-            DbxPath superIdTrackingConfigFilePathDropbox = new DbxPath(DbxPath.ROOT,""+seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"trk"+"/"+superIdMarkersTrackingConfigFileName);
-            // using the localFilePath to define the path to the superIdMarkersTrackingConfigFileName
-            MetaioDebug.log("Super Id Tracking Config Dropbox path = "+superIdTrackingConfigFilePathDropbox);
-            // Loading the super id tracking configuration from DROPBOX
-            DbxFile superIdtrackingConfigFile = dbxFs.open(superIdTrackingConfigFilePathDropbox);
             try
             {
-                superIdMarkersTrackingConfigFileContents = superIdtrackingConfigFile.readString();
+                InputStream fis = Utils.getLocalFile(superIdMarkersTrackingConfigFileName,getApplicationContext());
+                superIdMarkersTrackingConfigFileContents = IOUtils.toString(fis, UTF_8);
+                fis.close();
             }
-            finally
+            catch (Exception e)
             {
-                superIdtrackingConfigFile.close();
+                Log.e(TAG,"Error when loading markerlesstrackingConfigFileContents:"+e.toString());
             }
-            MetaioDebug.log("Tracking Config DROPBOX file = "+superIdtrackingConfigFile);
+
+
 
             //Reading Markers from Dropbox and Writing to Local assets path
+            /*
             for (int i=0; i<qtyVps; i++)
             {
                 try
                 {
-                    DbxPath vpMarkerImageFilePath = new DbxPath(DbxPath.ROOT,markervpDropboxPath+(i+1)+".jpg");
+                    DbxPath vpMarkerImageFilePath = new DbxPath(DbxPath.ROOT, markervpRemotePath +(i+1)+".jpg");
                     MetaioDebug.log("vpMarkerImageFilePath: "+"markervp"+(i+1)+".jpg");
                     DbxFile vpMarkerImageFileDropbox = dbxFs.open(vpMarkerImageFilePath);
                     vpMarkerImageFileContents = BitmapFactory.decodeStream(vpMarkerImageFileDropbox.getReadStream());
@@ -5534,6 +3619,7 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
                     MetaioDebug.log("Error accessing file: " + e.getMessage());
                 }
             }
+            */
             // Assigning tracking configuration
             boolean result = metaioSDK.setTrackingConfiguration(trackingConfigFileContents,false);
             MetaioDebug.log("Tracking data loaded: " + result);
@@ -5611,17 +3697,29 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
             // Load camera calibration
             try
             {
-                DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                DbxPath cameraCalibrationFilePath = new DbxPath(DbxPath.ROOT,camCalDropboxPath+cameraCalibrationFileName);
-                MetaioDebug.log("Camera Calibration path = "+cameraCalibrationFilePath);
-                String cameraCalibration;
-                DbxFile cameraCalibrationFile = dbxFs.open(cameraCalibrationFilePath);
-                try {
-                    cameraCalibration = cameraCalibrationFile.readString();
-                } finally {
-                    cameraCalibrationFile.close();
-                }
-                MetaioDebug.log("Camera Calibration DROPBOX file = "+cameraCalibrationFile);
+                String cameraCalibration = 	"<?xml version=\"1.0\"?>"+
+                        "<Camera>"+
+                        "<Name>LGG2 camera 1280x720</Name>"+
+                        "<Info>Calibration results generated with 3DF Lapyx v. 1.0</Info>"+
+                        "<CalibrationResolution>"+
+                        "<X>1280</X>"+
+                        "<Y>720</Y>"+
+                        "</CalibrationResolution>"+
+                        "<FocalLength>"+
+                        "<X>1054.42</X>"+
+                        "<Y>1014.44</Y>"+
+                        "</FocalLength>"+
+                        "<PrincipalPoint>"+
+                        "<X>640.735</X>"+
+                        "<Y>334.981</Y>"+
+                        "</PrincipalPoint>"+
+                        "<Distortion>"+
+                        "<K1>0.105051</K1>"+
+                        "<K2>-0.167575</K2>"+
+                        "<P1>-0.00409267</P1>"+
+                        "<P2>-0.0021432</P2>"+
+                        "</Distortion>"+
+                        "</Camera>";
                 boolean result = metaioSDK.setCameraParameters(cameraCalibration);
                 MetaioDebug.log("Camera Calibration data loaded: " + result);
             }
@@ -5646,56 +3744,6 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
             MetaioDebug.log("animation ended" + animationName);
         }
 
-        private  File getOutputMediaFile(int filenum){
-            // To be safe, you should check that the SDCard is mounted
-            // using Environment.getExternalStorageState() before doing this.
-            /**
-             File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
-             + "/Android/data/"
-             + getApplicationContext().getPackageName()
-             + "/Files");
-             */
-            File mediaStorageDir = new File(globalLocalFilePath);
-            // This location works best if you want the created images to be shared
-            // between applications and persist after your app has been uninstalled.
-
-            // Create the storage directory if it does not exist
-            if (! mediaStorageDir.exists()){
-                if (! mediaStorageDir.mkdirs()){
-                    return null;
-                }
-            }
-            // Create a media file name
-            File mediaFile;
-            String mImageName="tempfile.png";
-            if (filenum==1)
-            {
-                mImageName="MI_tempo"+filenum+".png";
-            }
-            if (filenum==2)
-            {
-                mImageName="markervp"+vpIndex+".jpg";
-            }
-            //mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-            mediaFile = new File(getFilesDir(), mImageName);
-            return mediaFile;
-        }
-
-
-
-        public Bitmap greyScaler(Bitmap b)
-        {
-            Bitmap grayscaleBitmap = Bitmap.createBitmap(b.getWidth(),b.getHeight(), Bitmap.Config.RGB_565);
-            Canvas c = new Canvas(grayscaleBitmap);
-            Paint p = new Paint();
-            ColorMatrix cm = new ColorMatrix();
-            cm.setSaturation(0); //Set the matrix to affect the saturation of colors. A value of 0 maps the color to gray-scale. 1 is identity.
-            ColorMatrixColorFilter filter = new ColorMatrixColorFilter(cm);
-            p.setColorFilter(filter);
-            c.drawBitmap(b, 0, 0, p);
-            return grayscaleBitmap;
-        }
-
         // Callback that receives imagestruct from requestcameraimage
         @Override
         public void onNewCameraFrame(ImageStruct cameraFrame)
@@ -5706,8 +3754,8 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
             Bitmap bitmapImage = null;
             Bitmap markerFromBitmapImage = null;
             // creating temp local storage files
-            File pictureFile = getOutputMediaFile(1);
-            File markerFile = getOutputMediaFile(2);
+            File pictureFile = new File(getApplicationContext().getFilesDir(), "descvp"+vpIndex+".png");
+            File markerFile = new File(getApplicationContext().getFilesDir(), "markervp"+vpIndex+".jpg");
             MetaioDebug.log("SDK callback: onNewCameraFrame: a new camera frame image is delivered " + cameraFrame.getTimestamp());
             if(cameraFrame != null)
             {
@@ -5795,35 +3843,28 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
             {
                 try
                 {
-                    DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                    if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,descvpDropboxPath+(vpIndex)+".png")))
-                    {
-                        DbxFile bitMap = dbxFs.create(new DbxPath(DbxPath.ROOT,descvpDropboxPath+(vpIndex)+".png"));
-                        try
-                        {
-                            bitMap.writeFromExistingFile(pictureFile, false);
-                        }
-                        finally
-                        {
-                            bitMap.close();
-                            pictureFile.delete();
-                        }
-                    }
-                    else
-                    {
-                        dbxFs.delete(new DbxPath(DbxPath.ROOT,descvpDropboxPath+(vpIndex)+".png"));
-                        try
-                        {
-                            MetaioDebug.log("Deleting and saving a new camera frame image to");
-                            DbxFile bitMap = dbxFs.create(new DbxPath(DbxPath.ROOT,descvpDropboxPath+(vpIndex)+".png"));
-                            bitMap.writeFromExistingFile(pictureFile, false);
-                            bitMap.close();
-                        }
-                        finally
-                        {
-                            pictureFile.delete();
-                        }
-                    }
+                    ObjectMetadata myObjectMetadata = new ObjectMetadata();
+                    //create a map to store user metadata
+                    Map<String, String> userMetadata = new HashMap<String,String>();
+                    userMetadata.put("VP", ""+(vpIndex));
+                    userMetadata.put("seamensorAccount", seamensorAccount);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    String formattedDateTime = sdf.format(Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference));
+                    userMetadata.put("DateTime", formattedDateTime);
+                    //call setUserMetadata on our ObjectMetadata object, passing it our map
+                    myObjectMetadata.setUserMetadata(userMetadata);
+                    //uploading the objects
+                    TransferObserver observer = Utils.storeRemoteFile(
+                            transferUtility,
+                            descvpRemotePath+pictureFile.getName(),
+                            Constants.BUCKET_NAME,
+                            pictureFile,
+                            myObjectMetadata);
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getState().toString());
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getAbsoluteFilePath());
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getBucket());
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getKey());
                 }
                 catch (Exception e)
                 {
@@ -5853,35 +3894,28 @@ public class ConfigActivity extends ARViewActivity implements OnItemClickListene
                 }
                 try
                 {
-                    DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-                    if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,markervpDropboxPath+(vpIndex)+".jpg")))
-                    {
-                        DbxFile bitMap = dbxFs.create(new DbxPath(DbxPath.ROOT,markervpDropboxPath+(vpIndex)+".jpg"));
-                        try
-                        {
-                            bitMap.writeFromExistingFile(markerFile, false);
-                        }
-                        finally
-                        {
-                            bitMap.close();
-                            //markerFile.delete();
-                        }
-                    }
-                    else
-                    {
-                        dbxFs.delete(new DbxPath(DbxPath.ROOT,markervpDropboxPath+(vpIndex)+".jpg"));
-                        try
-                        {
-                            MetaioDebug.log("Deleting and saving a new camera frame as marker image to");
-                            DbxFile bitMap = dbxFs.create(new DbxPath(DbxPath.ROOT,markervpDropboxPath+(vpIndex)+".jpg"));
-                            bitMap.writeFromExistingFile(markerFile, false);
-                            bitMap.close();
-                        }
-                        finally
-                        {
-                            //markerFile.delete();
-                        }
-                    }
+                    ObjectMetadata myObjectMetadata = new ObjectMetadata();
+                    //create a map to store user metadata
+                    Map<String, String> userMetadata = new HashMap<String,String>();
+                    userMetadata.put("VP", ""+(vpIndex));
+                    userMetadata.put("seamensorAccount", seamensorAccount);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    String formattedDateTime = sdf.format(Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference));
+                    userMetadata.put("DateTime", formattedDateTime);
+                    //call setUserMetadata on our ObjectMetadata object, passing it our map
+                    myObjectMetadata.setUserMetadata(userMetadata);
+                    //uploading the objects
+                    TransferObserver observer = Utils.storeRemoteFile(
+                            transferUtility,
+                            markervpRemotePath+pictureFile.getName(),
+                            Constants.BUCKET_NAME,
+                            pictureFile,
+                            myObjectMetadata);
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getState().toString());
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getAbsoluteFilePath());
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getBucket());
+                    Log.d(TAG, "AWS s3 Observer: "+observer.getKey());
                 }
                 catch (Exception e)
                 {

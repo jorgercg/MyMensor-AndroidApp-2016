@@ -12,12 +12,12 @@
     </item>
     <item
         is-multidex="true"
-        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/dropbox-sync-sdk-android.jar"
+        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/commons-io-2.5.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="45fb26781bc311772660c697996801f8f39d3ce0">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/dropbox-sync-sdk-android_a3d2e11458592488c65250a1f83db0aa6738da70/classes.dex" />
+        sha1="b24f6678d458e65f08113a079e3724581eca1184">
+        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/commons-io-2.5_680183a60830d7fe3025dc8f933c106f97182d7f/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -259,7 +259,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="cefa0d0387d539df036d4c5d29992a97b018e4b2">
+        sha1="604718bd4059a3419517e861f583673a88d7928a">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_451a72833b94a889e6af1ab6e7ee3b9d36392055/classes.dex" />
     </item>
     <item
@@ -315,15 +315,6 @@
         revision="24.0.2"
         sha1="a96b762bde4139de855735f175ec4d17dca55a6d">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wallet-7.0.0_bb97409b499193ffd25c06148090af43a44c6e34/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/cloudinary-core-1.4.5.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="814d2cc56fdb539e36cf95fb627f2b6d923c09e2">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/cloudinary-core-1.4.5_19b9d33d265d7c8201efc15287a564bed2cfaf68/classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -394,7 +385,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.2"
-        sha1="76d157bdbf4a9691f091a0944b4d70381c964324">
+        sha1="6812cba72a59bbd7d87bce6976228c114f7e3810">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_45de722bb9cab215a15af80addd370948735e1bb/classes.dex" />
     </item>
     <item
@@ -405,15 +396,6 @@
         revision="24.0.2"
         sha1="f6c3aed1cdfa21b5c1737c915186ea93a95a58bd">
         <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-core-2.1.3_fc0a31612b4569575b20385459f077a3ef67f2dd/classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/libs/cloudinary-android-1.4.5.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.2"
-        sha1="b2e47877509c81bb774f43743ec954d5ebcfe82c">
-        <dex dex="/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/seamensor/build/intermediates/transforms/dex/debug/folders/1000/2/cloudinary-android-1.4.5_7d11e03d8ce9f7d966abad8e0515ba9fa44cf5aa/classes.dex" />
     </item>
     <item
         is-multidex="true"

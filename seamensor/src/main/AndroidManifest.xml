@@ -36,8 +36,7 @@
         android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/Theme.FullScreen"
-        android:name="com.seamensor.seamensor.VolleyHelper">
+        android:theme="@style/Theme.FullScreen">
         <activity
             android:name="com.seamensor.seamensor.MainActivity"
             android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
@@ -87,22 +86,6 @@
             android:theme="@style/Theme.FullScreen"
             android:screenOrientation="landscape">
         </activity>
-        <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
-		<activity
-  			android:name="com.dropbox.client2.android.AuthActivity"
-  			android:launchMode="singleTask" >
-  		<intent-filter>
-    		<data android:scheme="db-0yrlhapf89ytpwi" />
-    		<action android:name="android.intent.action.VIEW" />
-    		<category android:name="android.intent.category.BROWSABLE" />
-    		<category android:name="android.intent.category.DEFAULT" />
-  		</intent-filter>
-		</activity>
-		<service
-  			android:name="com.dropbox.sync.android.DbxSyncService"
-  			android:enabled="true"
-  			android:exported="false"
-  		android:label="Dropbox Sync" />
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
@@ -117,7 +100,4 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
     </application>
-
-
-
 </manifest>

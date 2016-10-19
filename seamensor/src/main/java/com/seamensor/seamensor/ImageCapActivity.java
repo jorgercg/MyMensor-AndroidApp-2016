@@ -3,23 +3,23 @@ package com.seamensor.seamensor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.regex.Pattern;
 
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,10 +28,8 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.location.Location;
-import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
 import android.view.Gravity;
@@ -49,14 +47,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amazonaws.auth.CognitoCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.dropbox.sync.android.DbxException;
-import com.dropbox.sync.android.DbxFileInfo;
-import com.dropbox.sync.android.DbxFileStatus;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -77,11 +73,9 @@ import com.metaio.sdk.jni.TrackingValuesVector;
 import com.metaio.sdk.jni.Vector2di;
 import com.metaio.sdk.jni.Vector3d;
 import com.metaio.tools.io.AssetsManager;
-import com.dropbox.sync.android.DbxFile;
-import com.dropbox.sync.android.DbxFileSystem;
-import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxAccountManager;
 import com.seamensor.seamensor.cognitoclient.AwsUtil;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ImageCapActivity extends ARViewActivity implements
         OnItemClickListener,
@@ -105,16 +99,12 @@ public class ImageCapActivity extends ARViewActivity implements
 
     public static final boolean debugMode = false;
 
-	public static final String appKey = "0yrlhapf89ytpwi";
-	public static final String appSecret = "neg16q87i8rpym3";
-	public static final int REQUEST_LINK_TO_DBX = 0;
     public boolean inPosition = false;
     public boolean inRotation = false;
 	public boolean vpPhotoAccepted = false;
 	public boolean vpPhotoRejected = false;
 	public boolean vpPhotoRequestInProgress = false;
 	public boolean lastVpPhotoRejected = false;
-    public DbxAccountManager mDbxAcctMgr;
     public final int idMarkerStdSize = 20;
     public final String trackingConfigFileName = "TrackingDataMarkerless.xml";
     public final String idMarkersTrackingConfigFileName = "TrckMarkers.xml";
@@ -130,17 +120,15 @@ public class ImageCapActivity extends ARViewActivity implements
     public String trkLocalFilePath;
     public String geometry3dConfigFile = "CuboVP.obj";
 	public String geometrySecondary3dConfigFile = "vpchecked.obj";
-	public String cameraCalibrationFileName = "cameracalibration.xml";
 	public final String vpsConfigFileDropbox = "vps.xml";
 	public final String vpsCheckedConfigFileDropbox = "vpschecked.xml";
 
-    public String camCalDropboxPath;
-    public String descvpDropboxPath;
-    public String markervpDropboxPath;
-    public String trackingDropboxPath;
-    public String vpsDropboxPath;
-    public String vpsCheckedDropboxPath;
-    public String capDropboxPath;
+    public String descvpRemotePath;
+    public String markervpRemotePath;
+    public String trackingRemotePath;
+    public String vpsRemotePath;
+    public String vpsCheckedRemotePath;
+    public String capRemotePath;
 
     public boolean[] vpChecked;
     public long[] photoTakenTimeMillis;
@@ -214,9 +202,7 @@ public class ImageCapActivity extends ARViewActivity implements
 	
 	public String seamensorAccount;
     public int dciNumber;
-	//public String currentMillisStartAppString;
-    //public Long localCurrentMillisStartApp;
-	
+
 	private static long back_pressed;
 	
 	ListView listView;
@@ -329,6 +315,10 @@ public class ImageCapActivity extends ARViewActivity implements
 
 	SharedPreferences sharedPref;
 
+	public long sntpTime;
+	public long sntpTimeReference;
+	public boolean clockSetSuccess;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{
@@ -337,6 +327,9 @@ public class ImageCapActivity extends ARViewActivity implements
 		seamensorAccount = getIntent().getExtras().get("seamensoraccount").toString();
 		dciNumber = Integer.parseInt(getIntent().getExtras().get("dcinumber").toString());
 		qtyVps = Short.parseShort(getIntent().getExtras().get("QtyVps").toString());
+		sntpTime = Long.parseLong(getIntent().getExtras().get("sntpTime").toString());
+		sntpTimeReference = Long.parseLong(getIntent().getExtras().get("sntpReference").toString());
+		clockSetSuccess = Boolean.parseBoolean(getIntent().getExtras().get("clockSetSuccess").toString());
 		MetaioDebug.log("SeaMensor onCreate:Package: "+this.getPackageName());
 		MetaioDebug.log("SeaMensor onCreate:SeaMensor Account: "+seamensorAccount);
 		MetaioDebug.log("SeaMensor onCreate:Qty Vps: "+qtyVps);
@@ -344,6 +337,8 @@ public class ImageCapActivity extends ARViewActivity implements
 		sharedPref = this.getSharedPreferences("com.mymensor.app",Context.MODE_PRIVATE);
 
 		s3Client = CognitoSyncClientManager.getInstance();
+
+		transferUtility = AwsUtil.getTransferUtility(s3Client, getApplicationContext());
 
 		// Fused Location Provider
         MetaioDebug.log("SeaMensor onCreate: Setting up Fused Location Provider");
@@ -362,25 +357,12 @@ public class ImageCapActivity extends ARViewActivity implements
                 .addOnConnectionFailedListener(this)
                 .build();
 
-		// Enable Dropbox
-		mDbxAcctMgr = DbxAccountManager.getInstance(getApplicationContext(), appKey, appSecret);
-		if (!mDbxAcctMgr.hasLinkedAccount()) 
-		{
-			MetaioDebug.log("SeaMensor onCreate: Linking to DROPBOX");
-			mDbxAcctMgr.startLink((Activity)this, REQUEST_LINK_TO_DBX);		
-		}
-		else
-		{
-			MetaioDebug.log("SeaMensor onCreate: Linked to DROPBOX ALREADY");
-		}
-
-        camCalDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"cam"+"/";
-        descvpDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"dsc"+"/"+"descvp";
-        markervpDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"mrk"+"/"+"markervp";
-        trackingDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"trk"+"/";
-        vpsDropboxPath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/";
-        vpsCheckedDropboxPath = seamensorAccount+"/"+"chk"+"/"+dciNumber+"/";
-        capDropboxPath = seamensorAccount+"/"+"cap"+"/";
+        descvpRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"dsc"+"/"+"descvp";
+		markervpRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/"+"mrk"+"/"+"markervp";
+        trackingRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"trk"+"/";
+        vpsRemotePath = seamensorAccount+"/"+"cfg"+"/"+dciNumber+"/"+"vps"+"/";
+		vpsCheckedRemotePath = seamensorAccount + "/" + "chk" + "/" + dciNumber + "/";
+        capRemotePath = seamensorAccount+"/"+"cap"+"/";
 
 		mSDKCallback = new MetaioSDKCallbackHandler();
 
@@ -751,23 +733,6 @@ public class ImageCapActivity extends ARViewActivity implements
 	}
 			
 	@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) 
-    {
-        if (requestCode == REQUEST_LINK_TO_DBX) {
-            if (resultCode == Activity.RESULT_OK) 
-            	{
-    			MetaioDebug.log("Link to DROPBOX OK");
-                } 
-            else
-            	{
-            	MetaioDebug.log("Link to DROPBOX FAILED");
-            	}
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-	@Override
 	protected void onResume() 
 	{
 		super.onResume();
@@ -812,7 +777,7 @@ public class ImageCapActivity extends ARViewActivity implements
         super.onPause();
 		MetaioDebug.log("ARViewActivity.onPause SeaMensor");
         stopLocationUpdates();
-		new SaveVpsChecked().execute();
+		saveVpsChecked();
 		finish();
 	}
 
@@ -843,108 +808,84 @@ public class ImageCapActivity extends ARViewActivity implements
 		return R.layout.activity_imagecap;
 	}
 
-	public class SaveVpsChecked extends AsyncTask<Void, Void, Void>
+	public void saveVpsChecked()
 	{
-		@Override
-		protected Void doInBackground(Void... params) {
-			// Saving vpChecked state.
-			try {
-				// Getting a file path for vps checked config XML file
-				DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-				if (!dbxFs.exists(new DbxPath(DbxPath.ROOT, vpsCheckedDropboxPath + vpsCheckedConfigFileDropbox))) {
-					DbxFile vpsCheckedConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT, vpsCheckedDropboxPath + vpsCheckedConfigFileDropbox));
-					try {
-						XmlSerializer xmlSerializer = Xml.newSerializer();
-						StringWriter writer = new StringWriter();
-						xmlSerializer.setOutput(writer);
-						xmlSerializer.startDocument("UTF-8", true);
-						xmlSerializer.text("\n");
-						xmlSerializer.startTag("", "VpsChecked");
-						xmlSerializer.text("\n");
-						for (int i = 0; i < qtyVps; i++) {
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "Vp");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "VpNumber");
-							xmlSerializer.text(Short.toString(vpNumber[i]));
-							xmlSerializer.endTag("", "VpNumber");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "Checked");
-							xmlSerializer.text(Boolean.toString(vpChecked[i]));
-							xmlSerializer.endTag("", "Checked");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "PhotoTakenTimeMillis");
-							xmlSerializer.text(Long.toString(photoTakenTimeMillis[i]));
-							xmlSerializer.endTag("", "PhotoTakenTimeMillis");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.endTag("", "Vp");
-							xmlSerializer.text("\n");
-						}
-						xmlSerializer.endTag("", "VpsChecked");
-						xmlSerializer.endDocument();
-						vpsCheckedConfigFile.writeString(writer.toString());
-					} finally {
-						vpsCheckedConfigFile.close();
-					}
-				} else {
-					dbxFs.delete(new DbxPath(DbxPath.ROOT, vpsCheckedDropboxPath + vpsCheckedConfigFileDropbox));
-					DbxFile vpsCheckedConfigFile = dbxFs.create(new DbxPath(DbxPath.ROOT, vpsCheckedDropboxPath + vpsCheckedConfigFileDropbox));
-					try {
-						MetaioDebug.log("Deleting and saving a new vpsCheckedConfigFile to Dropbox");
-						XmlSerializer xmlSerializer = Xml.newSerializer();
-						StringWriter writer = new StringWriter();
-						xmlSerializer.setOutput(writer);
-						xmlSerializer.startDocument("UTF-8", true);
-						xmlSerializer.text("\n");
-						xmlSerializer.startTag("", "VpsChecked");
-						xmlSerializer.text("\n");
-						for (int i = 0; i < qtyVps; i++) {
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "Vp");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "VpNumber");
-							xmlSerializer.text(Short.toString(vpNumber[i]));
-							xmlSerializer.endTag("", "VpNumber");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "Checked");
-							xmlSerializer.text(Boolean.toString(vpChecked[i]));
-							xmlSerializer.endTag("", "Checked");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.text("\t");
-							xmlSerializer.startTag("", "PhotoTakenTimeMillis");
-							xmlSerializer.text(Long.toString(photoTakenTimeMillis[i]));
-							xmlSerializer.endTag("", "PhotoTakenTimeMillis");
-							xmlSerializer.text("\n");
-							xmlSerializer.text("\t");
-							xmlSerializer.endTag("", "Vp");
-							xmlSerializer.text("\n");
-						}
-						xmlSerializer.endTag("", "VpsChecked");
-						xmlSerializer.endDocument();
-						vpsCheckedConfigFile.writeString(writer.toString());
-					} finally {
-						vpsCheckedConfigFile.close();
-					}
+	// Saving vpChecked state.
+	try {
+		XmlSerializer xmlSerializer = Xml.newSerializer();
+		StringWriter writer = new StringWriter();
+		xmlSerializer.setOutput(writer);
+		xmlSerializer.startDocument("UTF-8", true);
+		xmlSerializer.text("\n");
+		xmlSerializer.startTag("", "VpsChecked");
+		xmlSerializer.text("\n");
+		for (int i = 0; i < qtyVps; i++) {
+			xmlSerializer.text("\t");
+			xmlSerializer.startTag("", "Vp");
+			xmlSerializer.text("\n");
+			xmlSerializer.text("\t");
+			xmlSerializer.text("\t");
+			xmlSerializer.startTag("", "VpNumber");
+			xmlSerializer.text(Short.toString(vpNumber[i]));
+			xmlSerializer.endTag("", "VpNumber");
+			xmlSerializer.text("\n");
+			xmlSerializer.text("\t");
+			xmlSerializer.text("\t");
+			xmlSerializer.startTag("", "Checked");
+			xmlSerializer.text(Boolean.toString(vpChecked[i]));
+			xmlSerializer.endTag("", "Checked");
+			xmlSerializer.text("\n");
+			xmlSerializer.text("\t");
+			xmlSerializer.text("\t");
+			xmlSerializer.startTag("", "PhotoTakenTimeMillis");
+			xmlSerializer.text(Long.toString(photoTakenTimeMillis[i]));
+			xmlSerializer.endTag("", "PhotoTakenTimeMillis");
+			xmlSerializer.text("\n");
+			xmlSerializer.text("\t");
+			xmlSerializer.endTag("", "Vp");
+			xmlSerializer.text("\n");
+		}
+		xmlSerializer.endTag("", "VpsChecked");
+		xmlSerializer.endDocument();
+		String vpsCheckedFileContents = writer.toString();
+		File vpsCheckedFile = new File(getApplicationContext().getFilesDir(),vpsCheckedConfigFileDropbox);
+		FileUtils.writeStringToFile(vpsCheckedFile,vpsCheckedFileContents, UTF_8);
+		ObjectMetadata myObjectMetadata = new ObjectMetadata();
+		//create a map to store user metadata
+		Map<String, String> userMetadata = new HashMap<String,String>();
+		userMetadata.put("TimeStamp", Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference).toString());
+		myObjectMetadata.setUserMetadata(userMetadata);
+		TransferObserver observer = Utils.storeRemoteFile(transferUtility, (vpsCheckedRemotePath + vpsCheckedConfigFileDropbox), Constants.BUCKET_NAME, vpsCheckedFile, myObjectMetadata);
+		observer.setTransferListener(new TransferListener() {
+			@Override
+			public void onStateChanged(int id, TransferState state) {
+				if (state.equals(TransferState.COMPLETED)) {
+					Log.d(TAG,"TransferListener="+state.toString());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				MetaioDebug.log(Log.ERROR, "Vps checked state data saving to Dropbox failed, see stack trace");
 			}
-			return null;
+
+			@Override
+			public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+				if (bytesTotal>0){
+					int percentage = (int) (bytesCurrent / bytesTotal * 100);
+				}
+
+				//Display percentage transfered to user
+			}
+
+			@Override
+			public void onError(int id, Exception ex) {
+				Log.e(TAG, "SaveVpsChecked(): vpsCheckedFile saving failed, see stack trace"+ ex.toString());
+			}
+
+		});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.e(TAG, "Vps checked state data saving to Remote Storage:"+e.toString());
 		}
 	}
+
 
 
 	public void setVpsChecked() 
@@ -2578,43 +2519,37 @@ public class ImageCapActivity extends ARViewActivity implements
 		}
 
 	}
-	
+
+
 	public void showVpCaptures(int vpSelected)
 	{
 		final int position = vpSelected-1;
+		final int vpToList = vpSelected;
 		String vpPhotoFileName=" ";
-		List<DbxFileInfo> entries = new ArrayList<DbxFileInfo>();
+		String path = getApplicationContext().getFilesDir().getPath();
+		File directory = new File(path);
+		File[] capsInDirectory = directory.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String filename) {
+				return filename.startsWith("cap_"+seamensorAccount+"_"+vpToList+"_");
+			}
+		});
 		int numOfEntries = 0;
 		try
 		{
-			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-			if (dbxFs != null)
 			{
-				try
+				if (!(capsInDirectory==null))
 				{
-					MetaioDebug.log("showVpCaptures: dropbox folder="+DbxPath.ROOT+capDropboxPath+vpSelected);
-					entries = dbxFs.listFolder(new DbxPath(DbxPath.ROOT, capDropboxPath + vpSelected ));
-				} catch (DbxException e) {
-					e.printStackTrace();
-				}
-				if (!entries.isEmpty())
-				{
-					numOfEntries = entries.size();
+					numOfEntries = capsInDirectory.length;
 					if (photoSelected==-1) photoSelected = numOfEntries - 1;
 					if (photoSelected<0) photoSelected = 0;
-					if (photoSelected > (numOfEntries-1)) photoSelected = 0; //(numOfEntries-1);
-					DbxFile selectedVpPhotoInDropbox = dbxFs.open(entries.get(photoSelected).path);
-					try {
-						vpPhotoFileName = selectedVpPhotoInDropbox.getInfo().path.getName();
-						selectedVpPhotoImageFileContents = BitmapFactory.decodeStream(selectedVpPhotoInDropbox.getReadStream());
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-					selectedVpPhotoInDropbox.close();
+					if (photoSelected > (numOfEntries-1)) photoSelected = 0;
+					vpPhotoFileName = capsInDirectory[photoSelected].getName();
+					InputStream fis = Utils.getLocalFile(vpPhotoFileName,getApplicationContext());
+					selectedVpPhotoImageFileContents = BitmapFactory.decodeStream(fis);
+					fis.close();
 					StringBuilder sb = new StringBuilder(vpPhotoFileName);
-					final String filename = Pattern.compile(".jpg").matcher(sb).replaceAll("");
+					final String filename =sb.substring(vpPhotoFileName.length()-17,vpPhotoFileName.length()-4);
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -2677,7 +2612,7 @@ public class ImageCapActivity extends ARViewActivity implements
 				}
 			}
 		}
-		catch (DbxException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -2724,13 +2659,12 @@ public class ImageCapActivity extends ARViewActivity implements
 		try
 		{
 			// Getting a file path for vps configuration XML file
-			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-			DbxPath vpsConfigFilePath = new DbxPath(DbxPath.ROOT,vpsDropboxPath+vpsConfigFileDropbox);
-			MetaioDebug.log("Vps Config Dropbox path = "+vpsConfigFilePath);
-			DbxFile vpsConfigFile = dbxFs.open(vpsConfigFilePath);
+
+			Log.d(TAG,"Vps Config Dropbox path = "+vpsConfigFileDropbox);
+			File vpsFile = new File(getApplicationContext().getFilesDir(),vpsConfigFileDropbox);
+			InputStream fis = Utils.getLocalFile(vpsConfigFileDropbox, getApplicationContext());
 			try 
 				{
-				FileInputStream fis = vpsConfigFile.getReadStream();
 				XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
 				XmlPullParser myparser = xmlFactoryObject.newPullParser();
 				myparser.setInput(fis, null);
@@ -2787,43 +2721,43 @@ public class ImageCapActivity extends ARViewActivity implements
 		        			{
                                 eventType = myparser.next();
                                 vpNumber[vpListOrder-1] = Short.parseShort(myparser.getText());
-			        			//MetaioDebug.log("VpNumber"+(vpListOrder-1)+": "+vpNumber[vpListOrder-1]);
+			        			MetaioDebug.log("VpNumber"+(vpListOrder-1)+": "+vpNumber[vpListOrder-1]);
 		        			}
 			        		else if(myparser.getName().equalsIgnoreCase("VpXCameraDistance"))
 		        			{ 
 			        			eventType = myparser.next();
 			        			vpXCameraDistance[vpListOrder-1] = Integer.parseInt(myparser.getText());
-			        			//MetaioDebug.log("vpXCameraDistance["+(vpListOrder-1)+"]"+vpXCameraDistance[vpListOrder-1]);
+			        			MetaioDebug.log("vpXCameraDistance["+(vpListOrder-1)+"]"+vpXCameraDistance[vpListOrder-1]);
 		        			}
 			        		else if(myparser.getName().equalsIgnoreCase("VpYCameraDistance"))
 		        			{ 
 			        			eventType = myparser.next();
 			        			vpYCameraDistance[vpListOrder-1] = Integer.parseInt(myparser.getText());
-			        			//MetaioDebug.log("vpYCameraDistance["+(vpListOrder-1)+"]"+vpYCameraDistance[vpListOrder-1]);
+			        			MetaioDebug.log("vpYCameraDistance["+(vpListOrder-1)+"]"+vpYCameraDistance[vpListOrder-1]);
 		        			}
 			        		else if(myparser.getName().equalsIgnoreCase("VpZCameraDistance"))
 		        			{ 
 			        			eventType = myparser.next();
 			        			vpZCameraDistance[vpListOrder-1] = Integer.parseInt(myparser.getText());
-			        			//MetaioDebug.log("vpZCameraDistance["+(vpListOrder-1)+"]"+vpZCameraDistance[vpListOrder-1]);
+			        			MetaioDebug.log("vpZCameraDistance["+(vpListOrder-1)+"]"+vpZCameraDistance[vpListOrder-1]);
 		        			}
 			        		else if(myparser.getName().equalsIgnoreCase("VpXCameraRotation"))
 		        			{ 
 			        			eventType = myparser.next();
 			        			vpXCameraRotation[vpListOrder-1] = Integer.parseInt(myparser.getText());
-			        			//MetaioDebug.log("vpXCameraRotation["+(vpListOrder-1)+"]"+vpXCameraRotation[vpListOrder-1]);
+			        			MetaioDebug.log("vpXCameraRotation["+(vpListOrder-1)+"]"+vpXCameraRotation[vpListOrder-1]);
 		        			}
 			        		else if(myparser.getName().equalsIgnoreCase("VpYCameraRotation"))
 		        			{ 
 			        			eventType = myparser.next();
 			        			vpYCameraRotation[vpListOrder-1] = Integer.parseInt(myparser.getText());
-			        			//MetaioDebug.log("vpYCameraRotation["+(vpListOrder-1)+"]"+vpYCameraRotation[vpListOrder-1]);
+			        			MetaioDebug.log("vpYCameraRotation["+(vpListOrder-1)+"]"+vpYCameraRotation[vpListOrder-1]);
 		        			}
 			        		else if(myparser.getName().equalsIgnoreCase("VpZCameraRotation"))
 		        			{ 
 			        			eventType = myparser.next();
 			        			vpZCameraRotation[vpListOrder-1] = Integer.parseInt(myparser.getText());
-			        			//MetaioDebug.log("vpZCameraRotation["+(vpListOrder-1)+"]"+vpZCameraRotation[vpListOrder-1]);
+			        			MetaioDebug.log("vpZCameraRotation["+(vpListOrder-1)+"]"+vpZCameraRotation[vpListOrder-1]);
 		        			}
 			        		else if(myparser.getName().equalsIgnoreCase("VpLocDescription"))
 		        			{ 
@@ -2891,14 +2825,11 @@ public class ImageCapActivity extends ARViewActivity implements
 			        	}
 			        	eventType = myparser.next();		
 			        }
+					fis.close();
 				} 
-			finally 
-				{
-				vpsConfigFile.close();
-	    		}
-			
-			MetaioDebug.log("Vps Config DROPBOX file = "+vpsConfigFile);
-						
+			finally {
+				MetaioDebug.log("Vps Config DROPBOX file = " + vpsFile);
+			}
 		}       
 		catch (Exception e)
 		{
@@ -3018,91 +2949,51 @@ public class ImageCapActivity extends ARViewActivity implements
             }
 		}
 	}
-	
-	
-	public void loadVpsChecked()
-	{
+
+
+	public void loadVpsChecked() {
 		MetaioDebug.log("loadVpsChecked() started ");
 		int vpListOrder = 0;
-		try
-		{
-			// Getting a file path for vps checked config XML file
-			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-            DbxPath vpsCheckedConfigFilePath = new DbxPath(DbxPath.ROOT,vpsCheckedDropboxPath+vpsCheckedConfigFileDropbox);
-			MetaioDebug.log("Vps Config Dropbox path = "+vpsCheckedConfigFilePath);
-			DbxFile vpsCheckedConfigFile=null;
-			try
-			{
-				vpsCheckedConfigFile = dbxFs.open(vpsCheckedConfigFilePath);
-			}
-			catch (DbxException.AlreadyOpen dbe)
-			{
-				MetaioDebug.log(Log.ERROR, "loadVpsChecked: Checked Vps data loading failed, vpsCheckedConfigFile ALREADY OPEN: "+dbe.getMessage());
-			}
-			try
-			{
-				FileInputStream fis = vpsCheckedConfigFile.getReadStream();
-				XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
-				XmlPullParser myparser = xmlFactoryObject.newPullParser();
-				myparser.setInput(fis, null);
-				int eventType = myparser.getEventType();
-		        while (eventType != XmlPullParser.END_DOCUMENT) 
-			        {
-			        	if(eventType == XmlPullParser.START_DOCUMENT) 
-			        	{
-			        		MetaioDebug.log("Start document: vpschecked.xml");
-			        	} 
-			        	else if(eventType == XmlPullParser.START_TAG) 
-			        	{
-			        		MetaioDebug.log("Start tag "+myparser.getName());
+		try {
+			InputStream fis = Utils.getLocalFile(vpsCheckedConfigFileDropbox, getApplicationContext());
+			XmlPullParserFactory xmlFactoryObject = XmlPullParserFactory.newInstance();
+			XmlPullParser myparser = xmlFactoryObject.newPullParser();
+			myparser.setInput(fis, null);
+			int eventType = myparser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				if (eventType == XmlPullParser.START_DOCUMENT) {
+					MetaioDebug.log("Start document: vpschecked.xml");
+				} else if (eventType == XmlPullParser.START_TAG) {
+					MetaioDebug.log("Start tag " + myparser.getName());
 
-                            if(myparser.getName().equalsIgnoreCase("Vp"))
-                            {
-                                vpListOrder++;
-                                MetaioDebug.log("VpListOrder: "+vpListOrder);
-                            }
-                            else if(myparser.getName().equalsIgnoreCase("VpNumber"))
-                            {
-                                eventType = myparser.next();
-                                vpNumber[vpListOrder - 1] = Short.parseShort(myparser.getText());
-                                MetaioDebug.log("VpNumber["+(vpListOrder-1)+": "+vpNumber[vpListOrder-1]);
-                            }
-        	        		else if(myparser.getName().equalsIgnoreCase("Checked"))
-		        			{ 
-			        			eventType = myparser.next();
-			        			vpChecked[vpListOrder-1]= Boolean.parseBoolean(myparser.getText());
-								MetaioDebug.log("VpChecked["+(vpListOrder-1)+": "+vpChecked[vpListOrder-1]);
-		        			}
-			        		else if(myparser.getName().equalsIgnoreCase("PhotoTakenTimeMillis"))
-		        			{ 
-			        			eventType = myparser.next();
-			        			photoTakenTimeMillis[vpListOrder-1] = Long.parseLong(myparser.getText());
-		        			}
-			        		
-			        	} 
-			        	else if(eventType == XmlPullParser.END_TAG) 
-			        	{
-			        		MetaioDebug.log("End tag "+myparser.getName());
-			        	} 
-			        	else if(eventType == XmlPullParser.TEXT) 
-			        	{
-			        		MetaioDebug.log("Text "+myparser.getText());
-			        	}
-			        	eventType = myparser.next();		
-			        }
+					if (myparser.getName().equalsIgnoreCase("Vp")) {
+						vpListOrder++;
+						MetaioDebug.log("VpListOrder: " + vpListOrder);
+					} else if (myparser.getName().equalsIgnoreCase("VpNumber")) {
+						eventType = myparser.next();
+						vpNumber[vpListOrder - 1] = Short.parseShort(myparser.getText());
+						MetaioDebug.log("VpNumber[" + (vpListOrder - 1) + ": " + vpNumber[vpListOrder - 1]);
+					} else if (myparser.getName().equalsIgnoreCase("Checked")) {
+						eventType = myparser.next();
+						vpChecked[vpListOrder - 1] = Boolean.parseBoolean(myparser.getText());
+						MetaioDebug.log("VpChecked[" + (vpListOrder - 1) + ": " + vpChecked[vpListOrder - 1]);
+					} else if (myparser.getName().equalsIgnoreCase("PhotoTakenTimeMillis")) {
+						eventType = myparser.next();
+						photoTakenTimeMillis[vpListOrder - 1] = Long.parseLong(myparser.getText());
+					}
+
+				} else if (eventType == XmlPullParser.END_TAG) {
+					MetaioDebug.log("End tag " + myparser.getName());
+				} else if (eventType == XmlPullParser.TEXT) {
+					MetaioDebug.log("Text " + myparser.getText());
+				}
+				eventType = myparser.next();
 			}
-			finally 
-			{
-				vpsCheckedConfigFile.close();
-	    	}
-			MetaioDebug.log("Vps Config DROPBOX file = "+vpsCheckedConfigFile);
-		}       
-		catch (Exception e)
-		{
+			fis.close();
+		} catch (Exception e) {
 			e.printStackTrace();
-			MetaioDebug.log(Log.ERROR, "Checked Vps data loading failed, see stack trace:"+e.getMessage());
+			MetaioDebug.log(Log.ERROR, "Checked Vps data loading failed, see stack trace:" + e.getMessage());
 		}
-
 	}
 
     @Override
@@ -3119,59 +3010,48 @@ public class ImageCapActivity extends ARViewActivity implements
             MetaioDebug.log("Models : "+ AssetsManager.getAbsolutePath());
             MetaioDebug.log("Model loaded: "+getApplicationContext()+"  " + seaMensorCubeModel);
             MetaioDebug.log("Model loaded: "+getApplicationContext()+"  " + vpCheckedModel);
-            // Starting Dropbox filesystem
-            DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-			// defining the localFilePath to be used for all assets downloaded from DROPBOX in the LoaderActivity
+            // defining the localFilePath to be used for all assets downloaded from DROPBOX in the LoaderActivity
 			String localFilePath = AssetsManager.getAbsolutePath()+"/";
             trkLocalFilePath = localFilePath;
 
             try
             {
                 MetaioDebug.log("####### LOADING: METAIO TRACKING");
-                // Getting a file path for tracking configuration XML file
-                DbxPath trackingConfigFilePathDropbox = new DbxPath(DbxPath.ROOT, trackingDropboxPath + trackingConfigFileName);
                 // using the localFilePath to define the path to the trackingConfigFile
-                String trackingConfigFilePath = localFilePath + trackingConfigFileName;
-                MetaioDebug.log("Tracking Config Dropbox path = " + trackingConfigFilePathDropbox);
+                //String trackingConfigFilePath = getApplicationContext().getFilesDir().getPath() + trackingConfigFileName;
                 // Loading the tracking configuration from DROPBOX
-                DbxFile trackingConfigFile = dbxFs.open(trackingConfigFilePathDropbox);
-                DbxFileStatus trackingConfigFileStatus = trackingConfigFile.getSyncStatus();
                 try
-                {
-                    if (!trackingConfigFileStatus.isLatest) trackingConfigFile.update();
-                    markerlesstrackingConfigFileContents = trackingConfigFile.readString();
+		        {
+                    InputStream fis = Utils.getLocalFile(trackingConfigFileName,getApplicationContext());
+					markerlesstrackingConfigFileContents = IOUtils.toString(fis, UTF_8);
+					fis.close();
                 }
-                finally
+				catch (Exception e)
                 {
-                    trackingConfigFile.close();
+                    Log.e(TAG,"Error when loading markerlesstrackingConfigFileContents:"+e.toString());
                 }
 
                 markerlesstrackingConfigFileContents = markerlesstrackingConfigFileContents.replace("markervp",localFilePath+"markervp");
                 markerlesstrackingConfigFileContents = markerlesstrackingConfigFileContents.replace(seaMensorMarker,localFilePath+seaMensorMarker);
 
                 // Loading ID Markers Tracking config file used for disambiguation
-                // Getting a file path for tracking configuration XML file
-                DbxPath idTrackingConfigFilePathDropbox = new DbxPath(DbxPath.ROOT,trackingDropboxPath+idMarkersTrackingConfigFileName);
                 // using the localFilePath to define the path to the trackingConfigFile
-                String idMarkersTrackingConfigFilePath = localFilePath+idMarkersTrackingConfigFileName;
-                MetaioDebug.log("ID Markers Tracking Config Dropbox path = "+idTrackingConfigFilePathDropbox);
-                // Loading the tracking configuration from DROPBOX
-                DbxFile idTrackingConfigFile = dbxFs.open(idTrackingConfigFilePathDropbox);
-                DbxFileStatus idTrackingConfigFileStatus = idTrackingConfigFile.getSyncStatus();
+                //String idMarkersTrackingConfigFilePath = getApplicationContext().getFilesDir().getPath()+idMarkersTrackingConfigFileName;
                 try
                 {
-                    if (!idTrackingConfigFileStatus.isLatest) idTrackingConfigFile.update();
-                    idMarkersTrackingConfigFileContents = idTrackingConfigFile.readString();
+                    InputStream fis = Utils.getLocalFile(idMarkersTrackingConfigFileName,getApplicationContext());
+                    idMarkersTrackingConfigFileContents = IOUtils.toString(fis, UTF_8);
+					fis.close();
                 }
-                finally
-                {
-                    idTrackingConfigFile.close();
-                }
+				catch (Exception e)
+				{
+					Log.e(TAG,"Error when loading idMarkersTrackingConfigFileContents:"+e.toString());
+				}
 
             }
             catch (Exception e)
             {
-                MetaioDebug.log(Log.ERROR, "Error loading tracking files from Dropbox and writing to LOCAL storage");
+                Log.e(TAG, "Error loading tracking files from Remote Storage and writing to LOCAL storage");
             }
 
             setMarkerlessTrackingConfiguration(markerlesstrackingConfigFileContents);
@@ -3553,30 +3433,40 @@ public class ImageCapActivity extends ARViewActivity implements
 					setVpsChecked();
 				}
 				});
-			
-			
-			// Load camera calibration			
+
+			// Load camera calibration
 			try
 			{
-				DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-				DbxPath cameraCalibrationFilePath = new DbxPath(DbxPath.ROOT,camCalDropboxPath+cameraCalibrationFileName);
-				MetaioDebug.log("Camera Calibration path = "+cameraCalibrationFilePath);
-				String cameraCalibration;
-				DbxFile cameraCalibrationFile = dbxFs.open(cameraCalibrationFilePath);
-				try {
-					cameraCalibration = cameraCalibrationFile.readString();
-				} finally {
-					cameraCalibrationFile.close();
-				}
-				MetaioDebug.log("Camera Calibration DROPBOX file = "+cameraCalibrationFile);
-				boolean result = metaioSDK.setCameraParameters(cameraCalibration); 
+				String cameraCalibration = 	"<?xml version=\"1.0\"?>"+
+											"<Camera>"+
+											"<Name>LGG2 camera 1280x720</Name>"+
+											"<Info>Calibration results generated with 3DF Lapyx v. 1.0</Info>"+
+											"<CalibrationResolution>"+
+											"<X>1280</X>"+
+											"<Y>720</Y>"+
+											"</CalibrationResolution>"+
+											"<FocalLength>"+
+											"<X>1054.42</X>"+
+											"<Y>1014.44</Y>"+
+											"</FocalLength>"+
+											"<PrincipalPoint>"+
+											"<X>640.735</X>"+
+											"<Y>334.981</Y>"+
+											"</PrincipalPoint>"+
+											"<Distortion>"+
+											"<K1>0.105051</K1>"+
+											"<K2>-0.167575</K2>"+
+											"<P1>-0.00409267</P1>"+
+											"<P2>-0.0021432</P2>"+
+											"</Distortion>"+
+											"</Camera>";
+				boolean result = metaioSDK.setCameraParameters(cameraCalibration);
 				MetaioDebug.log("Camera Calibration data loaded: " + result);
 			}
 			catch (Exception e)
 			{
-                MetaioDebug.log("Camera Calibration data loading failed");
-			}	
-			
+				MetaioDebug.log("Camera Calibration data loading failed");
+			}
 		}
 		
 		@Override
@@ -3584,27 +3474,7 @@ public class ImageCapActivity extends ARViewActivity implements
 		{
 			MetaioDebug.log("animation ended" + animationName);
 		}
-		
 
-		private  File getOutputMediaFile(){
-		    File mediaStorageDir = new File(Environment.getExternalStorageDirectory()
-		            + "/Android/data/"
-		            + getApplicationContext().getPackageName()
-		            + "/Files"); 
-
-		    // Create the storage directory if it does not exist
-		    if (! mediaStorageDir.exists()){
-		        if (! mediaStorageDir.mkdirs()){
-		            return null;
-		        }
-		    } 
-		    // Create a media file name
-		    File mediaFile;
-		    String mImageName="MI_tempo.jpg";
-		    mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);  
-		    return mediaFile;
-		} 
-		
 		
 		@Override
 		public void onNewCameraFrame(ImageStruct cameraFrame)
@@ -3612,9 +3482,9 @@ public class ImageCapActivity extends ARViewActivity implements
 			BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
 			bmpFactoryOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
 			Bitmap bitmapImage = null;
-			File pictureFile = getOutputMediaFile();
+			File pictureFile = new File(getApplicationContext().getFilesDir(), "cap_temp.jpg");
 			MetaioDebug.log("onNewCameraFrame: a new camera frame image is delivered " + cameraFrame.getTimestamp());
-			long momentoLong = System.currentTimeMillis();
+			long momentoLong = Utils.timeNow(clockSetSuccess,sntpTime,sntpTimeReference);
 			photoTakenTimeMillis[coordinateSystemTrackedInPoseI - 1] = momentoLong;
 
 			String momento = String.valueOf(momentoLong);
@@ -3691,73 +3561,15 @@ public class ImageCapActivity extends ARViewActivity implements
 					});
 
 					setVpsChecked();
-					new SaveVpsChecked().execute();
+					saveVpsChecked();
 
 					try
 					{
+						String pictureFileName = "cap_"+seamensorAccount+"_"+vpNumber[coordinateSystemTrackedInPoseI-1]+"_"+momento+".jpg";
+						pictureFile.renameTo(new File(getApplicationContext().getFilesDir(), pictureFileName));
 						FileOutputStream fos = new FileOutputStream(pictureFile);
 						bitmapImage.compress(Bitmap.CompressFormat.JPEG, 95, fos);
 						fos.close();
-						ExifInterface locPhotoTags = new ExifInterface(pictureFile.getAbsolutePath());
-						locPhotoTags.setAttribute("GPSLatitude", locPhotoToExif[0]);
-						MetaioDebug.log("onNewCameraFrame: GPSLatitude:" + locPhotoToExif[0] + " " + locPhotoToExif[1]);
-						locPhotoTags.setAttribute("GPSLatitudeRef", locPhotoToExif[1]);
-						locPhotoTags.setAttribute("GPSLongitude", locPhotoToExif[2]);
-						MetaioDebug.log("onNewCameraFrame: GPSLongitude:" + locPhotoToExif[2] + " " + locPhotoToExif[3]);
-						locPhotoTags.setAttribute("GPSLongitudeRef", locPhotoToExif[3]);
-						locPhotoTags.setAttribute("GPSAltitude", locPhotoToExif[4]);
-						locPhotoTags.setAttribute("Make", locPhotoToExif[5]);
-						locPhotoTags.setAttribute("Model", locPhotoToExif[6]);
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
-						sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-						String formattedDateTime = sdf.format(photoTakenTimeMillis[coordinateSystemTrackedInPoseI - 1]);
-						locPhotoTags.setAttribute("DateTime", formattedDateTime);
-						locPhotoTags.saveAttributes();
-						DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
-						if (!dbxFs.exists(new DbxPath(DbxPath.ROOT,capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg")))
-						{
-							DbxFile bitMap = dbxFs.create(new DbxPath(DbxPath.ROOT,capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg"));
-							MetaioDebug.log("onNewCameraFrame: Saving a new camera frame image to: "+capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg");
-							bitMap.writeFromExistingFile(pictureFile, false);
-							bitMap.close();
-							//pictureFile.delete();
-							if (resultSpecialTrk)
-							{
-								waitingForMarkerlessTrackingConfigurationToLoad = true;
-								MetaioDebug.log("onNewCameraFrame: vpPhotoAccepted >>>>> calling setMarkerlessTrackingConfiguration");
-								setMarkerlessTrackingConfiguration(markerlesstrackingConfigFileContents);
-								resultSpecialTrk = false;
-								vpIsDisambiguated = false;
-							}
-						}
-						else
-						{
-							dbxFs.delete(new DbxPath(DbxPath.ROOT,capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg"));
-							MetaioDebug.log("onNewCameraFrame: Deleting and saving a new camera frame image to: "+capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg");
-							DbxFile bitMap = dbxFs.create(new DbxPath(DbxPath.ROOT,capDropboxPath+vpNumber[coordinateSystemTrackedInPoseI-1]+"/"+momento+".jpg"));
-							bitMap.writeFromExistingFile(pictureFile, false);
-							bitMap.close();
-							//pictureFile.delete();
-							if (resultSpecialTrk)
-							{
-								waitingForMarkerlessTrackingConfigurationToLoad = true;
-								MetaioDebug.log("onNewCameraFrame: vpPhotoAccepted >>>>> calling setMarkerlessTrackingConfiguration");
-								setMarkerlessTrackingConfiguration(markerlesstrackingConfigFileContents);
-								resultSpecialTrk = false;
-								vpIsDisambiguated = false;
-							}
-						}
-					}
-					catch (Exception e)
-					{
-						vpChecked[coordinateSystemTrackedInPoseI - 1] = false;
-						setVpsChecked();
-						new SaveVpsChecked().execute();
-						//waitingToCaptureVpAfterDisambiguationProcedureSuccessful =true;
-						e.printStackTrace();
-					}
-
-					try {
 						ObjectMetadata myObjectMetadata = new ObjectMetadata();
 						//create a map to store user metadata
 						Map<String, String> userMetadata = new HashMap<String,String>();
@@ -3775,34 +3587,46 @@ public class ImageCapActivity extends ARViewActivity implements
 						//call setUserMetadata on our ObjectMetadata object, passing it our map
 						myObjectMetadata.setUserMetadata(userMetadata);
 						//uploading the objects
-						transferUtility = AwsUtil.getTransferUtility(s3Client, getApplicationContext());
 						File fileToUpload = pictureFile;
-						TransferObserver observer = transferUtility.upload(
-								Constants.BUCKET_NAME,		/* The bucket to upload to */
-								"cap/"+seamensorAccount+"/"+momento+".jpg",		/* The key for the uploaded object */
-								fileToUpload,				/* The file where the data to upload exists */
-								myObjectMetadata			/* The ObjectMetadata associated with the object*/
-						);
+						TransferObserver observer = Utils.storeRemoteFile(
+								transferUtility,
+								"cap/"+pictureFileName,
+								Constants.BUCKET_NAME,
+								fileToUpload,
+								myObjectMetadata);
 						Log.d(TAG, "AWS s3 Observer: "+observer.getState().toString());
 						Log.d(TAG, "AWS s3 Observer: "+observer.getAbsoluteFilePath());
 						Log.d(TAG, "AWS s3 Observer: "+observer.getBucket());
 						Log.d(TAG, "AWS s3 Observer: "+observer.getKey());
+						if (resultSpecialTrk)
+						{
+							waitingForMarkerlessTrackingConfigurationToLoad = true;
+							Log.d(TAG, "onNewCameraFrame: vpPhotoAccepted >>>>> calling setMarkerlessTrackingConfiguration");
+							setMarkerlessTrackingConfiguration(markerlesstrackingConfigFileContents);
+							resultSpecialTrk = false;
+							vpIsDisambiguated = false;
+						}
 					}
 					catch (Exception e)
 					{
-
+						Log.e(TAG, "Error when writing captured image to Remote Storage:"+e.toString());
+						vpChecked[coordinateSystemTrackedInPoseI - 1] = false;
+						setVpsChecked();
+						saveVpsChecked();
+						//waitingToCaptureVpAfterDisambiguationProcedureSuccessful =true;
+						e.printStackTrace();
 					}
 					vpPhotoAccepted = false;
 					vpPhotoRequestInProgress = false;
-					MetaioDebug.log("onNewCameraFrame: vpPhotoAccepted: vpPhotoRequestInProgress = "+vpPhotoRequestInProgress);
+					Log.d(TAG, "onNewCameraFrame: vpPhotoAccepted: vpPhotoRequestInProgress = "+vpPhotoRequestInProgress);
 					waitingForMarkerlessTrackingConfigurationToLoad = true;
-					MetaioDebug.log("onNewCameraFrame: vpPhotoAccepted >>>>> calling setMarkerlessTrackingConfiguration >>>> SECOND TIME!!!!!");
+					Log.d(TAG, "onNewCameraFrame: vpPhotoAccepted >>>>> calling setMarkerlessTrackingConfiguration >>>> SECOND TIME!!!!!");
 					setMarkerlessTrackingConfiguration(markerlesstrackingConfigFileContents);
 				}
 
 				if (vpPhotoRejected)
 				{
-					MetaioDebug.log("onNewCameraFrame: vpPhotoRejected!!!!");
+					Log.d(TAG, "onNewCameraFrame: vpPhotoRejected!!!!");
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -3820,7 +3644,7 @@ public class ImageCapActivity extends ARViewActivity implements
 					vpChecked[coordinateSystemTrackedInPoseI - 1] = false;
 					//waitingToCaptureVpAfterDisambiguationProcedureSuccessful=true;
 					setVpsChecked();
-					new SaveVpsChecked().execute();
+					saveVpsChecked();
 					if (resultSpecialTrk)
 					{
 						waitingForMarkerlessTrackingConfigurationToLoad = true;
@@ -3831,8 +3655,8 @@ public class ImageCapActivity extends ARViewActivity implements
 					lastVpPhotoRejected = true;
 					vpPhotoRejected = false;
 					vpPhotoRequestInProgress = false;
-					MetaioDebug.log("onNewCameraFrame: vpPhotoRejected >>>>> calling setMarkerlessTrackingConfiguration");
-					MetaioDebug.log("onNewCameraFrame: vpPhotoRejected: vpPhotoRequestInProgress = "+vpPhotoRequestInProgress);
+					Log.d(TAG, "onNewCameraFrame: vpPhotoRejected >>>>> calling setMarkerlessTrackingConfiguration");
+					Log.d(TAG, "onNewCameraFrame: vpPhotoRejected: vpPhotoRequestInProgress = "+vpPhotoRequestInProgress);
 				}
 			}
 		}
@@ -3840,7 +3664,7 @@ public class ImageCapActivity extends ARViewActivity implements
 		@Override
 		public void onScreenshotImage(ImageStruct image)
 		{
-			MetaioDebug.log("screenshot image is received" + image.getTimestamp());
+			Log.d(TAG, "screenshot image is received" + image.getTimestamp());
 		}
 		
 		@Override

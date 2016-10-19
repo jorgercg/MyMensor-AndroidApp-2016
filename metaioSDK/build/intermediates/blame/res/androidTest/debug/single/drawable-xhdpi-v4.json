@@ -32,12 +32,12 @@
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/web_close.png"
     },
     {
-        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/star_act.png",
-        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/star_act.png"
-    },
-    {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/web_back_dis.png",
         "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/web_back_dis.png"
+    },
+    {
+        "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/star_act.png",
+        "source": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/star_act.png"
     },
     {
         "merged": "/Users/jorgercg/loc/Des/seamensor_sdk_6_dj/metaioSDK/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/web_forward.png",
